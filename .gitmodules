@@ -1,0 +1,3 @@
+[submodule "asm_hammerspoon"]
+	path = Spoons/asmHammerspoon
+	url = https://github.com/asmagill/hammerspoon_asm.git
