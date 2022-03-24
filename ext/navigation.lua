@@ -15,9 +15,9 @@ end
 
 local function flashScreen(screen)
   local flash = hs.canvas.new(screen:fullFrame()):appendElements({
-    action = 'fill',
-    fillColor = {alpha = 0.25, red = 1},
-    type = 'rectangle'
+    action='fill',
+    fillColor={alpha=0.25, red=1},
+    type='rectangle'
   })
   flash:show()
   hs.timer.doAfter(.15, function() flash:delete() end)

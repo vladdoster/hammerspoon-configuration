@@ -1,7 +1,8 @@
 local module = {}
 local battery, canvas, fnutils = require('hs.battery'), require('hs.canvas'), require('hs.fnutils')
 local host, menubar, settings = require('hs.host'), require('hs._asm.guitk.menubar'), require('hs.settings')
-local speech, styledtext, timer, utf8 = require('hs.speech'), require('hs.styledtext'), require('hs.timer'), require('hs.utf8')
+local speech, styledtext, timer, utf8 = require('hs.speech'), require('hs.styledtext'), require('hs.timer'),
+                                        require('hs.utf8')
 local onAC, onBattery = utf8.codepointToUTF8(0x1F50C), utf8.codepointToUTF8(0x1F50B)
 local suppressAudioKey = '_asm.battery.suppressAudio'
 local suppressAudio = settings.get(suppressAudioKey) or false
@@ -11,10 +12,10 @@ local batteryPowerSource = function() return battery.powerSource() or 'no batter
 -- Some "notifications" to apply... need to update battery watcher to do these
 module.batteryNotifications = {
   {
-    doEvery = false,
-    onBattery = true,
-    percentage = 10,
-    fn = function()
+    doEvery=false,
+    onBattery=true,
+    percentage=10,
+    fn=function()
       local alert = require('hs.alert')
       if not suppressAudio then
         local audio = require('hs.audiodevice').defaultOutputDevice()
@@ -32,10 +33,10 @@ module.batteryNotifications = {
     end
   },
   {
-    doEvery = 60,
-    onBattery = true,
-    percentage = 5,
-    fn = function()
+    doEvery=60,
+    onBattery=true,
+    percentage=5,
+    fn=function()
       local alert = require('hs.alert')
       if not suppressAudio then
         local audio = require('hs.audiodevice').defaultOutputDevice()
@@ -54,27 +55,30 @@ module.batteryNotifications = {
     end
   },
   {
-    doEvery = 300,
-    onBattery = true,
-    timeRemaining = 30,
-    fn = function()
+    doEvery=300,
+    onBattery=true,
+    timeRemaining=30,
+    fn=function()
       local alert = require('hs.alert')
       alert.show('Battery has ' .. tostring(math.floor(battery.timeRemaining())) .. ' minutes left...', 10)
     end
   },
   {
-    doEvery = false,
-    onBattery = false,
-    percentage = 10,
-    fn = function() if not suppressAudio then local sp = speech.new('Zarvox'):speak('Feeling returning to my circuits') end end
+    doEvery=false,
+    onBattery=false,
+    percentage=10,
+    fn=function()
+      if not suppressAudio then local sp = speech.new('Zarvox'):speak('Feeling returning to my circuits') end
+    end
   },
   {
-    doEvery = false,
-    onBattery = false,
-    percentage = 90,
-    fn = function()
+    doEvery=false,
+    onBattery=false,
+    percentage=90,
+    fn=function()
       if not suppressAudio then
-        local sp = speech.new('Zarvox'):speak('I\'m feeling [[inpt PHON; rate 80]]+mUXC[[inpt TEXT; rset 0]] better [[emph +]]now')
+        local sp = speech.new('Zarvox'):speak(
+                     'I\'m feeling [[inpt PHON; rate 80]]+mUXC[[inpt TEXT; rset 0]] better [[emph +]]now')
       end
     end
   }
@@ -92,21 +96,20 @@ local updateMenuTitle = function()
         timeValue = battery.timeRemaining()
       end
       text = text .. ((timeValue < 0) and '???' or string.format('%d:%02d', math.floor(timeValue / 60), timeValue % 60))
-      local titleColor = {white = (host.interfaceStyle() == 'Dark') and 1 or 0}
-      titleText = styledtext.new(text,
-                                 {
-        font = {name = 'IBM Plex Mono', size = 9},
-        color = titleColor,
-        paragraphStyle = {alignment = 'center'}
+      local titleColor = {white=(host.interfaceStyle() == 'Dark') and 1 or 0}
+      titleText = styledtext.new(text, {
+        font={name='IBM Plex Mono', size=9},
+        color=titleColor,
+        paragraphStyle={alignment='center'}
       })
     end
     -- Big Sur forces a common text baseline for titles which
     -- causes multi-line text to push upper liness off top of
     -- menubar; this converts it to an image which is allowed
     -- the full menubar height for display
-    local c = canvas.new{x = 0, y = 0, h = 0, w = 0}
+    local c = canvas.new{x=0, y=0, h=0, w=0}
     c:frame(c:minimumTextSize(titleText))
-    c[1] = {type = 'text', text = titleText}
+    c[1] = {type='text', text=titleText}
     menuUserData:setIcon(c:imageFromCanvas())
     -- canvas does not auto-collect, so repeating this eats memory
     --         c:delete() ; c = nil
@@ -118,10 +121,10 @@ local powerSourceChangeFN = function(justOn)
   if menuUserData then updateMenuTitle() end
   if newPowerSource ~= 'no battery' then
     local test = {
-      onBattery = batteryPowerSource() == 'Battery Power',
-      percentage = battery.percentage(),
-      timeRemaining = battery.timeRemaining(),
-      timeStamp = os.time()
+      onBattery=batteryPowerSource() == 'Battery Power',
+      percentage=battery.percentage(),
+      timeRemaining=battery.timeRemaining(),
+      timeStamp=os.time()
     }
     if currentPowerSource ~= newPowerSource then
       currentPowerSource = newPowerSource
@@ -133,7 +136,9 @@ local powerSourceChangeFN = function(justOn)
         else
           if v.onBattery then
             if v.percentage and test.percentage < v.percentage then notificationStatus[i] = test.timeStamp end
-            if v.timeRemaining and test.timeRemaining < v.timeRemaining then notificationStatus[i] = test.timeStamp end
+            if v.timeRemaining and test.timeRemaining < v.timeRemaining then
+              notificationStatus[i] = test.timeStamp
+            end
           end
         end
       end
@@ -205,16 +210,20 @@ local rawBatteryData
 rawBatteryData = function(tbl)
   local data = {}
   local rawStyle = {
-    font = {name = 'IBM Plex Mono', size = 10},
+    font={name='IBM Plex Mono', size=10},
     -- apparently a true white based color gets automatically adjusted based on enabled
     -- status, but an RGB white doesn't; this is more visible, especially when in Dark mode
-    color = {blue = .5, green = .5, red = .5}
+    color={blue=.5, green=.5, red=.5}
   }
   for i, v in fnutils.sortByKeys(tbl) do
     if type(v) ~= 'table' then
-      table.insert(data, {title = styledtext.new(i .. ' = ' .. tostring(v), rawStyle), disabled = true})
+      table.insert(data, {title=styledtext.new(i .. ' = ' .. tostring(v), rawStyle), disabled=true})
     else
-      table.insert(data, {title = styledtext.new(i, rawStyle), menu = rawBatteryData(v), disabled = not next(v)})
+      table.insert(data, {
+        title=styledtext.new(i, rawStyle),
+        menu=rawBatteryData(v),
+        disabled=not next(v)
+      })
     end
   end
   return data
@@ -223,18 +232,18 @@ local displayBatteryData = function(modifier)
   local menuTable = {}
   updateMenuTitle()
   if batteryPowerSource() == 'no battery' then
-    table.insert(menuTable, {title = onAC .. '  No Battery'})
+    table.insert(menuTable, {title=onAC .. '  No Battery'})
   else
     local pwrIcon = (batteryPowerSource() == 'AC Power') and onAC or onBattery
     table.insert(menuTable, {
-      title = pwrIcon .. '  ' ..
-          ((battery.isCharged() and 'Fully Charged') or
-              (battery.isCharging() and (battery.isFinishingCharge() and 'Finishing Charge' or 'Charging')) or 'On Battery')
+      title=pwrIcon .. '  ' .. ((battery.isCharged() and 'Fully Charged')
+        or (battery.isCharging() and (battery.isFinishingCharge() and 'Finishing Charge' or 'Charging')) or 'On Battery')
     })
   end
-  table.insert(menuTable, {title = '-'})
+  table.insert(menuTable, {title='-'})
   table.insert(menuTable, {
-    title = utf8.codepointToUTF8(0x26A1) .. '  Current Charge: ' .. string.format('%.2f%%', (battery.percentage() or 'n/a'))
+    title=utf8.codepointToUTF8(0x26A1) .. '  Current Charge: '
+      .. string.format('%.2f%%', (battery.percentage() or 'n/a'))
   })
   local timeTitle, timeValue = utf8.codepointToUTF8(0x1F552) .. '  ', nil
   if batteryPowerSource() == 'AC Power' then
@@ -246,27 +255,32 @@ local displayBatteryData = function(modifier)
   end
   if timeValue then
     table.insert(menuTable, {
-      title = timeTitle ..
-          ((timeValue < 0) and '...calculating...' or string.format('%2d:%02d', math.floor(timeValue / 60), timeValue % 60))
+      title=timeTitle
+        .. ((timeValue < 0) and '...calculating...'
+          or string.format('%2d:%02d', math.floor(timeValue / 60), timeValue % 60))
     })
   else
-    table.insert(menuTable, {title = timeTitle .. 'n/a'})
+    table.insert(menuTable, {title=timeTitle .. 'n/a'})
   end
   local maxCapacity, designCapacity = battery.maxCapacity(), battery.designCapacity()
   table.insert(menuTable, {
-    title = utf8.codepointToUTF8(0x1F340) .. '  Battery Health: ' ..
-        (maxCapacity and designCapacity and string.format('%.2f%%', 100 * maxCapacity / designCapacity) or 'n/a')
+    title=utf8.codepointToUTF8(0x1F340) .. '  Battery Health: '
+      .. (maxCapacity and designCapacity and string.format('%.2f%%', 100 * maxCapacity / designCapacity) or 'n/a')
   })
-  table.insert(menuTable, {title = utf8.codepointToUTF8(0x1F300) .. '  Cycles: ' .. (battery.cycles() or 'n/a')})
-  local healthcondition = battery.healthCondition()
-  if healthCondition then table.insert(menuTable, {title = utf8.codepointToUTF8(0x26A0) .. '  ' .. healthCondition}) end
-  table.insert(menuTable, {title = '-'})
-  table.insert(menuTable, {title = 'Raw Battery Data...', menu = rawBatteryData(battery.getAll())})
-  table.insert(menuTable, {title = '-'})
   table.insert(menuTable, {
-    title = 'Suppress Audio',
-    checked = suppressAudio,
-    fn = function()
+    title=utf8.codepointToUTF8(0x1F300) .. '  Cycles: ' .. (battery.cycles() or 'n/a')
+  })
+  local healthcondition = battery.healthCondition()
+  if healthCondition then table.insert(menuTable, {
+    title=utf8.codepointToUTF8(0x26A0) .. '  ' .. healthCondition
+  }) end
+  table.insert(menuTable, {title='-'})
+  table.insert(menuTable, {title='Raw Battery Data...', menu=rawBatteryData(battery.getAll())})
+  table.insert(menuTable, {title='-'})
+  table.insert(menuTable, {
+    title='Suppress Audio',
+    checked=suppressAudio,
+    fn=function()
       suppressAudio = not suppressAudio
       settings.set(suppressAudioKey, suppressAudio)
     end
@@ -290,7 +304,7 @@ module.stop = function()
   return module
 end
 module = setmetatable(module, {
-  __gc = function(self)
+  __gc=function(self)
     --         if powerWatcher then powerWatcher:stop() end
     if module.menuTitleChanger then module.menuTitleChanger:stop() end
   end
