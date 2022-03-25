@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.0.0...v1.1.0) (2022-03-25)
+
+
+### feat
+
+* add asm spaces module as git submodule ([830f366](https://github.com/vladdoster/hammerspoon-configuration/commit/830f366a6b071428801f1a88be06d34f8b7f5a47))
+* update keybinding Method ([a110b53](https://github.com/vladdoster/hammerspoon-configuration/commit/a110b53ba71233f8cd3311c834df8aca073f0f3c))
+
+### maint
+
+* fmtting and cleanup init.lua cruft ([ea3a212](https://github.com/vladdoster/hammerspoon-configuration/commit/ea3a212afdfa47d93e6c2d7d4a3d5c47e2a6d0fc))
+
 # 1.0.0 (2022-03-24)
 
 
