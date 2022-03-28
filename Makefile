@@ -11,8 +11,9 @@ install:
 
 .PHONY: $(DIRS)
 $(DIRS): install
-	$(MAKE) -C $@ install-lua
-	find $@ -name '*tar.gz' -print -exec tar xzvf {} \;
+	# $(MAKE) -C $@ install-lua || true
+	# $(MAKE) -C $@ install-universal || true
+	find $@ -name '*.tar.gz' -print -exec tar xzvf {} \;
 
 deps: ## Install Lua formatter via luarocks
 	luarocks install --server=https://luarocks.org/dev luaformatter

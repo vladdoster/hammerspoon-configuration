@@ -1,45 +1,57 @@
 local M = {}
-local hotkey = require'hs.hotkey'
-local window = require'hs.window'
-local spaces = require'hs.spaces'
+local hotkey = require('hs.hotkey')
+local window = require('hs.window')
+local spaces = require('hs.spaces')
 M.last = nil
 
 spaces.MCwaitTime = 0.1
 
 local function getGoodFocusedWindow(nofull)
   local win = window.focusedWindow()
-  if not win or not win:isStandard() then return end
-  if nofull and win:isFullScreen() then return end
+  if not win or not win:isStandard() then
+    return
+  end
+  if nofull and win:isFullScreen() then
+    return
+  end
   return win
 end
 
 local function flashScreen(screen)
   local flash = hs.canvas.new(screen:fullFrame()):appendElements({
-    action='fill',
-    fillColor={alpha=0.25, red=1},
-    type='rectangle'
+    action = 'fill',
+    fillColor = { alpha = 0.50, red = 1 },
+    type = 'rectangle',
   })
   flash:show()
-  hs.timer.doAfter(.15, function() flash:delete() end)
+  hs.timer.doAfter(0.15, function()
+    flash:delete()
+  end)
 end
 
 local function switchSpace(skip, dir)
   for i = 1, skip do
-    hs.eventtap.keyStroke({'ctrl', 'fn'}, dir, 0) -- "fn" is a bugfix!
+    hs.eventtap.keyStroke({ 'ctrl', 'fn' }, dir, 0) -- "fn" is a bugfix!
   end
 end
 
 local function moveWindowOneSpace(dir, switch)
   local win = getGoodFocusedWindow(true)
-  if not win then return end
+  if not win then
+    return
+  end
   local screen = win:screen()
   local uuid = screen:getUUID()
   local userSpaces = nil
   for k, v in pairs(spaces.allSpaces()) do
     userSpaces = v
-    if k == uuid then break end
+    if k == uuid then
+      break
+    end
   end
-  if not userSpaces then return end
+  if not userSpaces then
+    return
+  end
   local thisSpace = spaces.windowSpaces(win) -- first space win appears on
   if not thisSpace then
     return
@@ -60,6 +72,7 @@ local function moveWindowOneSpace(dir, switch)
           switchSpace(skipSpaces + 1, dir)
         end
         spaces.moveWindowToSpace(win, newSpace)
+        hs.notify.new({ title = 'Spaces', informativeText = 'Current space: ' .. newSpace .. '   ' .. dir }):send()
         return
       end
       last = spc -- Haven't found it yet...
@@ -69,14 +82,28 @@ local function moveWindowOneSpace(dir, switch)
   flashScreen(screen) -- Shouldn't get here, so no space found
 end
 
-local function createSpace() spaces.addSpaceToScreen() end
+local function createSpace()
+  spaces.addSpaceToScreen()
+end
 
-local mash, mashshift = {'ctrl', 'cmd'}, {'ctrl', 'cmd', 'shift'}
-hotkey.bind(mash, 'a', nil, function() moveWindowOneSpace('left', true) end)
-hotkey.bind(mash, 's', nil, function() moveWindowOneSpace('right', true) end)
-hotkey.bind(mashshift, 'a', nil, function() moveWindowOneSpace('left', false) end)
-hotkey.bind(mashshift, 's', nil, function() moveWindowOneSpace('right', false) end)
-hotkey.bind({'ctrl', 'cmd'}, 'n', nil, function() createSpace() end)
-hotkey.bind({'ctrl', 'cmd'}, 'n', nil, function() spaces.removeSpace(M.last) end)
+local mash, mashshift = { 'ctrl', 'cmd' }, { 'ctrl', 'cmd', 'shift' }
+hotkey.bind(mash, 'a', nil, function()
+  moveWindowOneSpace('left', true)
+end)
+hotkey.bind(mash, 's', nil, function()
+  moveWindowOneSpace('right', true)
+end)
+hotkey.bind(mashshift, 'a', nil, function()
+  moveWindowOneSpace('left', false)
+end)
+hotkey.bind(mashshift, 's', nil, function()
+  moveWindowOneSpace('right', false)
+end)
+hotkey.bind({ 'ctrl', 'cmd' }, 'n', nil, function()
+  createSpace()
+end)
+hotkey.bind({ 'ctrl', 'cmd' }, 'n', nil, function()
+  spaces.removeSpace(M.last)
+end)
 
 return M
