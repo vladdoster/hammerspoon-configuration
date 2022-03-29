@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.1.0...v1.2.0) (2022-03-29)
+
+
+### maint
+
+* stylua fmt ([fbc56ab](https://github.com/vladdoster/hammerspoon-configuration/commit/fbc56ab0e743aa25edc9749bc95c824da7b21260))
+
 # [1.1.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.0.0...v1.1.0) (2022-03-25)
 
 
