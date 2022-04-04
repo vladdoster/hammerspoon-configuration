@@ -118,8 +118,12 @@ local updateMenuTitle = function()
         timeValue = battery.timeToFullCharge()
       else
         timeValue = battery.timeRemaining()
+        text = utf8.codepointToUTF8(0x26A1)
+          .. '  Current Charge: '
+          .. string.format('%.2f%%', (battery.percentage() or 'n/a'))
+          .. ' @ '
+          .. battery.timeRemaining()
       end
-      text = text .. ((timeValue < 0) and '???' or string.format('%d:%02d', math.floor(timeValue / 60), timeValue % 60))
       local titleColor = {
         white = (host.interfaceStyle() == 'Dark') and 1 or 0,
       }

@@ -14,8 +14,6 @@ require('ext.dockTime').start()
 require('ext.infoDisplay').start()
 require('ext.isOnline'):start()
 
-
-
 M.windows = require 'ext.windows'
 M.windows.applicationToggle {
   e = 'kitty',
