@@ -1,27 +1,32 @@
 local M = {}
-
-local K = require("ext.keybind")
-
-require("ext.spoons")
-require("ext.battery")
-require("ext.dockTime").start()
-require("ext.infoDisplay").start()
-require("ext.navigation")
+local K = require 'ext.keybind'
 
 hs.window.animationDuration = 0.1
+-- Capture the hostname, so we can make this config behave differently across my Macs
+hostname = hs.host.localizedName()
+-- Ensure the IPC command line client is available
 hs.ipc.cliInstall()
 
-M.windows = require("ext.windows")
-M.windows.applicationToggle({
-	e = "kitty",
-	z = "Music",
-	q = "Vivaldi",
-})
+require 'ext.spoons'
+require 'ext.battery'
+require 'ext.navigation'
+require('ext.dockTime').start()
+require('ext.infoDisplay').start()
+require('ext.isOnline'):start()
+
+
+
+M.windows = require 'ext.windows'
+M.windows.applicationToggle {
+  e = 'kitty',
+  z = 'Music',
+  q = 'Vivaldi',
+}
 
 local keybinds = {}
-keybinds["h"] = hs.hints.windowHints
+keybinds['h'] = hs.hints.windowHints
 -- keybinds["t"] = require("ext.sysStats").toggle
-keybinds["y"] = hs.toggleConsole
+keybinds['y'] = hs.toggleConsole
 K.bind(keybinds)
 
-hs.notify.new({ title = "Hammerspoon", informativeText = "Config loaded" }):send()
+hs.notify.new({ title = 'Hammerspoon', informativeText = 'Config loaded' }):send()

@@ -1,8 +1,8 @@
 local module = {}
-local battery, canvas, fnutils = require('hs.battery'), require('hs.canvas'), require('hs.fnutils')
-local host, menubar, settings = require('hs.host'), require('hs._asm.guitk.menubar'), require('hs.settings')
+local battery, canvas, fnutils = require 'hs.battery', require 'hs.canvas', require 'hs.fnutils'
+local host, menubar, settings = require 'hs.host', require 'hs._asm.guitk.menubar', require 'hs.settings'
 local speech, styledtext, timer, utf8 =
-  require('hs.speech'), require('hs.styledtext'), require('hs.timer'), require('hs.utf8')
+  require 'hs.speech', require 'hs.styledtext', require 'hs.timer', require 'hs.utf8'
 local onAC, onBattery = utf8.codepointToUTF8(0x1F50C), utf8.codepointToUTF8(0x1F50B)
 local suppressAudioKey = '_asm.battery.suppressAudio'
 local suppressAudio = settings.get(suppressAudioKey) or false
@@ -18,7 +18,7 @@ module.batteryNotifications = {
     onBattery = true,
     percentage = 10,
     fn = function()
-      local alert = require('hs.alert')
+      local alert = require 'hs.alert'
       if not suppressAudio then
         local audio = require('hs.audiodevice').defaultOutputDevice()
         local volume, muted = audio:volume(), audio:muted()
@@ -39,9 +39,9 @@ module.batteryNotifications = {
               end
             end
           end)
-          :speak('WARNING: LOW BATTERY')
+          :speak 'WARNING: LOW BATTERY'
       end
-      alert.show('WARNING: LOW BATTERY')
+      alert.show 'WARNING: LOW BATTERY'
     end,
   },
   {
@@ -49,7 +49,7 @@ module.batteryNotifications = {
     onBattery = true,
     percentage = 5,
     fn = function()
-      local alert = require('hs.alert')
+      local alert = require 'hs.alert'
       if not suppressAudio then
         local audio = require('hs.audiodevice').defaultOutputDevice()
         local volume, muted = audio:volume(), audio:muted()
@@ -71,9 +71,9 @@ module.batteryNotifications = {
               end
             end
           end)
-          :speak('WARNING: BATTERY AT 5%')
+          :speak 'WARNING: BATTERY AT 5%'
       end
-      alert.show('WARNING: BATTERY AT 5%')
+      alert.show 'WARNING: BATTERY AT 5%'
     end,
   },
   {
@@ -81,7 +81,7 @@ module.batteryNotifications = {
     onBattery = true,
     timeRemaining = 30,
     fn = function()
-      local alert = require('hs.alert')
+      local alert = require 'hs.alert'
       alert.show('Battery has ' .. tostring(math.floor(battery.timeRemaining())) .. ' minutes left...', 10)
     end,
   },
@@ -91,7 +91,7 @@ module.batteryNotifications = {
     percentage = 10,
     fn = function()
       if not suppressAudio then
-        local sp = speech.new('Zarvox'):speak('Feeling returning to my circuits')
+        local sp = speech.new('Zarvox'):speak 'Feeling returning to my circuits'
       end
     end,
   },
@@ -101,9 +101,8 @@ module.batteryNotifications = {
     percentage = 90,
     fn = function()
       if not suppressAudio then
-        local sp = speech.new('Zarvox'):speak(
-          'I\'m feeling [[inpt PHON; rate 80]]+mUXC[[inpt TEXT; rset 0]] better [[emph +]]now'
-        )
+        local sp =
+          speech.new('Zarvox'):speak 'I\'m feeling [[inpt PHON; rate 80]]+mUXC[[inpt TEXT; rset 0]] better [[emph +]]now'
       end
     end,
   },
@@ -121,9 +120,11 @@ local updateMenuTitle = function()
         timeValue = battery.timeRemaining()
       end
       text = text .. ((timeValue < 0) and '???' or string.format('%d:%02d', math.floor(timeValue / 60), timeValue % 60))
-      local titleColor = { white = (host.interfaceStyle() == 'Dark') and 1 or 0 }
+      local titleColor = {
+        white = (host.interfaceStyle() == 'Dark') and 1 or 0,
+      }
       titleText = styledtext.new(text, {
-        font = { name = 'IBM Plex Mono', size = 9 },
+        font = { name = 'IBMPlexMono', size = 9 },
         color = titleColor,
         paragraphStyle = { alignment = 'center' },
       })
@@ -132,7 +133,7 @@ local updateMenuTitle = function()
     -- causes multi-line text to push upper liness off top of
     -- menubar; this converts it to an image which is allowed
     -- the full menubar height for display
-    local c = canvas.new({ x = 0, y = 0, h = 0, w = 0 })
+    local c = canvas.new { x = 0, y = 0, h = 0, w = 0 }
     c:frame(c:minimumTextSize(titleText))
     c[1] = { type = 'text', text = titleText }
     menuUserData:setIcon(c:imageFromCanvas())
@@ -245,16 +246,23 @@ local rawBatteryData
 rawBatteryData = function(tbl)
   local data = {}
   local rawStyle = {
-    font = { name = 'IBM Plex Mono', size = 10 },
+    font = { name = 'IBMPlexMono', size = 10 },
     -- apparently a true white based color gets automatically adjusted based on enabled
     -- status, but an RGB white doesn't; this is more visible, especially when in Dark mode
     color = { blue = 0.5, green = 0.5, red = 0.5 },
   }
   for i, v in fnutils.sortByKeys(tbl) do
     if type(v) ~= 'table' then
-      table.insert(data, { title = styledtext.new(i .. ' = ' .. tostring(v), rawStyle), disabled = true })
+      table.insert(data, {
+        title = styledtext.new(i .. ' = ' .. tostring(v), rawStyle),
+        disabled = true,
+      })
     else
-      table.insert(data, { title = styledtext.new(i, rawStyle), menu = rawBatteryData(v), disabled = not next(v) })
+      table.insert(data, {
+        title = styledtext.new(i, rawStyle),
+        menu = rawBatteryData(v),
+        disabled = not next(v),
+      })
     end
   end
   return data
@@ -309,7 +317,9 @@ local displayBatteryData = function(modifier)
       100 * maxCapacity / designCapacity
     ) or 'n/a'),
   })
-  table.insert(menuTable, { title = utf8.codepointToUTF8(0x1F300) .. '  Cycles: ' .. (battery.cycles() or 'n/a') })
+  table.insert(menuTable, {
+    title = utf8.codepointToUTF8(0x1F300) .. '  Cycles: ' .. (battery.cycles() or 'n/a'),
+  })
   local healthcondition = battery.healthCondition()
   if healthCondition then
     table.insert(menuTable, { title = utf8.codepointToUTF8(0x26A0) .. '  ' .. healthCondition })

@@ -1,7 +1,7 @@
 -- a more modern take on https://github.com/szymonkaliski/Dotfiles/blob/ae42c100a56c26bc65f6e3ca2ad36e30b558ba10/Dotfiles/hammerspoon/utils/spaces/dots.lua
-local spaces = require('hs.spaces')
-local screen = require('hs.screen')
-local canvas = require('hs.canvas')
+local spaces = require 'hs.spaces'
+local screen = require 'hs.screen'
+local canvas = require 'hs.canvas'
 
 local module = {}
 -- display as circle or "squashed rounded rect"

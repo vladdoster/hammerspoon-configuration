@@ -1,13 +1,18 @@
-local canvas = require('hs.canvas')
-local dockicon = require('hs.dockicon')
-local timer = require('hs.timer')
+local canvas = require 'hs.canvas'
+local dockicon = require 'hs.dockicon'
+local timer = require 'hs.timer'
 
 local timeString = '%R:%S\n%A\n%D'
 local module = {}
 
 local tileSize = dockicon.tileSize()
-local _canvas = canvas.new({ x = 0, y = 0, h = tileSize.h, w = tileSize.w })
-_canvas[#_canvas + 1] = { id = 'time', type = 'text', text = '', textAlignment = 'center' }
+local _canvas = canvas.new { x = 0, y = 0, h = tileSize.h, w = tileSize.w }
+_canvas[#_canvas + 1] = {
+  id = 'time',
+  type = 'text',
+  text = '',
+  textAlignment = 'center',
+}
 
 local _timer = timer.doEvery(1, function()
   local output = os.date(timeString)
