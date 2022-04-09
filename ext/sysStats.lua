@@ -141,10 +141,7 @@ obj.updateDisplay = function(cpuUsage)
     final = final
       .. lineBreak
       .. stext.new('Last check: ' .. os.date '%c', {
-        font = stext.convertFont(
-          { name = obj.baseFont.name, size = obj.baseFont.size - 2 },
-          stext.fontTraits.italicFont
-        ),
+        font = stext.convertFont({ name = obj.baseFont.name, size = obj.baseFont.size - 2 }, stext.fontTraits.italicFont),
         color = { list = 'ansiTerminalColors', name = 'fgBlack' },
         paragraphStyle = { alignment = 'right' },
       })

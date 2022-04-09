@@ -1,8 +1,7 @@
 local module = {}
 local battery, canvas, fnutils = require 'hs.battery', require 'hs.canvas', require 'hs.fnutils'
 local host, menubar, settings = require 'hs.host', require 'hs._asm.guitk.menubar', require 'hs.settings'
-local speech, styledtext, timer, utf8 =
-  require 'hs.speech', require 'hs.styledtext', require 'hs.timer', require 'hs.utf8'
+local speech, styledtext, timer, utf8 = require 'hs.speech', require 'hs.styledtext', require 'hs.timer', require 'hs.utf8'
 local onAC, onBattery = utf8.codepointToUTF8(0x1F50C), utf8.codepointToUTF8(0x1F50B)
 local suppressAudioKey = '_asm.battery.suppressAudio'
 local suppressAudio = settings.get(suppressAudioKey) or false
@@ -101,8 +100,7 @@ module.batteryNotifications = {
     percentage = 90,
     fn = function()
       if not suppressAudio then
-        local sp =
-          speech.new('Zarvox'):speak 'I\'m feeling [[inpt PHON; rate 80]]+mUXC[[inpt TEXT; rset 0]] better [[emph +]]now'
+        local sp = speech.new('Zarvox'):speak 'I\'m feeling [[inpt PHON; rate 80]]+mUXC[[inpt TEXT; rset 0]] better [[emph +]]now'
       end
     end,
   },
@@ -290,10 +288,7 @@ local displayBatteryData = function(modifier)
   end
   table.insert(menuTable, { title = '-' })
   table.insert(menuTable, {
-    title = utf8.codepointToUTF8(0x26A1) .. '  Current Charge: ' .. string.format(
-      '%.2f%%',
-      (battery.percentage() or 'n/a')
-    ),
+    title = utf8.codepointToUTF8(0x26A1) .. '  Current Charge: ' .. string.format('%.2f%%', (battery.percentage() or 'n/a')),
   })
   local timeTitle, timeValue = utf8.codepointToUTF8(0x1F552) .. '  ', nil
   if batteryPowerSource() == 'AC Power' then

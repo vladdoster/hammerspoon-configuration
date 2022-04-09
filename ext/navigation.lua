@@ -89,23 +89,23 @@ local function createSpace()
   spaces.addSpaceToScreen()
 end
 
-local mash, mashshift = { 'ctrl', 'cmd' }, { 'ctrl', 'cmd', 'shift' }
+local mash, mashShift = { 'ctrl', 'cmd' }, { 'ctrl', 'cmd', 'shift' }
 hotkey.bind(mash, 'a', nil, function()
   moveWindowOneSpace('left', true)
 end)
 hotkey.bind(mash, 's', nil, function()
   moveWindowOneSpace('right', true)
 end)
-hotkey.bind(mashshift, 'a', nil, function()
+hotkey.bind(mashShift, 'a', nil, function()
   moveWindowOneSpace('left', false)
 end)
-hotkey.bind(mashshift, 's', nil, function()
+hotkey.bind(mashShift, 's', nil, function()
   moveWindowOneSpace('right', false)
 end)
-hotkey.bind({ 'ctrl', 'cmd' }, 'n', nil, function()
+hotkey.bind(mash, 'n', nil, function()
   createSpace()
 end)
-hotkey.bind({ 'ctrl', 'cmd' }, 'n', nil, function()
+hotkey.bind(mashShift, 'n', nil, function()
   spaces.removeSpace(M.last)
 end)
 
