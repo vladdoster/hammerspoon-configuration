@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.2.0...v1.3.0) (2022-04-09)
+
+
+### feat
+
+* refactor out init.lua into individual modules so I DRM' block ([a1e38f7](https://github.com/vladdoster/hammerspoon-configuration/commit/a1e38f748f4d7e86479d06beb5651b9e8d620fcb))
+
+### maint
+
+* clean up init.lua and battery ext ([eea840e](https://github.com/vladdoster/hammerspoon-configuration/commit/eea840e2f8c3e0ca27c931636256d6b83e155089))
+* update Makefile to compile asm Hammerspoon modules ([e03e39e](https://github.com/vladdoster/hammerspoon-configuration/commit/e03e39e2dc4dc5f64445a96049565cfb94f10e0e))
+
 # [1.2.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.1.0...v1.2.0) (2022-03-29)
 
 
