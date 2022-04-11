@@ -23,8 +23,7 @@ line_breaks_after_function_body: 1
 no_spaces_around_equals_in_field: true
 single_quote_to_double_quote: false
 spaces_around_equals_in_field: false
-spaces_before_call: 0
+spaces_before_call: 1
 tab_width: 2
 table_sep: ','
 use_tab: false
-

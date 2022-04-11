@@ -8,16 +8,14 @@ local module = {}
 module.circle = true
 module.radius = 4
 module.distance = 16
-module.color = { white = 0.7, alpha = 0.45 }
-module.selectedColor = { white = 0.7, alpha = 0.95 }
-module.activeColor = { green = 0.5, alpha = 0.75 }
+module.color = {white=0.7, alpha=0.45}
+module.selectedColor = {white=0.7, alpha=0.95}
+module.activeColor = {green=0.5, alpha=0.75}
 
-local cache = { running = false, watchers = {}, dots = {} }
+local cache = {running=false, watchers={}, dots={}}
 
 local clearDots = function()
-  for _, v in pairs(cache.dots) do
-    v:hide():delete()
-  end
+  for _, v in pairs(cache.dots) do v:hide():delete() end
   cache.dots = {}
 end
 
@@ -34,26 +32,25 @@ local drawDots = function()
 
     if displaySpaces then -- (NEED TO CONFIRM) when screens don't have separate spaces, it won't appear in the layout
       local dotCanvas = canvas.new({
-        x = displayFrame.x + (displayFrame.w - (module.radius * 2 + (#displaySpaces - 1) * module.distance)) / 2,
-        y = displayFrame.y - 20 + displayFrame.h - module.radius * (module.circle and 2 or 1),
-        w = module.radius * 2 + (#displaySpaces - 1) * module.distance,
-        h = module.radius * (module.circle and 2 or 1),
+        x=displayFrame.x + (displayFrame.w - (module.radius * 2 + (#displaySpaces - 1) * module.distance)) / 2,
+        y=displayFrame.y - 20 + displayFrame.h - module.radius * (module.circle and 2 or 1),
+        w=module.radius * 2 + (#displaySpaces - 1) * module.distance,
+        h=module.radius * (module.circle and 2 or 1)
       }):behavior(canvas.windowBehaviors.canJoinAllSpaces):level(canvas.windowLevels.popUpMenu):show()
 
       for i = 1, #displaySpaces, 1 do
         local spaceID = displaySpaces[i]
         dotCanvas[i] = {
-          id = tostring(spaceID),
-          type = 'circle',
-          action = 'fill',
-          center = {
-            x = (i - 1) * module.distance + module.radius,
-            y = module.radius / (module.circle and 1 or 2),
+          id=tostring(spaceID),
+          type='circle',
+          action='fill',
+          center={
+            x=(i - 1) * module.distance + module.radius,
+            y=module.radius / (module.circle and 1 or 2)
           },
-          radius = module.radius,
-          fillColor = (spaceID == focusedSpace and module.activeColor)
-            or (spaceID == activeSpaces[displayUUID] and module.selectedColor)
-            or module.color,
+          radius=module.radius,
+          fillColor=(spaceID == focusedSpace and module.activeColor)
+            or (spaceID == activeSpaces[displayUUID] and module.selectedColor) or module.color
         }
       end
       cache.dots[displayUUID] = dotCanvas
@@ -74,9 +71,7 @@ end
 
 module.stop = function()
   if cache.running then
-    for _, v in pairs(cache.watchers) do
-      v:stop()
-    end
+    for _, v in pairs(cache.watchers) do v:stop() end
     cache.watchers = {}
     clearDots()
     cache.running = false
