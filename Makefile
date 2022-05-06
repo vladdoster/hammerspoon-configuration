@@ -1,7 +1,7 @@
 MAKEFILES:=$(shell find . -mindepth 5 -name Makefile -type f)
 DIRS:=$(foreach m,$(MAKEFILES),$(realpath $(dir $(m))))
 
-all: $(DIRS)
+all: install $(DIRS)
 
 install:
 	git submodule update --init --recursive
