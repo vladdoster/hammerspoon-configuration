@@ -1,3 +1,20 @@
+# [1.4.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.3.0...v1.4.0) (2022-05-06)
+
+
+### feat
+
+* add volume module ([ad3fcd7](https://github.com/vladdoster/hammerspoon-configuration/commit/ad3fcd70593a5d98e3d09672d0f27afdd1b62c92))
+* switch back to lua-format ([1f5b14e](https://github.com/vladdoster/hammerspoon-configuration/commit/1f5b14ea7413bb6f66f01628263a61afc9ad7f01))
+
+### maint
+
+* remove broken configuration modules until I can fix ([cf7b428](https://github.com/vladdoster/hammerspoon-configuration/commit/cf7b4283d350271a9777e112fba4213efeb001b4))
+* run install target when installing git submodules ([e23f23c](https://github.com/vladdoster/hammerspoon-configuration/commit/e23f23cc2d9ca43056dd74a6a2601e42a2a2521f))
+
+### style
+
+* adjust stylua line length ([55998c7](https://github.com/vladdoster/hammerspoon-configuration/commit/55998c7cbf0ccd63a45bdbe75e5399a63d92c11a))
+
 # [1.3.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.2.0...v1.3.0) (2022-04-09)
 
 
