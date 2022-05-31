@@ -50,7 +50,7 @@ local drawDots = function()
           },
           radius=module.radius,
           fillColor=(spaceID == focusedSpace and module.activeColor)
-            or (spaceID == activeSpaces[displayUUID] and module.selectedColor) or module.color
+              or (spaceID == activeSpaces[displayUUID] and module.selectedColor) or module.color
         }
       end
       cache.dots[displayUUID] = dotCanvas

@@ -149,7 +149,7 @@ end
 module.switcher = function()
   if module._chooser == nil then
     module._chooser = hs.chooser.new(function(choice) if choice ~= nil then choice.win:focus() end end):bgDark(true)
-                        :placeholderText('Switch to Window'):searchSubText(true)
+                          :placeholderText('Switch to Window'):searchSubText(true)
   elseif module._chooser:isVisible() then
     module._chooser:hide()
     return
