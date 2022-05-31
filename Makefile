@@ -13,9 +13,9 @@ deps: ## Install Lua formatter via luarocks
 	luarocks install --server=https://luarocks.org/dev luaformatter
 
 format:
-	@find . -name '*.lua' -print -exec \
+	find . -name '*.lua' -maxdepth 2 -print -exec \
 		lua-format \
-		--config .lua_format.yml \
+		--config $$(PWD)/.lua_format.yml \
 		--in-place \
 		-- {} \;
 	# @find . \
@@ -23,4 +23,5 @@ format:
 	# 	-print \
 	# 	-exec stylua -f $$PWD/.stylua.toml  {} \;
 	#
-.PHONY: all install $(DIRS)
+.PHONY:  all deps format install $(DIRS)
+.SILENT: all deps format install $(DIRS)
