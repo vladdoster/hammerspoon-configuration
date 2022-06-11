@@ -1,14 +1,14 @@
-local module = {}
-local menubar = require('hs.menubar')
-local utf8 = require('hs.utf8')
+local M = {}
 local battery = require('hs.battery')
+local canvas = require('hs.canvas')
 local fnutils = require('hs.fnutils')
+local host = require('hs.host')
+local menubar = require('hs.menubar')
 local settings = require('hs.settings')
 local speech = require('hs.speech')
 local styledtext = require('hs.styledtext')
 local timer = require('hs.timer')
-local host = require('hs.host')
-local canvas = require('hs.canvas')
+local utf8 = require('hs.utf8')
 local onAC = utf8.codepointToUTF8(0x1F50C) -- plug
 local onBattery = utf8.codepointToUTF8(0x1F50B) -- battery
 local suppressAudioKey = '_asm.battery.suppressAudio'
@@ -17,7 +17,7 @@ local menuUserData = nil
 local currentPowerSource = ''
 local batteryPowerSource = function() return battery.powerSource() or 'no battery' end
 -- Some "notifications" to apply... need to update battery watcher to do these
-module.batteryNotifications = {
+M.batteryNotifications = {
   {
     onBattery=true,
     percentage=10,
@@ -141,7 +141,9 @@ local powerSourceChangeFN = function(justOn)
     }
     if currentPowerSource ~= newPowerSource then
       currentPowerSource = newPowerSource
-      for i, v in ipairs(module.batteryNotifications) do
+      hs.brightness.set(100)
+      print('--- power source changed - set brightness to 100')
+      for i, v in ipairs(M.batteryNotifications) do
         if newPowerSource == 'AC Power' then
           if not v.onBattery then
             if v.percentage and test.percentage > v.percentage then notificationStatus[i] = test.timeStamp end
@@ -157,7 +159,7 @@ local powerSourceChangeFN = function(justOn)
       end
     end
     if not justOn then
-      for i, v in ipairs(module.batteryNotifications) do
+      for i, v in ipairs(M.batteryNotifications) do
         if v.onBattery == test.onBattery then
           local shouldWeDoSomething = false
           if not notificationStatus[i] then
@@ -190,7 +192,7 @@ local powerSourceChangeFN = function(justOn)
         end
       end
     else
-      for i, v in ipairs(module.batteryNotifications) do
+      for i, v in ipairs(M.batteryNotifications) do
         if v.onBattery == test.onBattery then
           local shouldWeDoSomething = false
           if v.percentage then
@@ -271,10 +273,6 @@ local displayBatteryData = function(modifier)
   table.insert(menuTable, {
     title=utf8.codepointToUTF8(0x1F300) .. '  Cycles: ' .. (battery.cycles() or 'n/a')
   })
-  local healthcondition = battery.healthCondition()
-  if healthCondition then table.insert(menuTable, {
-    title=utf8.codepointToUTF8(0x26A0) .. '  ' .. healthCondition
-  }) end
   table.insert(menuTable, {title='-'})
   table.insert(menuTable, {title='Raw Battery Data...', menu=rawBatteryData(battery.getAll())})
   table.insert(menuTable, {title='-'})
@@ -288,22 +286,21 @@ local displayBatteryData = function(modifier)
   })
   return menuTable
 end
-module.start = function()
+M.start = function()
   menuUserData, currentPowerSource = menubar.new(), ''
   powerSourceChangeFN(true)
   menuUserData:setMenu(displayBatteryData)
-  module.menuTitleChanger = timer.doEvery(5, powerSourceChangeFN)
-  module.menuUserdata = menuUserData -- for debugging, may remove in the future
-  return module
+  M.menuTitleChanger = timer.doEvery(5, powerSourceChangeFN)
+  M.menuUserdata = menuUserData -- for debugging, may remove in the future
+  return M
 end
-module.stop = function()
-  module.menuTitleChanger:stop()
-  module.menuTitleChanger = nil
+M.stop = function()
+  M.menuTitleChanger:stop()
+  M.menuTitleChanger = nil
   menuUserData = menuUserData:delete()
-  return module
+  return M
 end
-module = setmetatable(module,
-                      {
-  __gc=function(self) if module.menuTitleChanger then module.menuTitleChanger:stop() end end
+M = setmetatable(M, {
+  __gc=function(self) if M.menuTitleChanger then M.menuTitleChanger:stop() end end
 })
-return module.start()
+return M.start()
