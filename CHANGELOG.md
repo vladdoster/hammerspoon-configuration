@@ -1,3 +1,32 @@
+# [1.5.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.4.0...v1.5.0) (2022-06-25)
+
+
+### feat
+
+* add less-laggy clipboard HS module ([df11d2a](https://github.com/vladdoster/hammerspoon-configuration/commit/df11d2a52d1db6925697f86a0a462016e36ac6c1))
+* set brightness to 100 on pwr src change ([39b59d6](https://github.com/vladdoster/hammerspoon-configuration/commit/39b59d650e9aa1282fc99e7fc87b7a595052678c))
+
+### fix
+
+* Make targets silenced and more specific ([fc55a7e](https://github.com/vladdoster/hammerspoon-configuration/commit/fc55a7e6c2a3860b614f07ceef004e6ff0bbb50a))
+* remove `v1.5.0` from CHANGELOG so CI passes ([145e3cb](https://github.com/vladdoster/hammerspoon-configuration/commit/145e3cb915c9c4ff21af8084986f4fbf43a3da4f))
+* remove release version bump check in README.md ([fa9e2c1](https://github.com/vladdoster/hammerspoon-configuration/commit/fa9e2c19f232fada84d808373823da8afe2d8a79))
+* revert version to appease CI ([e242931](https://github.com/vladdoster/hammerspoon-configuration/commit/e2429311f1b00df0362e5f9d9e7a87fbd72c9240))
+* semantic release configuration ([384f230](https://github.com/vladdoster/hammerspoon-configuration/commit/384f230862a5130782442d47956f690fd6f0cccf))
+
+### maint
+
+* update git submodules ([451772e](https://github.com/vladdoster/hammerspoon-configuration/commit/451772e887af8029ce4d7d70e4a2d0269d796d3b))
+
+### release
+
+* v1.4.0 → v1.5.0 ([b5f19fd](https://github.com/vladdoster/hammerspoon-configuration/commit/b5f19fde31562759230766c5883777af46e968fa))
+
+### style
+
+* apply lua format styling to extensions ([d52ec09](https://github.com/vladdoster/hammerspoon-configuration/commit/d52ec09e9fb82d9fd38decac61854fe856321721))
+* update lua format configuration ([d795280](https://github.com/vladdoster/hammerspoon-configuration/commit/d795280eb723d83d5d24229b67692ba8789e6554))
+
 # [1.4.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.3.0...v1.4.0) (2022-05-06)
 
 
