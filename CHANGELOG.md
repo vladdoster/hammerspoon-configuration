@@ -1,3 +1,24 @@
+# [1.5.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.4.0...v1.5.0) (2022-06-25)
+
+
+### feat
+
+* add less-laggy clipboard HS module ([df11d2a](https://github.com/vladdoster/hammerspoon-configuration/commit/df11d2a52d1db6925697f86a0a462016e36ac6c1))
+* set brightness to 100 on pwr src change ([39b59d6](https://github.com/vladdoster/hammerspoon-configuration/commit/39b59d650e9aa1282fc99e7fc87b7a595052678c))
+
+### fix
+
+* Make targets silenced and more specific ([fc55a7e](https://github.com/vladdoster/hammerspoon-configuration/commit/fc55a7e6c2a3860b614f07ceef004e6ff0bbb50a))
+
+### maint
+
+* update git submodules ([451772e](https://github.com/vladdoster/hammerspoon-configuration/commit/451772e887af8029ce4d7d70e4a2d0269d796d3b))
+
+### style
+
+* apply lua format styling to extensions ([d52ec09](https://github.com/vladdoster/hammerspoon-configuration/commit/d52ec09e9fb82d9fd38decac61854fe856321721))
+* update lua format configuration ([d795280](https://github.com/vladdoster/hammerspoon-configuration/commit/d795280eb723d83d5d24229b67692ba8789e6554))
+
 # [1.4.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.3.0...v1.4.0) (2022-05-06)
 
 
