@@ -1,34 +1,91 @@
 {
   "repositoryUrl": "https://github.com/vladdoster/hammerspoon-configuration",
   "plugins": [
-    ["@semantic-release/commit-analyzer", {
-      "preset": "eslint",
-      "releaseRules": [
-        {"tag": "build", "release": "patch"},
-        {"tag": "chore", "release": "patch"},
-        {"tag": "docs",  "release": "patch"},
-        {"tag": "feat",  "release": "minor"},
-        {"tag": "fix",   "release": "patch"},
-        {"tag": "maint", "release": "minor"},
-        {"tag": "new",   "release": "minor"}
-      ]
-    }],
-    ["@google/semantic-release-replace-plugin", {
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "eslint",
+        "releaseRules": [
+          {
+            "tag": "build",
+            "release": "patch"
+          },
+          {
+            "tag": "chore",
+            "release": "patch"
+          },
+          {
+            "tag": "docs",
+            "release": "patch"
+          },
+          {
+            "tag": "fix",
+            "release": "patch"
+          },
+          {
+            "tag": "feat",
+            "release": "minor"
+          },
+          {
+            "tag": "new",
+            "release": "minor"
+          },
+          {
+            "tag": "refactor",
+            "release": "major"
+          },
+          {
+            "tag": "update",
+            "release": "minor"
+          }
+        ]
+      }
+    ],
+    [
+      "@google/semantic-release-replace-plugin",
+      {
         "replacements": [
           {
-            "files": ["VERSION"],
-            "from": "^([0-9]).+([0-9]).+([0-9])$",
-            "to": "${nextRelease.version}",
-            "results": [ { "file": "VERSION", "hasChanged": true }
+            "files": [
+              "README.md",
+              "VERSION"
+            ],
+            "from": "v([0-9]).+([0-9]).+([0-9])",
+            "to": "v${nextRelease.version}",
+            "results": [
+              {
+                "file": "README.md",
+                "hasChanged": true
+              },
+              {
+                "file": "VERSION",
+                "hasChanged": true
+              }
             ]
           }
         ]
       }
     ],
-    ["@semantic-release/release-notes-generator", { "preset": "eslint" }],
-    ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" } ],
-    ["@semantic-release/git", {
-        "assets": ["CHANGELOG.md", "VERSION"],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "eslint"
+      }
+    ],
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "README.md",
+          "CHANGELOG.md",
+          "VERSION"
+        ],
         "message": "release: v${lastRelease.version} → v${nextRelease.version}\n\n${nextRelease.notes}"
       }
     ],
