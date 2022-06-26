@@ -28,7 +28,7 @@ module.normalBorderColor = {white=0}
 module.movableBorderColor = {red=1}
 
 -- set the default inactiveAlpha (changes only visible after mouse enters and exits virtual touchbar)
-module.inactiveAlpha = .4
+module.inactiveAlpha = 0.4
 
 local touchbar = require('hs._asm.undocumented.touchbar')
 local eventtap = require('hs.eventtap')
@@ -42,7 +42,7 @@ end
 
 local showNormalState = function()
   module.touchbar:backgroundColor(module.normalBorderColor):movable(false):acceptsMouseEvents(true):inactiveAlpha(
-      module.inactiveAlpha) -- in case it changed
+    module.inactiveAlpha) -- in case it changed
   if hs.execute('defaults read com.apple.dock autohide') == '1\n' then
     module.touchbar:level(20)
   else
@@ -89,7 +89,7 @@ end
 -- we only care about events other than flagsChanged that should *stop* a current count down
 module.eventwatcher = eventtap.new({events.flagsChanged, events.keyDown, events.leftMouseDown}, function(ev)
   -- synthesized events set 0x20000000 and we may or may not get the nonCoalesced bit, so filter them out
-  local rawFlags = ev:getRawEventData().CGEventData.flags & 0xdffffeff
+  local rawFlags = ev:getRawEventData().CGEventData.flags and 0xdffffeff
   rightOptPressed = false
   if ev:getType() == events.flagsChanged and rawFlags == 524352 then
     rightOptPressed = true

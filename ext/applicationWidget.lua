@@ -4,10 +4,10 @@
 local module = {}
 local USERDATA_TAG = 'applicationsWidget'
 
-local canvas = require 'hs.canvas'
-local settings = require 'hs.settings'
-local image = require 'hs.image'
-local application = require 'hs.application'
+local canvas = require('hs.canvas')
+local settings = require('hs.settings')
+local image = require('hs.image')
+local application = require('hs.application')
 
 local _bundleIDs = settings.get(USERDATA_TAG)
 if not _bundleIDs then
@@ -50,7 +50,7 @@ local updateCanvas = function()
       image=image.imageFromAppBundle(v)
     }
   end
-  _canvas:size{h=42, w=#_bundleIDs * 37 + 5}
+  _canvas:size({h=42, w=#_bundleIDs * 37 + 5})
 end
 updateCanvas()
 

@@ -1,7 +1,7 @@
 local M = {}
-local alert = require 'hs.alert'
-local audio_device = require 'hs.audiodevice'
-local bind = require'hs.hotkey'.bind
+local alert = require('hs.alert')
+local audio_device = require('hs.audiodevice')
+local bind = require('hs.hotkey').bind
 local hyper = {'cmd', 'alt', 'ctrl'}
 
 M.changeVolume = function(diff)

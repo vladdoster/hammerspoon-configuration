@@ -5,22 +5,18 @@
 --   * document
 --   * make appropriate for use outside of panel (behavior, level, etc)
 --   * check memory usage; can we differentiate between truly in use vs disk caching to get a better idea of true "Free" memory?
-local canvas = require 'hs.canvas'
-local battery = require 'hs.battery'
-local timer = require 'hs.timer'
-local stext = require 'hs.styledtext'
-local host = require 'hs.host'
+local canvas = require('hs.canvas')
+local battery = require('hs.battery')
+local timer = require('hs.timer')
+local stext = require('hs.styledtext')
+local host = require('hs.host')
 local obj = {}
 
 local newFullBarGuage = function(barWidth)
   barWidth = barWidth or obj.barWidth
-  return stext.new {
+  return stext.new({
     string.rep('|', barWidth),
-    {
-      starts=1,
-      ends=barWidth / 2,
-      attributes={font=obj.baseFont, color={list='ansiTerminalColors', name='fgGreen'}}
-    },
+    {starts=1, ends=barWidth / 2, attributes={font=obj.baseFont, color={list='ansiTerminalColors', name='fgGreen'}}},
     {
       starts=barWidth / 2 + 1,
       ends=3 * barWidth / 4,
@@ -31,7 +27,7 @@ local newFullBarGuage = function(barWidth)
       ends=barWidth,
       attributes={font=obj.baseFont, color={list='ansiTerminalColors', name='fgRed'}}
     }
-  }
+  })
 end
 
 obj.updateDisplay = function(cpuUsage)
@@ -45,16 +41,14 @@ obj.updateDisplay = function(cpuUsage)
     cpuGuage = cpuGuage:setStyle({color=obj.emptyBar}, math.ceil(obj.barWidth * cpuActive / 100), #cpuGuage)
   end
 
-  cpuGuage = stext.new('CPU ', {
-    font=obj.baseFont,
-    color={list='ansiTerminalColors', name='fgBlack'}
-  }) .. cpuGuage .. stext.new(string.format(' %3d%% utilization', cpuActive), {
-    font=obj.baseFont,
-    color={
-      list='ansiTerminalColors',
-      name=(cpuActive > 75) and 'fgRed' or ((cpuActive > 50) and 'fgYellow' or 'fgGreen')
-    }
-  })
+  cpuGuage = stext.new('CPU ', {font=obj.baseFont, color={list='ansiTerminalColors', name='fgBlack'}}) .. cpuGuage
+               .. stext.new(string.format(' %3d%% utilization', cpuActive), {
+      font=obj.baseFont,
+      color={
+        list='ansiTerminalColors',
+        name=(cpuActive > 75) and 'fgRed' or ((cpuActive > 50) and 'fgYellow' or 'fgGreen')
+      }
+    })
 
   -- RAM Usage
 
@@ -72,18 +66,12 @@ obj.updateDisplay = function(cpuUsage)
 
   ramGuage = ramGuage:setStyle({color=obj.emptyBar}, math.ceil(obj.barWidth * percentInUse), #ramGuage)
 
-  ramGuage = stext.new('RAM ', {
-    font=obj.baseFont,
-    color={list='ansiTerminalColors', name='fgBlack'}
-  }) .. ramGuage
+  ramGuage = stext.new('RAM ', {font=obj.baseFont, color={list='ansiTerminalColors', name='fgBlack'}}) .. ramGuage
 
   local active = math.floor(100 * percentInUse)
   ramGuage = ramGuage .. stext.new(string.format(' %3d%% used, %.2fGB free', active, totalFree), {
     font=obj.baseFont,
-    color={
-      list='ansiTerminalColors',
-      name=(active > 75) and 'fgRed' or ((active > 50) and 'fgYellow' or 'fgGreen')
-    }
+    color={list='ansiTerminalColors', name=(active > 75) and 'fgRed' or ((active > 50) and 'fgYellow' or 'fgGreen')}
   })
 
   -- Battery Usage
@@ -96,19 +84,14 @@ obj.updateDisplay = function(cpuUsage)
   percentInUse = max_charge and cur_charge and (cur_charge / max_charge) or 0
   batteryGuage = batteryGuage:setStyle({color=obj.emptyBar}, 1, math.ceil(obj.barWidth * (1 - percentInUse)))
 
-  batteryGuage = stext.new('Bat ', {
-    font=obj.baseFont,
-    color={list='ansiTerminalColors', name='fgBlack'}
-  }) .. batteryGuage
+  batteryGuage = stext.new('Bat ', {font=obj.baseFont, color={list='ansiTerminalColors', name='fgBlack'}})
+                   .. batteryGuage
 
   if max_charge and cur_charge then
     local avail = math.floor(100 * percentInUse)
     batteryGuage = batteryGuage .. stext.new(string.format(' %3d%% charged, %d mAh', avail, cur_charge), {
       font=obj.baseFont,
-      color={
-        list='ansiTerminalColors',
-        name=(avail > 50) and 'fgGreen' or ((avail > 25) and 'fgYellow' or 'fgRed')
-      }
+      color={list='ansiTerminalColors', name=(avail > 50) and 'fgGreen' or ((avail > 25) and 'fgYellow' or 'fgRed')}
     })
   else
     batteryGuage = batteryGuage .. stext.new(' n/a', {
@@ -126,7 +109,7 @@ obj.updateDisplay = function(cpuUsage)
   local final = cpuGuage .. lineBreak .. ramGuage .. lineBreak .. batteryGuage
 
   if obj.includeTime then
-    final = final .. lineBreak .. stext.new('Last check: ' .. os.date '%c', {
+    final = final .. lineBreak .. stext.new('Last check: ' .. os.date('%c'), {
       font=stext.convertFont({name=obj.baseFont.name, size=obj.baseFont.size - 2}, stext.fontTraits.italicFont),
       color={list='ansiTerminalColors', name='fgBlack'},
       paragraphStyle={alignment='right'}
@@ -137,12 +120,12 @@ obj.updateDisplay = function(cpuUsage)
 
   obj.canvas.output.text = final
   obj.canvas.output.frame = {x=obj.padding, y=obj.padding, h=outputSize.h, w=outputSize.w}
-  obj.canvas:frame{
+  obj.canvas:frame({
     x=obj.location.x,
     y=obj.location.y,
     h=outputSize.h + obj.padding * 2,
     w=outputSize.w + obj.padding * 2
-  }
+  })
 
   -- in case they changed
   obj.canvas.background.roundedRectRadii = {xRadius=obj.cornerRadius, yRadius=obj.cornerRadius}
@@ -169,7 +152,7 @@ obj.backgroundBorder = {alpha=0.5}
 
 -- a typical height and width for this output on my machine; it will change as soon as there is data, so accuracy isn't important
 local defaultSize = {h=88, w=360}
-obj.canvas = canvas.new {x=obj.location.x, y=obj.location.y, h=defaultSize.h, w=defaultSize.w}
+obj.canvas = canvas.new({x=obj.location.x, y=obj.location.y, h=defaultSize.h, w=defaultSize.w})
 
 local initialMsg = stext.new('awaiting data collection', {
   font=stext.convertFont(obj.baseFont, stext.fontTraits.italicFont),
@@ -190,12 +173,7 @@ obj.canvas[#obj.canvas + 1] = {
   id='output',
   type='text',
   text=initialMsg,
-  frame={
-    x=(defaultSize.w - msgSize.w) / 2,
-    y=(defaultSize.h - msgSize.h) / 2,
-    h=msgSize.h,
-    w=msgSize.w
-  }
+  frame={x=(defaultSize.w - msgSize.w) / 2, y=(defaultSize.h - msgSize.h) / 2, h=msgSize.h, w=msgSize.w}
 }
 
 obj.show = function(self)

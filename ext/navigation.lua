@@ -1,7 +1,7 @@
 local M = {}
-local hotkey = require 'hs.hotkey'
-local window = require 'hs.window'
-local spaces = require 'hs.spaces'
+local hotkey = require('hs.hotkey')
+local window = require('hs.window')
+local spaces = require('hs.spaces')
 M.last = nil
 
 spaces.MCwaitTime = 0.1
@@ -14,11 +14,11 @@ local function getGoodFocusedWindow(nofull)
 end
 
 local function flashScreen(screen)
-  local flash = hs.canvas.new(screen:fullFrame()):appendElements{
+  local flash = hs.canvas.new(screen:fullFrame()):appendElements({
     action='fill',
     fillColor={alpha=0.50, red=1},
     type='rectangle'
-  }
+  })
   flash:show()
   hs.timer.doAfter(0.15, function() flash:delete() end)
 end
@@ -60,10 +60,7 @@ local function moveWindowOneSpace(dir, switch)
           switchSpace(skipSpaces + 1, dir)
         end
         spaces.moveWindowToSpace(win, newSpace)
-        hs.notify.new({
-          title='Spaces',
-          informativeText='Current space: ' .. newSpace .. '   ' .. dir
-        }):send()
+        hs.notify.new({title='Spaces', informativeText='Current space: ' .. newSpace .. '   ' .. dir}):send()
         return
       end
       last = spc -- Haven't found it yet...

@@ -1,27 +1,33 @@
 MAKEFILES:=$(shell find . -mindepth 5 -name Makefile -type f)
-DIRS:=$(foreach m,$(MAKEFILES),$(realpath $(dir $(m))))
+DIRS:=(foreach m,$(MAKEFILES),$(realpath $(dir $(m))))
+
+help: ## Display all Makfile targets
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+	| sort \
+	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 all: install $(DIRS)
 
-install:
+install: ## Install dependencies (i.e., asm modules)
 	git submodule update --init --recursive
 
-$(DIRS): install
-	find $@ -name '*.tar.gz' -print -exec tar xzvf {} \;
-
-deps: ## Install Lua formatter via luarocks
-	luarocks install --server=https://luarocks.org/dev luaformatter
-
-format:
+format/lua-format: ## Format Lua files in-place via lua-formatter
+  ifeq (, $(shell which nvim))
+  $(error "No lzop in \$(PATH), consider doing apt-get install lzop")
+  endif
 	find . -name '*.lua' -maxdepth 2 -print -exec \
 		lua-format \
 		--config $$(PWD)/.lua_format.yml \
 		--in-place \
 		-- {} \;
-	# @find . \
-	# 	-name '*.lua' \
-	# 	-print \
-	# 	-exec stylua -f $$PWD/.stylua.toml  {} \;
-	#
-.PHONY:  all deps format install $(DIRS)
-.SILENT: all deps format install $(DIRS)
+
+format/stylua: ## Format Lua files in-place via Stylua
+  ifeq (, $(shell which stylua))
+  $(error "No lzop in \$(PATH), consider doing apt-get install lzop")
+  endif
+	find . -name '*.lua' -maxdepth 2 -print -exec \
+		stylua \
+		-- {} \;
+
+$(DIRS): install ## Extracts module archives
+	find $@ -name '*.tar.gz' -print -exec tar xzvf {} \;

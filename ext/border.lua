@@ -1,5 +1,5 @@
 local wb = hs.canvas.windowBehaviors
-local spaces = require 'hs.spaces'
+local spaces = require('hs.spaces')
 local running = require('ext.running')
 hs.window.filter.forceRefreshOnSpaceChange = true
 local module = {widget=hs.canvas.new({})}
@@ -26,12 +26,7 @@ module.update = function()
     local alpha = 0.9
     module.widget:replaceElements({
       action='build',
-      frame={
-        x=top_left['x'] - offset,
-        y=top_left['y'] - offset,
-        h=size['h'] + offset * 2,
-        w=size['w'] + offset * 2
-      },
+      frame={x=top_left['x'] - offset, y=top_left['y'] - offset, h=size['h'] + offset * 2, w=size['w'] + offset * 2},
       type='rectangle',
       roundedRectRadii={xRadius=radius, yRadius=radius},
       withShadow=false

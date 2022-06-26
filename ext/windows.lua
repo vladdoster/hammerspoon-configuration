@@ -1,5 +1,5 @@
 local M = {frameCache={}}
-local K = require 'ext.keybind'
+local K = require('ext.keybind')
 -- Toggle an application between being the frontmost app, and being hidden
 M.toggle_application = function(_app)
   local app = hs.appfinder.appFromName(_app)
@@ -26,9 +26,9 @@ M.toggle_window_maximized = function()
   end
 end
 M.applicationToggle = function(toggles)
-  for k, v in pairs(toggles) do K.bind {k=function() M.toggle_application(v) end} end
+  for k, v in pairs(toggles) do K.bind({k=function() M.toggle_application(v) end}) end
 end
-M.fullscreenToggle = function() K.bind {f=hs.window.focusedWindow():toggleFullScreen()} end
+M.fullscreenToggle = function() K.bind({f=hs.window.focusedWindow():toggleFullScreen()}) end
 -- Toggle a window between its normal size, and being maximized
 -- local function toggle_window_maximized()
 --   local win = hs.window.focusedWindow()

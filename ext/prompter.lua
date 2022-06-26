@@ -30,13 +30,13 @@ Notes:
     * Check if the current argument is a function; if so, set it to `callback`
   * If you want to set a default, but no label, you must set label to "" because the first string will always be assigned to `label`.
   * Technically, point is a frame, and a height of 1 and a width of 1 will be assigned if they are not provided.  This is because the webview can't be a zero height/width object, but we're really only interested in the javascript pop-up, so we make sure the webview is small enough to hide behind the dialog box. You can make it bigger if you like, but I'm not sure why you would -- If you need something more complex, you're better off writing a web form and not using the javascript pop-ups at all.  (see `dterm.lua` example in this repository).
-]]   )
+]])
     return
   end
   local screenFrame = require('hs.screen').mainScreen():fullFrame()
   local label = 'Your input:'
   local default = ''
-  local frame = { x = screenFrame.x + screenFrame.w / 2, y = screenFrame.y + screenFrame.h / 4 }
+  local frame = {x=screenFrame.x + screenFrame.w / 2, y=screenFrame.y + screenFrame.h / 4}
   local callback = function(input) print('prompter result:' .. tostring(input)) end
 
   if type(argv[pos]) == 'string' or type(argv[pos]) == 'number' then
@@ -48,7 +48,7 @@ Notes:
     pos = pos + 1
   end
   if type(argv[pos]) == 'table' then
-    frame = argv[pos];
+    frame = argv[pos]
     pos = pos + 1
   end
   if type(argv[pos]) == 'function' then callback = argv[pos] end
@@ -68,7 +68,7 @@ Notes:
     view:delete()
   end)
 
-  view = webview.new(frame, { developerExtrasEnabled = true }, ucc):html([[
+  view = webview.new(frame, {developerExtrasEnabled=true}, ucc):html([[
         <script type="text/javascript">
         var textMsg = window.prompt("]] .. label .. [[", "]] .. default .. [[") ;
         try {
@@ -81,9 +81,9 @@ Notes:
     ]]):show()
   view:level(drawing.windowLevels.screenSaver)
 
-  return setmetatable({ view }, {
-    __index = {
-      delete = function(_)
+  return setmetatable({view}, {
+    __index={
+      delete=function(_)
         if getmetatable(_[1]) == hs.getObjectMetatable('hs.webview') then
           _[1]:delete()
           setmetatable(_, nil)

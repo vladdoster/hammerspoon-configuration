@@ -90,7 +90,7 @@ M.batteryNotifications = {
       if not suppressAudio then
         -- I don't care if I miss this one, so... no volume changes
         local sp = speech.new('Zarvox'):speak(
-                       'I\'m feeling [[inpt PHON; rate 80]]+mUXC[[inpt TEXT; rset 0]] better [[emph +]]now')
+                     'I\'m feeling [[inpt PHON; rate 80]]+mUXC[[inpt TEXT; rset 0]] better [[emph +]]now')
       end
     end
   }
@@ -239,14 +239,14 @@ local displayBatteryData = function(modifier)
     local pwrIcon = (batteryPowerSource() == 'AC Power') and onAC or onBattery
     table.insert(menuTable, {
       title=pwrIcon .. '  ' .. ((battery.isCharged() and 'Fully Charged')
-          or (battery.isCharging() and (battery.isFinishingCharge() and 'Finishing Charge' or 'Charging'))
-          or (battery._powerSources()[1]['Optimized Battery Charging Engaged'] and 'On Hold' or 'On Battery'))
+        or (battery.isCharging() and (battery.isFinishingCharge() and 'Finishing Charge' or 'Charging'))
+        or (battery._powerSources()[1]['Optimized Battery Charging Engaged'] and 'On Hold' or 'On Battery'))
     })
   end
   table.insert(menuTable, {title='-'})
   table.insert(menuTable, {
     title=utf8.codepointToUTF8(0x26A1) .. '  Current Charge: '
-        .. string.format('%.2f%%', (battery.percentage() or 'n/a'))
+      .. string.format('%.2f%%', (battery.percentage() or 'n/a'))
   })
   local timeTitle, timeValue = utf8.codepointToUTF8(0x1F552) .. '  ', nil
   if batteryPowerSource() == 'AC Power' then
@@ -259,8 +259,8 @@ local displayBatteryData = function(modifier)
   if timeValue then
     table.insert(menuTable, {
       title=timeTitle
-          .. ((timeValue < 0) and '...calculating...'
-              or string.format('%2d:%02d', math.floor(timeValue / 60), timeValue % 60))
+        .. ((timeValue < 0) and '...calculating...'
+          or string.format('%2d:%02d', math.floor(timeValue / 60), timeValue % 60))
     })
   else
     table.insert(menuTable, {title=timeTitle .. 'n/a'})
@@ -268,11 +268,9 @@ local displayBatteryData = function(modifier)
   local maxCapacity, designCapacity = battery.maxCapacity(), battery.designCapacity()
   table.insert(menuTable, {
     title=utf8.codepointToUTF8(0x1F340) .. '  Battery Health: '
-        .. (maxCapacity and designCapacity and string.format('%.2f%%', 100 * maxCapacity / designCapacity) or 'n/a')
+      .. (maxCapacity and designCapacity and string.format('%.2f%%', 100 * maxCapacity / designCapacity) or 'n/a')
   })
-  table.insert(menuTable, {
-    title=utf8.codepointToUTF8(0x1F300) .. '  Cycles: ' .. (battery.cycles() or 'n/a')
-  })
+  table.insert(menuTable, {title=utf8.codepointToUTF8(0x1F300) .. '  Cycles: ' .. (battery.cycles() or 'n/a')})
   table.insert(menuTable, {title='-'})
   table.insert(menuTable, {title='Raw Battery Data...', menu=rawBatteryData(battery.getAll())})
   table.insert(menuTable, {title='-'})
@@ -300,7 +298,5 @@ M.stop = function()
   menuUserData = menuUserData:delete()
   return M
 end
-M = setmetatable(M, {
-  __gc=function(self) if M.menuTitleChanger then M.menuTitleChanger:stop() end end
-})
+M = setmetatable(M, {__gc=function(self) if M.menuTitleChanger then M.menuTitleChanger:stop() end end})
 return M.start()

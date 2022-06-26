@@ -11,13 +11,7 @@ module.appEvents = {
   [appw.terminated]='terminated',
   [appw.unhidden]='unhidden'
 }
-module.events = {
-  focused='focused',
-  framed='framed',
-  closed='closed',
-  created='created',
-  hidden='hidden'
-}
+module.events = {focused='focused', framed='framed', closed='closed', created='created', hidden='hidden'}
 module.getWindowsPerSpace = function()
   local ret = {}
   for _, windows in pairs(module.windows) do
@@ -149,7 +143,7 @@ end
 module.switcher = function()
   if module._chooser == nil then
     module._chooser = hs.chooser.new(function(choice) if choice ~= nil then choice.win:focus() end end):bgDark(true)
-                          :placeholderText('Switch to Window'):searchSubText(true)
+                        :placeholderText('Switch to Window'):searchSubText(true)
   elseif module._chooser:isVisible() then
     module._chooser:hide()
     return

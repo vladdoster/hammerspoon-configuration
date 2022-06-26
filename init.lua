@@ -2,12 +2,12 @@ hs.window.animationDuration = 0.1
 hs.ipc.cliInstall()
 
 local K = require('ext.keybind')
-require 'ext.battery'
-require 'ext.spoons'
-require 'ext.volume'
-require 'ext.clipboard'
-require 'ext.dockTime'.start()
-require 'ext.infoDisplay'.start()
+require('ext.battery')
+require('ext.spoons')
+require('ext.volume')
+require('ext.clipboard')
+require('ext.dockTime').start()
+require('ext.infoDisplay').start()
 
 local function reload()
   hs.reload()
