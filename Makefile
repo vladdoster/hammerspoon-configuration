@@ -9,24 +9,14 @@ help: ## Display all Makfile targets
 all: install $(DIRS)
 
 install: ## Install dependencies (i.e., asm modules)
+	luarocks install --server https://luarocks.org/dev luaformatter
 	git submodule update --init --recursive
 
 format/lua-format: ## Format Lua files in-place via lua-formatter
-  ifeq (, $(shell which lua-format))
-  $(error "No lua-format in \$(PATH), consider doing apt-get install lzop")
-  endif
 	find . -name '*.lua' -maxdepth 2 -print -exec \
 		lua-format \
 		--config $$(PWD)/.lua_format.yml \
 		--in-place \
-		-- {} \;
-
-format/stylua: ## Format Lua files in-place via Stylua
-  ifeq (, $(shell which stylua))
-  $(error "No stylua in \$(PATH), consider doing apt-get install lzop")
-  endif
-	find . -name '*.lua' -maxdepth 2 -print -exec \
-		stylua \
 		-- {} \;
 
 $(DIRS): install ## Extracts module archives
