@@ -1,3 +1,22 @@
+# [1.6.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.5.0...v1.6.0) (2022-08-07)
+
+
+### feat
+
+* add MouseFollowsFocus spoon ([742556c](https://github.com/vladdoster/hammerspoon-configuration/commit/742556c6d27581f2624aa60d07445bf1860a884e))
+
+### fix
+
+* command checks & Make foreach loop ([7262f58](https://github.com/vladdoster/hammerspoon-configuration/commit/7262f5898bbb6bf83181174c858ea58a72fcffcc))
+
+### maint
+
+* improve low battery notifications ([c1f0561](https://github.com/vladdoster/hammerspoon-configuration/commit/c1f0561ba1c7f1ffa0f7285e8ebae50e2f685972))
+
+### style
+
+* update format Make targets and format code ([775e1a5](https://github.com/vladdoster/hammerspoon-configuration/commit/775e1a5839db6e175178829881649f8fd0006ccc))
+
 # [1.5.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.4.0...v1.5.0) (2022-06-25)
 
 
