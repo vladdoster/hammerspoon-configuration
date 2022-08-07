@@ -9,10 +9,7 @@ require('ext.clipboard')
 require('ext.dockTime').start()
 require('ext.infoDisplay').start()
 
-local function reload()
-  hs.reload()
-  hs.alert.show('hammerspoon re-loaded')
-end
+local function reload() hs.reload() end
 
 local keymaps = {}
 keymaps['h'] = hs.hints.windowHints

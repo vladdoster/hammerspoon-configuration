@@ -12,7 +12,7 @@ install: ## Install dependencies (i.e., asm modules)
 	luarocks install --server https://luarocks.org/dev luaformatter
 	git submodule update --init --recursive
 
-format/lua-format: ## Format Lua files in-place via lua-formatter
+format: ## Format Lua files in-place via lua-formatter
 	find . -name '*.lua' -maxdepth 2 -print -exec \
 		lua-format \
 		--config $$(PWD)/.lua_format.yml \

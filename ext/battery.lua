@@ -37,7 +37,7 @@ M.batteryNotifications = {
           end
         end):speak('LOW BATTERY')
       end
-      alert.show('LOW BATTERY')
+      hs.dialog.blockAlert('Low Battery', 'Battery at 10%', 'Ok')
     end
   },
   {
@@ -49,7 +49,7 @@ M.batteryNotifications = {
       if not suppressAudio then
         local audio = require('hs.audiodevice').defaultOutputDevice()
         local volume, muted = audio:volume(), audio:muted()
-        if volume then audio:setVolume(100) end
+        if volume then audio:setVolume(50) end
         if muted then audio:setMuted(false) end
         local sp = speech.new('Zarvox'):setCallback(function(s, why, ...)
           if why == 'didFinish' then
@@ -58,7 +58,7 @@ M.batteryNotifications = {
           end
         end):speak('PLUG ME IN NOW')
       end
-      alert.show('PLUG ME IN NOW')
+      hs.dialog.blockAlert('Low Battery', 'Connect computer to charger', 'Ok')
     end
   },
   {
