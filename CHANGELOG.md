@@ -1,3 +1,10 @@
+# [2.0.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.6.0...v2.0.0) (2022-08-14)
+
+
+### refactor
+
+* Makefile targets & add clean target ([b3bb45c](https://github.com/vladdoster/hammerspoon-configuration/commit/b3bb45cbe5a4d9e4ebf631aba66469cd02b908c8))
+
 # [1.6.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.5.0...v1.6.0) (2022-08-07)
 
 
