@@ -13,7 +13,7 @@ install: ## Install dependencies (i.e., asm modules)
 		| xargs -I{} make \
 			--directory {} \
 			--ignore-errors \
-			--jobs 8 \
+			--jobs \
 			install
 	$(info extracting spoon archives)
 	find . -mindepth 5 -name '*tar.gz' -print \
@@ -36,4 +36,4 @@ clean: ## Remove artifacts
 	git submodule deinit \
 		--all \
 		--force
-	find ./Spoons/* -not -name "SpoonInstall.spoon" -type d -exec rm -rvf {} +
+	find ./Spoons/* -not \( -name "asm*" -o -name "SpoonInstall.spoon" \) -type d -exec rm -rvf {} +
