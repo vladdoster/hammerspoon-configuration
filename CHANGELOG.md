@@ -1,3 +1,18 @@
+## [2.0.1](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.0.0...v2.0.1) (2022-10-04)
+
+
+### docs
+
+* add Make targets & add release status badge ([32e5c4a](https://github.com/vladdoster/hammerspoon-configuration/commit/32e5c4a30d3e0ddb2c2085bea4c374ced0e4ee8c))
+
+### fix
+
+* clean Make target doesnt delete submodules ([985adde](https://github.com/vladdoster/hammerspoon-configuration/commit/985adde3ab64597a2b54e2b8d05a306041857851))
+
+### maint
+
+* refactor spoons extension ([6d003b4](https://github.com/vladdoster/hammerspoon-configuration/commit/6d003b44bf71f3e412da831ee3c2c86529c89a4c))
+
 # [2.0.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v1.6.0...v2.0.0) (2022-08-14)
 
 
