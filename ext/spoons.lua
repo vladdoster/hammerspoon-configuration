@@ -12,7 +12,12 @@ obj.repos = {
   MouseCircle={config={color=hs.drawing.color.x11.red}, disable=false, hotkeys={show={hyper, 'm'}}},
   RoundedCorners={start=true},
   SpeedMenu={},
-  TextClipboardHistory={ config={show_in_menubar=true}, disable=false, hotkeys={toggle_clipboard={{'cmd', 'shift'}, 'v'}}, start=true }
+  TextClipboardHistory={
+    config={show_in_menubar=false},
+    disable=false,
+    hotkeys={toggle_clipboard={{'cmd', 'shift'}, 'v'}},
+    start=true
+  }
 }
 
 for k, v in pairs(obj.repos) do
