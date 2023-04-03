@@ -1,3 +1,16 @@
+# [2.1.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.0.1...v2.1.0) (2023-04-03)
+
+
+### Bug Fixes
+
+* hide clipboard history in menu bar ([a5931b5](https://github.com/vladdoster/hammerspoon-configuration/commit/a5931b56c22ebbc09cade5f75a4377dbdf930d85))
+* remove local semantic release configuration  ([412a2cf](https://github.com/vladdoster/hammerspoon-configuration/commit/412a2cf66d29bffe7cc5d0ba626667081af53306))
+
+
+### Features
+
+* quickly toggle terminal and safari windows ([dbe37fb](https://github.com/vladdoster/hammerspoon-configuration/commit/dbe37fb82025e14e1a1477949469023c833f264a))
+
 ## [2.0.1](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.0.0...v2.0.1) (2022-10-04)
 
 
