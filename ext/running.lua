@@ -1,3 +1,5 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
+
 local appw = hs.application.watcher
 local module = {apps={}, observers={}, windows={}}
 local spaces = require('hs.spaces')

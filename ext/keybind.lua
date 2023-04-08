@@ -1,3 +1,5 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
+
 local M = {}
 
 M.hyper = {'cmd', 'alt', 'ctrl'}

@@ -1,3 +1,5 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
+
 -- TODO:
 --   * need a better name
 --   * make more spoon like (hotkeys, metadata, etc.)

@@ -1,3 +1,5 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
+
 local M = {}
 local battery = require('hs.battery')
 local canvas = require('hs.canvas')

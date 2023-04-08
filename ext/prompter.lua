@@ -1,3 +1,5 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
+
 local module = {}
 local webview = require('hs.webview')
 local usercontent = webview.usercontent
