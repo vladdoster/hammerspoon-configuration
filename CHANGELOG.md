@@ -1,3 +1,19 @@
+# [2.2.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.1.0...v2.2.0) (2023-04-08)
+
+
+### Bug Fixes
+
+* check if space did not change ([e925c8f](https://github.com/vladdoster/hammerspoon-configuration/commit/e925c8f406fd6672c0d1fbcee44926f06e9dc3aa))
+* disable window manager ([a2f9bd6](https://github.com/vladdoster/hammerspoon-configuration/commit/a2f9bd61864115e1deb064430975408ace8a7dc1))
+* handle focusing fullscreen apps ([6730bc3](https://github.com/vladdoster/hammerspoon-configuration/commit/6730bc372c35e2666b5493edcc141f76d912f440))
+* remove duplicated code in app-toggle.lua ([a51c21b](https://github.com/vladdoster/hammerspoon-configuration/commit/a51c21b8122ae5d7ce9d1fd9db91cf6176acdba5))
+
+
+### Features
+
+* add smartLaunchOrFocus keybinds ([1c5a129](https://github.com/vladdoster/hammerspoon-configuration/commit/1c5a129db2600e6b9017e694b03af956f0dcfbf1))
+* add vim modelines ([a614264](https://github.com/vladdoster/hammerspoon-configuration/commit/a61426467cbce1a1f8d9e4a1169d6aa4be2ad0de))
+
 # [2.1.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.0.1...v2.1.0) (2023-04-03)
 
 
