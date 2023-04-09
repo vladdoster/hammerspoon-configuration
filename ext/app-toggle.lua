@@ -84,6 +84,7 @@ function ext.app.smartLaunchOrFocus(launchApps)
         spaces.closeMissionControl()
       end
       runningWindows[newIndex]:focus()
+      runningWindows[newIndex]:centerOnScreen()
     end
   end
 end
