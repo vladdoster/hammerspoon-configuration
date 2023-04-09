@@ -1,5 +1,3 @@
--- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-
 local M = {}
 local battery = require('hs.battery')
 local canvas = require('hs.canvas')
@@ -18,6 +16,8 @@ local suppressAudio = settings.get(suppressAudioKey) or false
 local menuUserData = nil
 local currentPowerSource = ''
 local batteryPowerSource = function() return battery.powerSource() or 'no battery' end
+M.logger = hs.logger.new('Battery')
+M.logger.setLogLevel('info')
 -- Some "notifications" to apply... need to update battery watcher to do these
 M.batteryNotifications = {
   {
@@ -144,7 +144,7 @@ local powerSourceChangeFN = function(justOn)
     if currentPowerSource ~= newPowerSource then
       currentPowerSource = newPowerSource
       hs.brightness.set(100)
-      print('--- power source changed - set brightness to 100')
+      M.logger.i('power source changed - set brightness to 100')
       for i, v in ipairs(M.batteryNotifications) do
         if newPowerSource == 'AC Power' then
           if not v.onBattery then
@@ -178,7 +178,7 @@ local powerSourceChangeFN = function(justOn)
                 shouldWeDoSomething = (test.timeRemaining - v.timeRemaining) > 0
               end
             else
-              print('++ unknown test for battery notification #' .. tostring(i))
+              M.logger.ef('unknown test for battery notification #',tostring(i))
             end
           elseif notificationStatus[i] and doEvery and (test.timeStamp - notificationStatus[i]) > v.doEvery then
             shouldWeDoSomething = true
@@ -210,7 +210,7 @@ local powerSourceChangeFN = function(justOn)
               shouldWeDoSomething = (test.timeRemaining - v.timeRemaining) > 0
             end
           else
-            print('++ unknown test for battery notification #' .. tostring(i))
+            M.logger.ef('unknown test for battery notification #', tostring(i))
           end
           if shouldWeDoSomething then notificationStatus[i] = test.timeStamp end
         end
@@ -282,6 +282,7 @@ local displayBatteryData = function(modifier)
     fn=function()
       suppressAudio = not suppressAudio
       settings.set(suppressAudioKey, suppressAudio)
+      M.logger.i('Suppress Audio ' .. tostring(suppressAudio))
     end
   })
   return menuTable
