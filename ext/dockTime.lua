@@ -1,5 +1,4 @@
 -- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-
 local canvas = require('hs.canvas')
 local dockicon = require('hs.dockicon')
 local timer = require('hs.timer')

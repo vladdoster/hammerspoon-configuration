@@ -1,5 +1,4 @@
 -- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-
 local M = {frameCache={}}
 local K = require('ext.keybind')
 -- Toggle an application between being the frontmost app, and being hidden
@@ -50,7 +49,6 @@ M.fullscreenToggle = function() K.bind({f=hs.window.focusedWindow():toggleFullSc
 -- hs.hotkey.bind({'ctrl', 'cmd'}, 'C', center)
 -- hs.hotkey.bind({'ctrl', 'cmd'}, 'M', toggle_window_maximized)
 --
-
 
 -- Toggle an application between being the frontmost app, and being hidden
 function toggle_application(_app)

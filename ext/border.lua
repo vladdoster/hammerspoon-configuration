@@ -1,5 +1,4 @@
 -- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-
 local wb = hs.canvas.windowBehaviors
 local spaces = require('hs.spaces')
 local running = require('ext.running')

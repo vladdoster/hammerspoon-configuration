@@ -178,7 +178,7 @@ local powerSourceChangeFN = function(justOn)
                 shouldWeDoSomething = (test.timeRemaining - v.timeRemaining) > 0
               end
             else
-              M.logger.ef('unknown test for battery notification #',tostring(i))
+              M.logger.ef('unknown test for battery notification #', tostring(i))
             end
           elseif notificationStatus[i] and doEvery and (test.timeStamp - notificationStatus[i]) > v.doEvery then
             shouldWeDoSomething = true

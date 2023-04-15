@@ -1,5 +1,4 @@
 -- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-
 local M = {}
 local hotkey = require('hs.hotkey')
 local window = require('hs.window')

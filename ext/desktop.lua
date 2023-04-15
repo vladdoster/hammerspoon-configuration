@@ -1,5 +1,4 @@
 -- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-
 local spaces = require('hs.spaces')
 local config = {spacesDelay=0.3}
 local module = {active=1, lastMove=0}

@@ -1,16 +1,18 @@
 -- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-
-local obj={}
+local obj = {}
 obj.__index = obj
 -- Metadata
-obj.name = "AppToggle"
-obj.version = "0.5"
-obj.author = "Vladislav Doster <mvdoster@gmail.com>"
-obj.homepage = "https://github.com/Hammerspoon/Spoons"
-obj.license = "MIT - https://opensource.org/licenses/MIT"
+obj.name = 'AppToggle'
+obj.version = '0.5'
+obj.author = 'Vladislav Doster <mvdoster@gmail.com>'
+obj.homepage = 'https://github.com/Hammerspoon/Spoons'
+obj.license = 'MIT - https://opensource.org/licenses/MIT'
 local spaces, fnutils = require('hs.spaces'), require('hs.fnutils')
-local getSetting = function(label, default) return hs.settings.get(obj.name.."."..label) or default end
-local setSetting = function(label, value)   hs.settings.set(obj.name.."."..label, value); return value end
+local getSetting = function(label, default) return hs.settings.get(obj.name .. '.' .. label) or default end
+local setSetting = function(label, value)
+  hs.settings.set(obj.name .. '.' .. label, value);
+  return value
+end
 obj.frequency = 0.8
 obj.hist_size = 100
 obj.honor_ignoredidentifiers = true
@@ -18,6 +20,7 @@ obj.paste_on_select = getSetting('paste_on_select', false)
 obj.logger = hs.logger.new('AppToggler')
 obj.logger.setLogLevel('info')
 
+hs.window.animationDuration = 0
 ext = {app={}, cache={}}
 hs.spaces.MCwaitTime = 0.1
 
@@ -29,7 +32,7 @@ function ext.app.forceLaunchOrFocus(appName)
     local frontmostWindows = fnutils.filter(frontmostApp:allWindows(), function(win) return win:isStandard() end)
     -- break if this app is not frontmost (when/why?)
     if frontmostApp:title() ~= appName then
-      obj.logger.i("front most app " .. frontmostApp:title())
+      obj.logger.i('front most app ' .. frontmostApp:title())
       return
     end
     if #frontmostWindows == 0 then
@@ -38,7 +41,7 @@ function ext.app.forceLaunchOrFocus(appName)
         -- select it, usually moves to space with this window
         frontmostApp:selectMenuItem({'Window', appName})
       else
-        obj.logger.i("creating new window " .. appName)
+        obj.logger.i('creating new window ' .. appName)
         hs.eventtap.keyStroke({'cmd'}, 'n')
       end
     end
@@ -71,20 +74,24 @@ function ext.app.smartLaunchOrFocus(launchApps)
     if not currentIndex then
       -- if none of them is selected focus the first one
       runningWindows[1]:focus()
+      runningWindows[1]:centerOnScreen()
     else
       -- otherwise cycle through all the windows
       local newIndex = currentIndex + 1
       if newIndex > #runningWindows then newIndex = 1 end
       local currentSpace = spaces.focusedSpace()
       local windowSpace = spaces.windowSpaces(runningWindows[newIndex])[newIndex]
-      obj.logger.i("current space: " .. currentSpace .. " window space: " .. windowSpace)
+      obj.logger.i('current space: ' .. currentSpace .. ' window space: ' .. windowSpace)
       if runningWindows[newIndex]:isFullScreen() and windowSpace ~= currentSpace then
-        obj.logger.i("focusing space: " .. windowSpace)
+        obj.logger.i('focusing space: ' .. windowSpace)
         spaces.gotoSpace(spaces.windowSpaces(runningWindows[newIndex])[newIndex])
         spaces.closeMissionControl()
       end
-      runningWindows[newIndex]:focus()
       runningWindows[newIndex]:centerOnScreen()
+      runningWindows[newIndex]:focus()
+      -- hs.window.tileWindows(runningWindows,hs.screen.mainScreen():frame(), 1, false, false, 0)
+      hs.window.layout:start(hs.window.layout.new({'move 1 [0,0,50,50] -1,0'}))
+      -- runningWindows[newIndex]:centerOnScreen()
     end
   end
 end

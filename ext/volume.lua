@@ -1,5 +1,4 @@
 -- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-
 local M = {}
 local alert = require('hs.alert')
 local audio_device = require('hs.audiodevice')

@@ -1,5 +1,4 @@
 -- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-
 --
 -- rewrite to be editable/managable like a module or userdata
 -- panel updates will (soon) allow for configuring widget after its installed as well
