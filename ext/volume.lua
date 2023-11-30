@@ -16,7 +16,7 @@ M.changeVolume = function(diff)
   end
 end
 
-bind(hyper, 'Down', M.changeVolume(-3))
-bind(hyper, 'Up', M.changeVolume(3))
+bind(hyper, 'Down', M.changeVolume(-2))
+bind(hyper, 'Up', M.changeVolume(2))
 
 return M
