@@ -55,5 +55,6 @@ for k, v in pairs(obj.repos) do
   obj.logger.i('Installing ' .. k)
   spoon.SpoonInstall:andUse(k, v)
 end
+hs.loadSpoon('asmHammerspoon')
 
 return M

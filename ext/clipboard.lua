@@ -3,7 +3,7 @@ local module = {}
 
 local eventtap = require('hs.eventtap')
 local hashFN = require('hs.hash').MD5 -- can use other hash fn if this proves insufficient
-local menubar = require('hs._asm.guitk.menubar')
+local menubar = require('hs.menubar')
 local pb = require('hs.pasteboard')
 local settings = require('hs.settings')
 local stext = require('hs.styledtext')

@@ -1,7 +1,7 @@
 -- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
 -- Make all our animations really fast
 hs.window.animationDuration = 0.1
-hs.ipc.cliInstall()
+hs.ipc.cliInstall('/opt/hs')
 hs.logger.setGlobalLogLevel('verbose')
 
 -- spaces = require('hs._asm.undocumented.spaces')
@@ -10,7 +10,8 @@ hs.logger.setGlobalLogLevel('verbose')
 
 hs.loadSpoon('SpoonInstall')
 spoon.SpoonInstall.use_syncinstall = true
-Install = spoon.SpoonInstall
+-- Install = spoon.SpoonInstall
+require('_hs.hs.eventtap')
 
 local K = require('ext.keybind')
 require('ext.clipboard')
