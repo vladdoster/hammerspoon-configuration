@@ -23,10 +23,10 @@ local module = {}
 module.rightOptPressTime = 2
 
 -- set the "normal" border
-module.normalBorderColor = {white=0}
+module.normalBorderColor = { white = 0 }
 
 -- set the "movable" border
-module.movableBorderColor = {red=1}
+module.movableBorderColor = { red = 1 }
 
 -- set the default inactiveAlpha (changes only visible after mouse enters and exits virtual touchbar)
 module.inactiveAlpha = 0.4
@@ -38,35 +38,38 @@ local timer = require('hs.timer')
 local events = eventtap.event.types
 
 local showMovableState = function()
-  module.touchbar:backgroundColor(module.movableBorderColor):movable(true):acceptsMouseEvents(false)
+    module.touchbar:backgroundColor(module.movableBorderColor):movable(true):acceptsMouseEvents(false)
 end
 
 local showNormalState = function()
-  module.touchbar:backgroundColor(module.normalBorderColor):movable(false):acceptsMouseEvents(true):inactiveAlpha(
-    module.inactiveAlpha) -- in case it changed
-  if hs.execute('defaults read com.apple.dock autohide') == '1\n' then
-    module.touchbar:level(20)
-  else
-    module.touchbar:level(1500)
-  end
+    module.touchbar
+        :backgroundColor(module.normalBorderColor)
+        :movable(false)
+        :acceptsMouseEvents(true)
+        :inactiveAlpha(module.inactiveAlpha) -- in case it changed
+    if hs.execute('defaults read com.apple.dock autohide') == '1\n' then
+        module.touchbar:level(20)
+    else
+        module.touchbar:level(1500)
+    end
 end
 
 local mouseInside = false
 local touchbarWatcher = function(obj, message)
-  if message == 'didEnter' then
-    mouseInside = true
-  elseif message == 'didExit' then
-    mouseInside = false
-    -- just in case we got here before the eventtap returned the touch bar to normal
-    showNormalState()
-  end
+    if message == 'didEnter' then
+        mouseInside = true
+    elseif message == 'didExit' then
+        mouseInside = false
+        -- just in case we got here before the eventtap returned the touch bar to normal
+        showNormalState()
+    end
 end
 
 local createTouchbarIfNeeded = function()
-  if not module.touchbar then
-    module.touchbar = touchbar.virtual.new():inactiveAlpha(module.inactiveAlpha):setCallback(touchbarWatcher)
-    showNormalState()
-  end
+    if not module.touchbar then
+        module.touchbar = touchbar.virtual.new():inactiveAlpha(module.inactiveAlpha):setCallback(touchbarWatcher)
+        showNormalState()
+    end
 end
 
 -- should add a cleaner way to detect right modifiers then checking their flags, but for now,
@@ -82,34 +85,37 @@ local rightOptPressed = false
 
 -- might want to call this from the "outside" of our normal watcher
 module.toggle = function()
-  createTouchbarIfNeeded()
-  module.touchbar:toggle()
-  if module.touchbar:isVisible() then module.touchbar:centered() end
+    createTouchbarIfNeeded()
+    module.touchbar:toggle()
+    if module.touchbar:isVisible() then module.touchbar:centered() end
 end
 
 -- we only care about events other than flagsChanged that should *stop* a current count down
-module.eventwatcher = eventtap.new({events.flagsChanged, events.keyDown, events.leftMouseDown}, function(ev)
-  -- synthesized events set 0x20000000 and we may or may not get the nonCoalesced bit, so filter them out
-  local rawFlags = ev:getRawEventData().CGEventData.flags and 0xdffffeff
-  rightOptPressed = false
-  if ev:getType() == events.flagsChanged and rawFlags == 524352 then
-    rightOptPressed = true
-    module.countDown = timer.doAfter(module.rightOptPressTime,
-                                     function() if rightOptPressed then module.toggle() end end)
-  else
-    if module.countDown then
-      module.countDown:stop()
-      module.countDown = nil
-    end
-    if mouseInside then
-      if ev:getType() == events.flagsChanged and rawFlags == 524320 then
-        showMovableState()
-      elseif ev:getType() ~= events.leftMouseDown then
-        showNormalState()
-      end
-    end
-  end
-  return false
-end):start()
+module.eventwatcher = eventtap
+    .new({ events.flagsChanged, events.keyDown, events.leftMouseDown }, function(ev)
+        -- synthesized events set 0x20000000 and we may or may not get the nonCoalesced bit, so filter them out
+        local rawFlags = ev:getRawEventData().CGEventData.flags and 0xdffffeff
+        rightOptPressed = false
+        if ev:getType() == events.flagsChanged and rawFlags == 524352 then
+            rightOptPressed = true
+            module.countDown = timer.doAfter(module.rightOptPressTime, function()
+                if rightOptPressed then module.toggle() end
+            end)
+        else
+            if module.countDown then
+                module.countDown:stop()
+                module.countDown = nil
+            end
+            if mouseInside then
+                if ev:getType() == events.flagsChanged and rawFlags == 524320 then
+                    showMovableState()
+                elseif ev:getType() ~= events.leftMouseDown then
+                    showNormalState()
+                end
+            end
+        end
+        return false
+    end)
+    :start()
 
 return module

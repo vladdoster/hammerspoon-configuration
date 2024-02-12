@@ -25,12 +25,16 @@ install-luaformatter: ## Install luaformatter via luarocks
 		--server https://luarocks.org/dev \
 		luaformatter
 
-format: ## Format Lua files in-place via lua-formatter
-	find . -name '*.lua' -maxdepth 2 -print -exec \
-		lua-format \
-		--config $$(PWD)/.lua_format.yml \
-		--in-place \
-		-- {} +
+format: ## Run lua-formatter using .lua_format.yml config
+	stylua \
+		--call-parentheses Input \
+		--collapse-simple-statement Always \
+		--column-width 120 \
+		--glob **/*.lua \
+		--indent-type Spaces \
+		--line-endings Unix \
+		--quote-style AutoPreferSingle \
+		--verbose
 
 clean: ## Remove artifacts
 	git submodule deinit \

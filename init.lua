@@ -15,12 +15,18 @@ require('_hs.hs.eventtap')
 
 local K = require('ext.keybind')
 require('ext.clipboard')
+
 -- require('ext.infoDisplay').start()
-require('ext.app-toggle')
+-- require('ext.keyboardPrinter')
+-- require('ext.app-toggle')
+
+require('ext.navigation')
 require('ext.dockTime').start()
 require('ext.spoons')
 require('ext.volume')
 require('ext.chooseApp')
+require('ext.battery')
+
 -- PaperWM = hs.loadSpoon("PaperWM")
 -- PaperWM:bindHotkeys({
 --     -- switch to a new focused window in tiled grid

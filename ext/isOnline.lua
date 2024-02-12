@@ -6,16 +6,16 @@ obj.menuItem = nil
 obj.watcher = nil
 
 function obj:start()
-  self.menuItem = hs.menubar.new():setTitle('?')
-  callback = function(self, flags)
-    if (flags and hs.network.reachability.flags.reachable) > 0 then
-      obj.menuItem:setTitle('☁️')
-    else
-      obj.menuItem:setTitle('🌪')
+    self.menuItem = hs.menubar.new():setTitle('?')
+    callback = function(self, flags)
+        if (flags and hs.network.reachability.flags.reachable) > 0 then
+            obj.menuItem:setTitle('☁️')
+        else
+            obj.menuItem:setTitle('🌪')
+        end
     end
-  end
-  self.watcher = hs.network.reachability.forAddress('8.8.8.8'):setCallback(callback):start()
-  callback(self.watcher, self.watcher:status())
+    self.watcher = hs.network.reachability.forAddress('8.8.8.8'):setCallback(callback):start()
+    callback(self.watcher, self.watcher:status())
 end
 
 return obj
