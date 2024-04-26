@@ -10,17 +10,11 @@ help: ## Display all Makfile targets
 dependencies:
 	git submodule update --init --recursive
 
-hs: ## Install dependencies (i.e., asm modules)
+compile: ## Install dependencies (i.e., asm modules)
 	$(info compiling modules)
-	setopt extended_glob NO_interactive_comments; \
-	mk_glob='(*/)#Makefile(:A)'; \
-	for mk_dir in $${~mk_glob}; do \
-		cd $${mkdir:h}; \
-		HS_APPLICATION=/Applications PREFIX=$${HOME}/.hammerspoon \
-		make --directory $${mk_dir:h} --ignore-errors --keep-going all docs install_everything install; \
-	done;
+	zsh --extendedglob -c 'for mk_dir in **/(*/)#Makefile(:h); make -C$${mk_dir} -Bikj8 all install_everything docs install'
 
-.PHONY: hs
+.PHONY: compile
 
 install-luaformatter: ## Install luaformatter via luarocks
 	luarocks install \
