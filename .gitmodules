@@ -1,6 +1,3 @@
-[submodule "asm_hammerspoon"]
-	path = Spoons/asmHammerspoon
-	url = https://github.com/asmagill/hammerspoon_asm.git
-[submodule "asm_spaces"]
-	path = Spoons/asm.hs_spaces
-	url = https://github.com/vladdoster/hs._asm.spaces.git
+[submodule "hs_modules"]
+	path = hs_modules
+	url = https://github.com/vladdoster/hammerspoon_asm.git

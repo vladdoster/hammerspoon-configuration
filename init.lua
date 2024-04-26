@@ -11,7 +11,7 @@ hs.logger.setGlobalLogLevel('verbose')
 hs.loadSpoon('SpoonInstall')
 spoon.SpoonInstall.use_syncinstall = true
 -- Install = spoon.SpoonInstall
-require('_hs.hs.eventtap')
+-- require('_hs.hs.eventtap')
 
 local K = require('ext.keybind')
 require('ext.clipboard')

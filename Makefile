@@ -1,8 +1,6 @@
 # vim: set fenc=utf8 ffs=unix ft=make list noet sw=2 ts=2 tw=100:
-
+SHELL = /bin/zsh
 .ONESHELL:
-
-vars ?= HS_APPLICATION=/Applications PREFIX=$${HOME}/.hammerspoon
 
 help: ## Display all Makfile targets
 	@grep -E '^.*[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -12,13 +10,17 @@ help: ## Display all Makfile targets
 dependencies:
 	git submodule update --init --recursive
 
-
-install: dependencies ## Install dependencies (i.e., asm modules)
+hs: ## Install dependencies (i.e., asm modules)
 	$(info compiling modules)
-	zsh +o extendedglob -ilc \
-		'for mk_dir in **/(*/)#Makefile(:h); \
-		${vars} \
-		make --always-make --directory=$${mk_dir} --ignore-errors --jobs --keep-going'
+	setopt extended_glob NO_interactive_comments; \
+	mk_glob='(*/)#Makefile(:A)'; \
+	for mk_dir in $${~mk_glob}; do \
+		cd $${mkdir:h}; \
+		HS_APPLICATION=/Applications PREFIX=$${HOME}/.hammerspoon \
+		make --directory $${mk_dir:h} --ignore-errors --keep-going all docs install_everything install; \
+	done;
+
+.PHONY: hs
 
 install-luaformatter: ## Install luaformatter via luarocks
 	luarocks install \
