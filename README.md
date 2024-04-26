@@ -25,4 +25,4 @@ git clone https://github.com/vladdoster/hammerspoon-configuration
 | format               | Format Lua files in-place via lua-formatter |
 | help                 | Display all Makfile targets                 |
 | install-luaformatter | Install luaformatter via luarocks           | 
-| install              | Install dependencies (i.e., asm modules)    |
+| compile              | Install dependencies (i.e., asm modules)    |
