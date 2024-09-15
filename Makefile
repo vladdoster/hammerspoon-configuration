@@ -2,6 +2,8 @@
 SHELL = /bin/zsh
 .ONESHELL:
 
+LUA_FILES := $(shell find . -name '*.lua' -print)
+
 help: ## Display all Makfile targets
 	@grep -E '^.*[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 	| sort \
@@ -21,16 +23,19 @@ install-luaformatter: ## Install luaformatter via luarocks
 		--server https://luarocks.org/dev \
 		luaformatter
 
-format: ## Run lua-formatter using .lua_format.yml config
+format: ## Run stylua
 	stylua \
-		--call-parentheses Input \
-		--collapse-simple-statement Always \
+		--call-parentheses Always \
+		--collapse-simple-statement ConditionalOnly \
 		--column-width 120 \
-		--glob **/*.lua \
 		--indent-type Spaces \
+		--indent-width 2 \
 		--line-endings Unix \
-		--quote-style AutoPreferSingle \
-		--verbose
+		--no-editorconfig \
+		--quote-style AutoPreferDouble \
+		--sort-requires \
+		--verbose \
+		$(LUA_FILES)
 
 clean: ## Remove artifacts
 	git submodule deinit \
