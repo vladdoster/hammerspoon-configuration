@@ -2,7 +2,6 @@
 local appw = hs.application.watcher
 local module = { apps = {}, observers = {}, windows = {} }
 local spaces = require('hs.spaces')
-local desktop = require('ext.desktop')
 module.appEvents = {
     [appw.activated] = 'activated',
     [appw.deactivated] = 'deactivated',
@@ -30,7 +29,7 @@ module.getWindowsPerSpace = function()
 end
 ---@return hs.window[]
 module.getWindows = function(currentSpaceOnly)
-    local mySpace = desktop.activeSpace()
+    local mySpace = spaces.activeSpace()
     local ret = {}
     for _, windows in pairs(module.windows) do
         for _, ax in pairs(windows) do
