@@ -19,7 +19,7 @@ git clone https://github.com/vladdoster/hammerspoon-configuration
 
 ## Makefile targets
 
-| TARGET               | DESCRIPTION |
+| TARGET               | DESCRIPTION                                 |
 | -------------------- | ------------------------------------------- |
 | clean                | Remove artifacts                            |
 | format               | Format Lua files in-place via lua-formatter |
