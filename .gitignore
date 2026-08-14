@@ -1,3 +1,6 @@
 Spoons/*
-hs/
-Spoons/asm*
+!Spoons/DeminimizeWindow.spoon
+!Spoons/FocusBorder.spoon
+!Spoons/PinnedWindows.spoon
+!Spoons/SpoonInstall.spoon
+!Spoons/SummonWindow.spoon

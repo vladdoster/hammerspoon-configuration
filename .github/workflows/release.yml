@@ -13,8 +13,3 @@ jobs:
     uses: vladdoster/.github/.github/workflows/release.yml@master
     secrets:
        github-token: ${{ secrets.GITHUB_TOKEN }}
-  container-image:
-    needs: [release]
-    uses: vladdoster/.github/.github/workflows/containers.yml@master
-    secrets:
-       github-token: ${{ secrets.GH_ACTIONS_TOKEN }}
