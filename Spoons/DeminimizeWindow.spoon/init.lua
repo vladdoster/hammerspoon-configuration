@@ -1057,6 +1057,13 @@ local ENGINES = {
 -- steps a rung grows.
 function obj:runSteps(ctx, names, done)
   local function step(i)
+    -- This rung was abandoned while it was in flight -- stop(), or the ladderDeadline
+    -- watchdog firing. Every callback in runLadder tests this, but the guard has to be here
+    -- too: without it the watchdog only stops the *next* rung from starting, while the one
+    -- already running walks its remaining steps and issues yabai --space / --deminimize /
+    -- --focus seconds after the user was told the restore had failed.
+    if self.pending ~= ctx then return end
+
     local name = names[i]
     if not name then return done(true, nil) end
     local fn = STEPS[name]
@@ -1069,6 +1076,9 @@ function obj:runSteps(ctx, names, done)
     local function reply(ok, err)
       if answered then return end
       answered = true
+      -- Consume the answer either way, but do not act on one that arrives after this rung
+      -- was abandoned: reporting it would overwrite the outcome the watchdog already gave.
+      if self.pending ~= ctx then return end
       if not ok then return done(false, err) end
       step(i + 1)
     end

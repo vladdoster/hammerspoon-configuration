@@ -96,6 +96,7 @@ obj.maxWindowsPerApp = 20
 ---
 --- Notes:
 ---  * Ordered most specific first, so "Always on Top" wins over a bare "on top" match.
+---  * Every hint must name a *toggle* that the app keeps set. A one-shot action such as Window > "Bring All to Front" must never appear here: it is present in nearly every Cocoa app, so as a low-ranked hint it would match almost everywhere no real toggle exists, report windows as floating when nothing is, and yank every window of the app forward again on unpin.
 ---  * Extend this list to teach the Spoon about an app whose float menu item is worded differently, e.g. `table.insert(spoon.PinnedWindows.floatHints, 1, "pin window")`.
 obj.floatHints = {
   'always on top',
@@ -106,7 +107,6 @@ obj.floatHints = {
   'float above',
   'always visible',
   'on top',
-  'bring all to front',
 }
 
 --------------------------------------------------------------------------------
@@ -405,13 +405,21 @@ function obj:restoreFrame(entry)
     pcall(win.setFrame, win, target, 0) -- duration 0 skips the animation path entirely
   end
 
+  -- failWindow separates one bout of resistance from the next: a failure that lands more
+  -- than failWindow after the previous one is a fresh problem, not a continuation. It is
+  -- the gap between consecutive failures, never a deadline the whole streak must fit
+  -- inside -- enforcement polls every pollInterval, so any streak long enough to reach
+  -- failLimit necessarily spans longer than failWindow and would disarm the guard below
+  -- permanently.
+  if entry.attempts > 0 and (now - entry.lastAttempt) > self.failWindow then entry.attempts = 0 end
   if entry.attempts == 0 then entry.firstAttempt = now end
+  entry.lastAttempt = now
   entry.attempts = entry.attempts + 1
 
   -- Guard 3: some windows simply cannot reach the requested frame (Terminal snaps to a
   -- character grid, fixed dialogs refuse outright). Without this we would spin forever
   -- against a target that is unreachable by construction, so we adopt reality instead.
-  if entry.attempts >= self.failLimit and (now - entry.firstAttempt) <= self.failWindow then
+  if entry.attempts >= self.failLimit then
     local okNow, actual = pcall(win.frame, win)
     if okNow and actual then entry.frame = rectOf(actual) end
     entry.attempts = 0
@@ -618,7 +626,12 @@ function obj:enableNativeFloat(entry)
       self:updateMenubarTitle()
       return
     end
-    entry.nativeFloat = { path = found.path, title = found.title }
+    -- Two different questions, tracked separately: `on` is the item's current state and is
+    -- what the menu renders, while `enabledByUs` records whether we were the one who
+    -- switched it on and is what decides whether unpinning switches it back off. Folding
+    -- them into one field makes toggling the row from the menu flip the ownership flag,
+    -- which leaves an already-floating app floating after it is unpinned.
+    entry.nativeFloat = { path = found.path, title = found.title, on = true }
     if found.ticked then
       -- Already on before we touched it; leave it alone when unpinning.
       entry.nativeFloat.enabledByUs = false
@@ -635,7 +648,9 @@ end
 
 function obj:disableNativeFloat(entry)
   local nf = entry.nativeFloat
-  if type(nf) ~= 'table' or not nf.enabledByUs then return end
+  -- Only undo our own doing, and only if it is still done: the user may have turned the
+  -- app's float back off from the submenu, in which case clicking it again turns it on.
+  if type(nf) ~= 'table' or not nf.enabledByUs or not nf.on then return end
   local win = resolve(entry)
   local app = win and win:application()
   if not app then return end
@@ -678,6 +693,7 @@ function obj:pin(win)
     suppressUntil = 0,
     attempts = 0,
     firstAttempt = 0,
+    lastAttempt = 0,
     lastRaise = 0,
     resisted = false,
     nativeFloat = nil, -- nil = still looking, false = none, table = found
@@ -780,7 +796,7 @@ function obj:statusSuffix(entry)
   if not entry.lockPos then off[#off + 1] = 'position' end
   if #off > 0 then return ' (' .. table.concat(off, '/') .. ' unlocked)' end
   -- Be honest about which windows are genuinely floating and which are not.
-  if type(entry.nativeFloat) == 'table' then return ' ✓floating' end
+  if type(entry.nativeFloat) == 'table' then return entry.nativeFloat.on and ' ✓floating' or ' (float off)' end
   if entry.nativeFloat == false then return ' (no real on-top)' end
   return ''
 end
@@ -790,13 +806,13 @@ function obj:pinSubmenu(entry)
   if type(entry.nativeFloat) == 'table' then
     floatRow = {
       title = 'Always on Top — ' .. entry.appName .. '’s “' .. entry.nativeFloat.title .. '”',
-      checked = true,
+      checked = entry.nativeFloat.on,
       fn = function()
         local win = resolve(entry)
         local app = win and win:application()
         if app then
           self:clickMenuItem(app, entry.nativeFloat.path)
-          entry.nativeFloat.enabledByUs = not entry.nativeFloat.enabledByUs
+          entry.nativeFloat.on = not entry.nativeFloat.on
         end
       end,
     }

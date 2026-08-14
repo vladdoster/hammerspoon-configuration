@@ -196,9 +196,7 @@ obj.dragTiming = {
   hopSettle = 0.22, -- the Space id flips when the switch commits, not when it finishes
   preRelease = 0.30, -- final landing -> mouse up
   postRelease = 0.10, -- mouse up -> undoing the pixel nudge
-  verifyDelay = 0.40, -- mouse up -> first check; the move commits on release, not before
-  verifyPoll = 0.10,
-  verifyTimeout = 1.50,
+  verifyTimeout = 1.50, -- how long to keep asking whether the window actually landed
 }
 
 --------------------------------------------------------------------------------
@@ -362,6 +360,27 @@ function obj:spacesFor(win)
     return nil
   end
   return spaces
+end
+
+-- The first Space in a window's list that it could actually be moved out of.
+--
+-- Everything that moves a window has to agree with classify() on which Space it is coming
+-- from, and classify() deliberately skips fullscreen Spaces because a window cannot be
+-- dragged out of one. Taking spaces[1] blindly instead routes the walk to a Space the
+-- window is not reachable on, so grabPoint() takes hold of whatever happens to be under
+-- the cursor there, or the hop simply times out.
+--
+-- Takes the already-fetched list rather than calling spacesFor() itself: that is a system
+-- call per window and classify() runs it over every window in the list.
+--
+-- An unknown type counts as movable, matching classify(): if spaceType() is unavailable we
+-- would rather offer a window that fails than silently refuse it.
+local function firstMovableSpace(spaces, types)
+  if not spaces then return nil end
+  for _, id in ipairs(spaces) do
+    if not types or types[id] ~= 'fullscreen' then return id end
+  end
+  return nil
 end
 
 --- SummonWindow:windowIsOn(win, spaceId) -> boolean
@@ -836,7 +855,13 @@ end
 -- The sweep goes through hs.window.allWindows() rather than iterating
 -- hs.application.runningApplications() by hand, because allWindows() carries a skip list
 -- for applications known to blow macOS's 6-second limit on answering AX queries.
-function obj:knownWindows()
+--
+-- `deep` overrides SummonWindow.deepScan for one call, and exists for the menubar path: the
+-- skip list above is there because allWindows() can take seconds, and hs.menubar demands
+-- its menu synchronously, so running the sweep inside that callback beachballs Hammerspoon
+-- for as long as the slowest application takes to answer. Pass nil to use the setting.
+function obj:knownWindows(deep)
+  if deep == nil then deep = self.deepScan end
   local seen, out = {}, {}
 
   local function add(win)
@@ -858,7 +883,7 @@ function obj:knownWindows()
     end
   end
 
-  if self.deepScan then
+  if deep then
     local ok, wins = pcall(hs.window.allWindows)
     if ok and type(wins) == 'table' then
       for _, win in ipairs(wins) do
@@ -899,16 +924,8 @@ function obj:classify(win, current, model)
   -- therefore always contain the current one -- they are visible here already.
   if hs.fnutils.contains(spaces, current) then return nil end
 
-  -- Prefer the first Space we could actually move the window out of. An unknown type is
-  -- treated as movable: if spaceType() is broken we would rather offer a window that
-  -- fails than silently show an empty list.
-  local spaceId
-  for _, id in ipairs(spaces) do
-    if model.types[id] ~= 'fullscreen' then
-      spaceId = id
-      break
-    end
-  end
+  -- Prefer the first Space we could actually move the window out of.
+  local spaceId = firstMovableSpace(spaces, model.types)
   if not spaceId then return nil end
 
   local title = win:title() or ''
@@ -1022,12 +1039,12 @@ function obj:yabaiEntries(current, model, seen)
   return out
 end
 
---- SummonWindow:candidates() -> table
+--- SummonWindow:candidates([opts]) -> table
 --- Method
 --- Returns the windows currently living on other Spaces, in the order they are listed.
 ---
 --- Parameters:
----  * None
+---  * opts - an optional table; `deep` overrides `SummonWindow.deepScan` for this call
 ---
 --- Returns:
 ---  * A list of plain tables with `winId`, `spaceId`, `appName`, `bundleID`, `title`, `minimized`, `label`, `order` and `yabaiOnly` keys
@@ -1035,16 +1052,21 @@ end
 --- Notes:
 ---  * Rebuilds from scratch on every call, and as a side effect refreshes the internal id-to-window map that `SummonWindow:summonById()` reads.
 ---  * The yabai source is served from the last snapshot rather than fetched here, because `hs.menubar` demands its menu synchronously and cannot wait for a subprocess. `SummonWindow:show()` refreshes before it builds, so the chooser is always current; the menubar menu can be up to `SummonWindow.yabaiCacheSeconds` behind.
-function obj:candidates()
+---  * The menubar path passes `deep = false` for the same reason: the `hs.window.allWindows()` sweep can take seconds, and the menu callback cannot wait for it either. The chooser, `status()` and `diagnose()` all still run the full sweep.
+function obj:candidates(opts)
   local current = self:currentSpace()
   if not current then return {} end
 
   local model = self:spaceModel()
   local entries = {}
-  self.byId = {}
+  -- Built into locals and published together at the end, rather than cleared in place. An
+  -- open chooser holds winIds that only resolve through these tables, and anything that
+  -- rebuilds the list while it is open -- clicking the menubar item, status(), diagnose()
+  -- -- would otherwise empty them out from under the rows the user is still looking at.
+  local byId = {}
   -- Kept alongside byId so a failure message can still name the app and Space of a window
   -- that has since become uninspectable.
-  self.lastEntries = {}
+  local lastEntries = {}
 
   -- Every id the Accessibility sources produced, whatever classify() then decided about it.
   -- yabai is only ever allowed to *add* windows those sources could not see at all: a window
@@ -1052,7 +1074,7 @@ function obj:candidates()
   -- yabai resurrect it would quietly undo that ruling.
   local seen = {}
 
-  for _, win in ipairs(self:knownWindows()) do
+  for _, win in ipairs(self:knownWindows(opts and opts.deep)) do
     local okId, id = pcall(win.id, win)
     if okId and id then seen[id] = true end
 
@@ -1063,8 +1085,8 @@ function obj:candidates()
     if not ok then
       self:warnOnce('classify', 'window inspection failed (%s); skipping', tostring(entry))
     elseif entry then
-      self.byId[entry.winId] = win
-      self.lastEntries[entry.winId] = entry
+      byId[entry.winId] = win
+      lastEntries[entry.winId] = entry
       entries[#entries + 1] = entry
     end
   end
@@ -1076,8 +1098,8 @@ function obj:candidates()
     for _, item in ipairs(found) do
       -- win is nil for a window only yabai can see. byId simply has no entry for it, which
       -- is why summonById reads lastEntries as its authority instead.
-      self.byId[item.entry.winId] = item.win
-      self.lastEntries[item.entry.winId] = item.entry
+      byId[item.entry.winId] = item.win
+      lastEntries[item.entry.winId] = item.entry
       entries[#entries + 1] = item.entry
     end
   end
@@ -1085,6 +1107,10 @@ function obj:candidates()
   -- Leave a warmer snapshot behind for the next build. Not forced, so repeated calls inside
   -- the cache window cost nothing.
   self:refreshYabai(false)
+
+  -- Published only now that both tables are complete, so a row picked from an open chooser
+  -- never resolves against a half-built map.
+  self.byId, self.lastEntries = byId, lastEntries
 
   table.sort(entries, bySpaceThenApp)
   return entries
@@ -1144,7 +1170,11 @@ end
 
 function obj:buildMenu()
   local menu = {}
-  local entries = self:candidates()
+  -- deep = false: hs.menubar demands this table synchronously, so the allWindows() sweep
+  -- would block the main thread until every application has answered. Same bargain the
+  -- yabai snapshot already makes here -- a menu that can be slightly behind beats a menu
+  -- that beachballs.
+  local entries = self:candidates({ deep = false })
 
   if #entries == 0 then
     menu[#menu + 1] = { title = 'No windows on other Spaces', disabled = true }
@@ -1217,16 +1247,34 @@ local function placeCursor(pt)
   ET.newMouseEvent(TY.mouseMoved, pt):post()
 end
 
+-- Release a ctrl we are holding down, at most once. Idempotent, because both the normal
+-- end of an arrow and every teardown path call it and either may get there first.
+local function releaseCtrl(job)
+  if not job.ctrlDown then return end
+  job.ctrlDown = false
+  pcall(function() ET.newKeyEvent('ctrl', false):post() end)
+end
+
 -- One Space-switch arrow, emitted the way a keyboard would: modifier down, key down
 -- carrying the whole mask, key up, modifier up.
-local function pressSpaceArrow(dir, useFn, keyHold, done)
+--
+-- The ctrl-up is the dangerous half. It is posted from a timer, so a teardown during the
+-- ~2*keyHold this takes -- a config reload, hs.reload() bound to a hotkey, stop() -- would
+-- collect the timer and strand ctrl down system-wide with nothing left to release it. That
+-- is the same hazard abortDrag() already guards for the mouse button, so it is handled the
+-- same way: the timers are registered on the job so teardown can stop them, and job.ctrlDown
+-- records that a release is owed so teardown can pay it.
+local function pressSpaceArrow(job, dir, useFn, keyHold, done)
   local mods = useFn and { 'ctrl', 'fn' } or { 'ctrl' }
   ET.newKeyEvent('ctrl', true):post()
-  hs.timer.doAfter(keyHold, function()
+  job.ctrlDown = true
+  job.timer = hs.timer.doAfter(keyHold, function()
+    if job.finished then return end
     ET.newKeyEvent(mods, dir, true):post()
-    hs.timer.doAfter(keyHold, function()
+    job.timer = hs.timer.doAfter(keyHold, function()
+      if job.finished then return end
       ET.newKeyEvent(mods, dir, false):post()
-      ET.newKeyEvent('ctrl', false):post()
+      releaseCtrl(job)
       done()
     end)
   end)
@@ -1326,6 +1374,7 @@ function obj:abortDrag()
   if job and not job.finished then
     job.finished = true
     if job.holding then pcall(mouseUp, hs.mouse.absolutePosition()) end
+    releaseCtrl(job)
     if job.watchdog then pcall(function() job.watchdog:stop() end) end
     if job.timer then pcall(function() job.timer:stop() end) end
     pcall(hs.mouse.absolutePosition, job.cursor)
@@ -1358,7 +1407,8 @@ function obj:dragToCurrentSpace(win, done)
   if not okHere or type(here) ~= 'number' then return done(false, 'could not determine the current Space') end
   local spaces = self:spacesFor(win)
   if not spaces or #spaces == 0 then return done(false, "could not determine the window's Space") end
-  local from = spaces[1]
+  local from = firstMovableSpace(spaces, self:spaceModel().types)
+  if not from then return done(false, 'the window is only on a fullscreen Space, which it cannot be dragged out of') end
 
   local order, oErr = self:spaceOrder(win)
   if not order then return done(false, oErr) end
@@ -1381,6 +1431,7 @@ function obj:dragToCurrentSpace(win, done)
     grab = nil,
     holding = false,
     finished = false,
+    ctrlDown = false,
     watchdog = nil,
     timer = nil,
     dragSign = 1,
@@ -1396,6 +1447,7 @@ function obj:dragToCurrentSpace(win, done)
       pcall(mouseUp, hs.mouse.absolutePosition())
       job.holding = false
     end
+    releaseCtrl(job)
     if job.watchdog then pcall(function() job.watchdog:stop() end) end
     if job.timer then pcall(function() job.timer:stop() end) end
     self.dragJob = nil
@@ -1435,7 +1487,7 @@ function obj:dragToCurrentSpace(win, done)
   -- hops with no way to tell which. Waiting for each landing turns an unreliable burst
   -- into a series of reliable steps.
   local function hop(dir, expectId, onOk)
-    pressSpaceArrow(dir, self.useFnModifier, T.keyHold, function()
+    pressSpaceArrow(job, dir, self.useFnModifier, T.keyHold, function()
       local deadline = hs.timer.secondsSinceEpoch() + T.hopTimeout
       local function arrived()
         local ok, cur = pcall(hs.spaces.focusedSpace)
@@ -1912,7 +1964,7 @@ function obj:summonById(winId)
   local sourceSpace = entry.spaceId
   if win then
     local spaces = self:spacesFor(win)
-    sourceSpace = (spaces and spaces[1]) or sourceSpace
+    sourceSpace = firstMovableSpace(spaces, self:spaceModel().types) or sourceSpace
   end
 
   -- Arriving is the only definition of success. Note that focus() is deliberately not
