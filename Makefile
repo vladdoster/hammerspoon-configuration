@@ -28,5 +28,12 @@ format: ## Run stylua
 		--verbose \
 		$(LUA_FILES)
 
-clean: ## Remove artifacts
-	find ./Spoons/* -not \( -name "asm*" -o -name "SpoonInstall.spoon" \) -type d -exec rm -rvf {} +
+# Spoons that live here as source rather than as SpoonInstall downloads. Keep this list in
+# sync with the !Spoons/*.spoon negations in .gitignore -- both encode the same fact, and
+# clean is destructive, so a Spoon missing from here is a Spoon it deletes.
+KEEP_SPOONS := SpoonInstall DeminimizeWindow FocusBorder PinnedWindows SummonWindow
+
+clean: ## Remove SpoonInstall-managed Spoon downloads
+	find ./Spoons -mindepth 1 -maxdepth 1 -type d \
+		$(foreach spoon,$(KEEP_SPOONS),-not -name '$(spoon).spoon') \
+		-exec rm -rf {} +
