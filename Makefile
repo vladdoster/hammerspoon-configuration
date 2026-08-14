@@ -9,12 +9,6 @@ help: ## Display all Makfile targets
 	| sort \
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-compile: ## Install dependencies (i.e., asm modules)
-	$(info compiling modules)
-	zsh --extendedglob -c 'for mk_dir in **/(*/)#Makefile(:h); make -C$${mk_dir} -Bikj8 all install_everything docs install'
-
-.PHONY: compile
-
 install-luaformatter: ## Install luaformatter via luarocks
 	luarocks install \
 		--server https://luarocks.org/dev \
