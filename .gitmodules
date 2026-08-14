@@ -1,3 +1,0 @@
-[submodule "hs_modules"]
-	path = hs_modules
-	url = https://github.com/vladdoster/hammerspoon_asm.git
