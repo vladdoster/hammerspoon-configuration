@@ -40,7 +40,7 @@ obj.__index = obj
 -- Metadata
 obj.name = 'DeminimizeWindow'
 obj.version = '1.0'
-obj.author = 't <t@t>'
+obj.author = 'Vladislav Doster <mvdoster@gmail.com>'
 obj.license = 'MIT - https://opensource.org/licenses/MIT'
 
 --- DeminimizeWindow.logger
