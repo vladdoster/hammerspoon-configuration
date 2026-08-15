@@ -13,6 +13,7 @@ spoon.SpoonInstall:andUse(
     "DeminimizeWindow",
     { hotkeys = { restore = { { "cmd", "alt", "ctrl" }, "M" } }, start = true }
 )
+spoon.SpoonInstall:andUse("FocusBorder", { start = true })
 spoon.SpoonInstall:andUse(
     "PinnedWindows",
     { hotkeys = { togglePin = { { "cmd", "alt", "shift" }, "P" } }, start = true }
