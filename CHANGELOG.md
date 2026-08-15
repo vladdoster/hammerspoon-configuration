@@ -1,3 +1,30 @@
+# [2.3.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.2.0...v2.3.0) (2026-08-15)
+
+
+### Bug Fixes
+
+* app-toggler logging & window commands ([0f53ddf](https://github.com/vladdoster/hammerspoon-configuration/commit/0f53ddfc0a7b05a190a8120913b905dacd950851))
+* **build:** ext modules ([aa47d5c](https://github.com/vladdoster/hammerspoon-configuration/commit/aa47d5c1cba99d27efa0ceaf848d907a09dadb40))
+* center window in app-toggle ext ([6be2311](https://github.com/vladdoster/hammerspoon-configuration/commit/6be23111723cfdace9ee1449b297872bf0fe02cb))
+* compile hs modules make target ([369c2b5](https://github.com/vladdoster/hammerspoon-configuration/commit/369c2b5871c7d95a13e30fb09f43c9584f69a6bd))
+* format lua files ([0a212fe](https://github.com/vladdoster/hammerspoon-configuration/commit/0a212fe08ef199594bba3546fcbd328a54a0c75b))
+* install makefile target ([231101c](https://github.com/vladdoster/hammerspoon-configuration/commit/231101caf6a367d1aa01bfbf231d3f43873152c8))
+* make targets in README.md ([d6a9a47](https://github.com/vladdoster/hammerspoon-configuration/commit/d6a9a47493311f3f32915e9562514e57b659fd21))
+* migrate to hs.menubar module ([6e9341c](https://github.com/vladdoster/hammerspoon-configuration/commit/6e9341c48e7c8dadff148f782d28ebe08c5873bd))
+* set volume increment from 3% to 2% ([da4fefb](https://github.com/vladdoster/hammerspoon-configuration/commit/da4fefb8eb75af76ae8c73d5ed2c8cdfd9dbe8b3))
+* **spoons:** correct eight logic bugs ([064a5c7](https://github.com/vladdoster/hammerspoon-configuration/commit/064a5c78c176af6ec751edddb74664f5742358fc))
+* **spoons:** update gitmodules ([f9c1a2f](https://github.com/vladdoster/hammerspoon-configuration/commit/f9c1a2f76a802881b45c79a4babadd2ec8a28bb2))
+* stop make clean deleting hand-written Spoons ([265604a](https://github.com/vladdoster/hammerspoon-configuration/commit/265604a43bc7fae381cc7256fdeecc59bae9d6d3))
+* use hs logger in battery ext ([f92c74e](https://github.com/vladdoster/hammerspoon-configuration/commit/f92c74e2320dc74b46f5e13858d7e052e378506f))
+
+
+### Features
+
+* modal app launcher via ctrl+opt+cmd+return ([be09512](https://github.com/vladdoster/hammerspoon-configuration/commit/be09512f73b4f680fd5f81d2d85b79b656ab2d89))
+* Safari ignores escape to fix fullscreen ([86b4871](https://github.com/vladdoster/hammerspoon-configuration/commit/86b48717748341e8ea3fe6c32644358459d22a1d))
+* track hand-written Spoons as source ([14c96b0](https://github.com/vladdoster/hammerspoon-configuration/commit/14c96b05132960f4b683b70e1b2d5b0937ff77e2))
+* update asmHammerspoon submodule ([9e7f0ef](https://github.com/vladdoster/hammerspoon-configuration/commit/9e7f0ef2588b3cb4fffb268fd715af13eb7ba1b8))
+
 # [2.2.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.1.0...v2.2.0) (2023-04-08)
 
 
