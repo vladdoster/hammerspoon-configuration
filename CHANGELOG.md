@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.4.0...v2.5.0) (2026-08-15)
+
+
+### Features
+
+* **init:** enable FocusBorder at startup ([ff798d9](https://github.com/vladdoster/hammerspoon-configuration/commit/ff798d9be38e4e630627c166cc31087b8eb7867a))
+
 # [2.4.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.3.0...v2.4.0) (2026-08-15)
 
 
