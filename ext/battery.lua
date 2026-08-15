@@ -238,11 +238,61 @@ local powerSourceChangeFN = function(justOn)
     end
 end
 -- local powerWatcher = battery.watcher.new(powerSourceChangeFN)
--- Keys are stringified before they reach styledtext, and sorted as strings.
+-- The readings behind "Raw Battery Data...", gathered WITHOUT hs.battery.getAll().
 --
--- Both matter because this walks whatever hs.battery.getAll() nests, which it does not
--- control. otherBatteryInfo() and privateBluetoothBatteryInfo() return one entry per
--- connected Bluetooth device, so those sub-tables are arrays and their keys are numbers:
+-- getAll() walks its own check list, and two entries on it reach Apple's Bluetooth stack:
+-- privateBluetoothBatteryInfo() calls the private +[IOBluetoothDevice connectedDevices],
+-- which blocks the calling thread on a semaphore inside IOBluetoothCoreBluetoothCoordinator's
+-- initialiser. When the Bluetooth daemon does not answer, it never returns -- and since
+-- hs.menubar builds its menu synchronously on the main thread, the whole app wedges there
+-- and gets aborted:
+--
+--   -[IOBluetoothCoreBluetoothCoordinator init]  <- semaphore_wait_trap
+--   +[IOBluetoothDevice connectedDevices]
+--   libbattery.dylib battery_private
+--
+-- That is a native deadlock, not a Lua error, so wrapping the caller in pcall does nothing
+-- for it -- the only fix is not to make the call. otherBatteryInfo() reports "non-PSU
+-- batteries (e.g. Bluetooth accessories)" through the same framework and is omitted on the
+-- same grounds. Everything else getAll() would have reported is still here.
+local SAFE_BATTERY_KEYS = {
+    'adapterSerialNumber',
+    'amperage',
+    'batterySerialNumber',
+    'batteryType',
+    'capacity',
+    'cycles',
+    'designCapacity',
+    'health',
+    'healthCondition',
+    'isCharged',
+    'isCharging',
+    'isFinishingCharge',
+    'maxCapacity',
+    'name',
+    'percentage',
+    'powerSource',
+    'powerSourceType',
+    'timeRemaining',
+    'timeToFullCharge',
+    'voltage',
+    'watts',
+}
+local safeBatteryData = function()
+    local t = {}
+    for _, key in ipairs(SAFE_BATTERY_KEYS) do
+        local fn = battery[key]
+        -- Per-key pcall: these read live from IOKit, and one unavailable reading should cost
+        -- its own row rather than the whole submenu.
+        if type(fn) == 'function' then
+            local ok, value = pcall(fn)
+            t[key] = (ok and value ~= nil) and value or 'n/a'
+        end
+    end
+    return t
+end
+
+-- Keys are stringified before they reach styledtext, and sorted as strings, because
 -- styledtext.new() takes a string, a table or a styledtext object and throws on a number,
 -- and sortByKeys' default comparator throws on any table mixing number and string keys.
 local rawBatteryData
@@ -314,7 +364,7 @@ local displayBatteryData = function(modifier)
     })
     table.insert(menuTable, { title = utf8.codepointToUTF8(0x1F300) .. '  Cycles: ' .. (battery.cycles() or 'n/a') })
     table.insert(menuTable, { title = '-' })
-    table.insert(menuTable, { title = 'Raw Battery Data...', menu = rawBatteryData(battery.getAll()) })
+    table.insert(menuTable, { title = 'Raw Battery Data...', menu = rawBatteryData(safeBatteryData()) })
     table.insert(menuTable, { title = '-' })
     table.insert(menuTable, {
         title = 'Suppress Audio',
