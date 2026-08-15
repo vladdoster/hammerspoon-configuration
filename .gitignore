@@ -1,4 +1,5 @@
 Spoons/*
+!Spoons/ClipboardHistory.spoon
 !Spoons/DeminimizeWindow.spoon
 !Spoons/FocusBorder.spoon
 !Spoons/PinnedWindows.spoon

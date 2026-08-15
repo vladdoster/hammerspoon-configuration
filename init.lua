@@ -27,6 +27,10 @@ hs.loadSpoon('DeminimizeWindow')
 spoon.DeminimizeWindow:bindHotkeys({ restore = { { 'cmd', 'alt', 'ctrl' }, 'M' } })
 spoon.DeminimizeWindow:start()
 
+hs.loadSpoon('ClipboardHistory')
+spoon.ClipboardHistory:bindHotkeys({ show = { { 'cmd', 'alt', 'ctrl' }, 'C' } })
+spoon.ClipboardHistory:start()
+
 local function reload() hs.reload() end
 local keymaps = {}
 keymaps['R'] = reload
