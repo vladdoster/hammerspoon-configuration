@@ -1,13 +1,11 @@
--- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
-hs.window.animationDuration = 0.1
-hs.ipc.cliInstall("/opt/homebrew")
-hs.logger.setGlobalLogLevel("verbose")
+-- vim: set expandtab filetype=lua:
 require("hs.ipc")
 
-local K = require("ext.keybind")
-require("ext.infoDisplay"):start()
-require("ext.volume")
 require("ext.battery")
+require("ext.volume")
+
+hs.window.animationDuration = 0.1
+
 hs.loadSpoon("PinnedWindows")
 spoon.PinnedWindows:bindHotkeys({ togglePin = { { "cmd", "alt", "shift" }, "P" } })
 spoon.PinnedWindows:start()
@@ -24,11 +22,10 @@ hs.loadSpoon("ClipboardHistory")
 spoon.ClipboardHistory:bindHotkeys({ show = { { "cmd", "alt", "ctrl" }, "C" } })
 spoon.ClipboardHistory:start()
 
-local function reload()
-    hs.reload()
-end
-local keymaps = {}
-keymaps["R"] = reload
-K.bind(keymaps)
+require("ext.keybind").bind({
+    ["R"] = function()
+        hs.reload()
+    end,
+})
 
-hs.notify.new({ title = "Hammerspoon", informativeText = "Config loaded" }):send()
+hs.notify.new({ informativeText = "Config loaded", title = "Hammerspoon" }):send()
