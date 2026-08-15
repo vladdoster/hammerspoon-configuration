@@ -6,6 +6,7 @@
 ## Features
 
 - Battery menubar readout and low-battery alerts (`BatteryMonitor.spoon`)
+- Volume hotkeys with an on-screen readout (`VolumeControl.spoon`)
 - Spaces navigation
 - Clipboard history
 

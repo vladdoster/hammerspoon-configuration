@@ -1,8 +1,6 @@
 -- vim: set expandtab filetype=lua:
 require("hs.ipc")
 
-require("ext.volume")
-
 hs.window.animationDuration = 0.1
 
 hs.loadSpoon("SpoonInstall")
@@ -19,6 +17,10 @@ spoon.SpoonInstall:andUse(
     { hotkeys = { togglePin = { { "cmd", "alt", "shift" }, "P" } }, start = true }
 )
 spoon.SpoonInstall:andUse("SummonWindow", { hotkeys = { summon = { { "cmd", "alt", "shift" }, "S" } }, start = true })
+spoon.SpoonInstall:andUse("VolumeControl", {
+    hotkeys = { down = { { "cmd", "alt", "ctrl" }, "Down" }, up = { { "cmd", "alt", "ctrl" }, "Up" } },
+    start = true,
+})
 
 require("ext.keybind").bind({
     ["R"] = function()

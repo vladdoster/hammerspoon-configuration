@@ -1,0 +1,762 @@
+[
+  {
+    "Constant" : [
+
+    ],
+    "submodules" : [
+
+    ],
+    "Function" : [
+
+    ],
+    "Variable" : [
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+        ],
+        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "def" : "VolumeControl.logger",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.logger",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "logger",
+        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Percentage points added or removed per keypress. Defaults to `2`."
+        ],
+        "doc" : "Percentage points added or removed per keypress. Defaults to `2`.",
+        "def" : "VolumeControl.increment",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.increment",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "increment",
+        "desc" : "Percentage points added or removed per keypress. Defaults to `2`."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Seconds the readout stays up after you stop adjusting. Defaults to `2`.",
+          "",
+          "The countdown restarts on every change, from a held key's repeats and from separate presses alike, so a burst of adjustments shows one continuous readout. Read it as \"how long after the LAST change\", not \"how long each change is shown\": a value shorter than the gap between deliberate presses makes the readout drop out mid-adjustment."
+        ],
+        "doc" : "Seconds the readout stays up after you stop adjusting. Defaults to `2`.\n\nThe countdown restarts on every change, from a held key's repeats and from separate presses alike, so a burst of adjustments shows one continuous readout. Read it as \"how long after the LAST change\", not \"how long each change is shown\": a value shorter than the gap between deliberate presses makes the readout drop out mid-adjustment.",
+        "def" : "VolumeControl.hudDuration",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.hudDuration",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "hudDuration",
+        "desc" : "Seconds the readout stays up after you stop adjusting. Defaults to `2`."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Seconds after which the next step re-reads the device instead of trusting its own target. Defaults to `1`.",
+          "",
+          "During a ramp the Spoon steps its own figure, which keeps the increments even on hardware that quantises volume to its own steps and reads back something other than what was written. Once you pause for longer than this, the device is authoritative again, so changes made with the media keys or in System Settings are picked up."
+        ],
+        "doc" : "Seconds after which the next step re-reads the device instead of trusting its own target. Defaults to `1`.\n\nDuring a ramp the Spoon steps its own figure, which keeps the increments even on hardware that quantises volume to its own steps and reads back something other than what was written. Once you pause for longer than this, the device is authoritative again, so changes made with the media keys or in System Settings are picked up.",
+        "def" : "VolumeControl.resyncAfter",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.resyncAfter",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "resyncAfter",
+        "desc" : "Seconds after which the next step re-reads the device instead of trusting its own target. Defaults to `1`."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Whether reaching 0% mutes the device, and anything above it unmutes. Defaults to `true`."
+        ],
+        "doc" : "Whether reaching 0% mutes the device, and anything above it unmutes. Defaults to `true`.",
+        "def" : "VolumeControl.muteAtZero",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.muteAtZero",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "muteAtZero",
+        "desc" : "Whether reaching 0% mutes the device, and anything above it unmutes. Defaults to `true`."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Appearance of the readout, mirroring `hs.alert.defaultStyle` so it looks like the alert it replaces.",
+          "",
+          "Baked into the canvas at build time. Change it before `VolumeControl:start()`, or call `VolumeControl:rebuild()` afterwards."
+        ],
+        "doc" : "Appearance of the readout, mirroring `hs.alert.defaultStyle` so it looks like the alert it replaces.\n\nBaked into the canvas at build time. Change it before `VolumeControl:start()`, or call `VolumeControl:rebuild()` afterwards.",
+        "def" : "VolumeControl.hudStyle",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.hudStyle",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "hudStyle",
+        "desc" : "Appearance of the readout, mirroring `hs.alert.defaultStyle` so it looks like the alert it replaces."
+      }
+    ],
+    "stripped_doc" : [
+
+    ],
+    "type" : "Module",
+    "desc" : "Steps the default output device's volume from a hotkey, with an on-screen readout.",
+    "Deprecated" : [
+
+    ],
+    "Constructor" : [
+
+    ],
+    "items" : [
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Seconds the readout stays up after you stop adjusting. Defaults to `2`.",
+          "",
+          "The countdown restarts on every change, from a held key's repeats and from separate presses alike, so a burst of adjustments shows one continuous readout. Read it as \"how long after the LAST change\", not \"how long each change is shown\": a value shorter than the gap between deliberate presses makes the readout drop out mid-adjustment."
+        ],
+        "doc" : "Seconds the readout stays up after you stop adjusting. Defaults to `2`.\n\nThe countdown restarts on every change, from a held key's repeats and from separate presses alike, so a burst of adjustments shows one continuous readout. Read it as \"how long after the LAST change\", not \"how long each change is shown\": a value shorter than the gap between deliberate presses makes the readout drop out mid-adjustment.",
+        "def" : "VolumeControl.hudDuration",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.hudDuration",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "hudDuration",
+        "desc" : "Seconds the readout stays up after you stop adjusting. Defaults to `2`."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Appearance of the readout, mirroring `hs.alert.defaultStyle` so it looks like the alert it replaces.",
+          "",
+          "Baked into the canvas at build time. Change it before `VolumeControl:start()`, or call `VolumeControl:rebuild()` afterwards."
+        ],
+        "doc" : "Appearance of the readout, mirroring `hs.alert.defaultStyle` so it looks like the alert it replaces.\n\nBaked into the canvas at build time. Change it before `VolumeControl:start()`, or call `VolumeControl:rebuild()` afterwards.",
+        "def" : "VolumeControl.hudStyle",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.hudStyle",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "hudStyle",
+        "desc" : "Appearance of the readout, mirroring `hs.alert.defaultStyle` so it looks like the alert it replaces."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Percentage points added or removed per keypress. Defaults to `2`."
+        ],
+        "doc" : "Percentage points added or removed per keypress. Defaults to `2`.",
+        "def" : "VolumeControl.increment",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.increment",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "increment",
+        "desc" : "Percentage points added or removed per keypress. Defaults to `2`."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+        ],
+        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "def" : "VolumeControl.logger",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.logger",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "logger",
+        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Whether reaching 0% mutes the device, and anything above it unmutes. Defaults to `true`."
+        ],
+        "doc" : "Whether reaching 0% mutes the device, and anything above it unmutes. Defaults to `true`.",
+        "def" : "VolumeControl.muteAtZero",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.muteAtZero",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "muteAtZero",
+        "desc" : "Whether reaching 0% mutes the device, and anything above it unmutes. Defaults to `true`."
+      },
+      {
+        "parameters" : [
+
+        ],
+        "stripped_doc" : [
+          "Seconds after which the next step re-reads the device instead of trusting its own target. Defaults to `1`.",
+          "",
+          "During a ramp the Spoon steps its own figure, which keeps the increments even on hardware that quantises volume to its own steps and reads back something other than what was written. Once you pause for longer than this, the device is authoritative again, so changes made with the media keys or in System Settings are picked up."
+        ],
+        "doc" : "Seconds after which the next step re-reads the device instead of trusting its own target. Defaults to `1`.\n\nDuring a ramp the Spoon steps its own figure, which keeps the increments even on hardware that quantises volume to its own steps and reads back something other than what was written. Once you pause for longer than this, the device is authoritative again, so changes made with the media keys or in System Settings are picked up.",
+        "def" : "VolumeControl.resyncAfter",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl.resyncAfter",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "resyncAfter",
+        "desc" : "Seconds after which the next step re-reads the device instead of trusting its own target. Defaults to `1`."
+      },
+      {
+        "parameters" : [
+          " * mapping - A table containing hotkey modifier\/key details for the following items:",
+          "   * up - Raise the volume by `VolumeControl.increment`",
+          "   * down - Lower the volume by `VolumeControl.increment`",
+          ""
+        ],
+        "stripped_doc" : [
+          "Binds hotkeys for VolumeControl.",
+          ""
+        ],
+        "doc" : "Binds hotkeys for VolumeControl.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * up - Raise the volume by `VolumeControl.increment`\n   * down - Lower the volume by `VolumeControl.increment`\n\nReturns:\n * The VolumeControl object\n\nFor example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`\nBound directly with `hs.hotkey.bind` rather than through `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`; each key is given the same function as its `repeatfn` too, so holding it ramps the volume instead of moving it one step.",
+        "def" : "VolumeControl:bindHotkeys(mapping) -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:bindHotkeys(mapping) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object",
+          "",
+          "For example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`",
+          "Bound directly with `hs.hotkey.bind` rather than through `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`; each key is given the same function as its `repeatfn` too, so holding it ramps the volume instead of moving it one step."
+        ],
+        "name" : "bindHotkeys",
+        "desc" : "Binds hotkeys for VolumeControl."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+          ""
+        ],
+        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object\n\nDeliberately starts nothing. The canvas is built lazily on the first volume change.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under a live canvas.",
+        "def" : "VolumeControl:init() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:init() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object",
+          "",
+          "Deliberately starts nothing. The canvas is built lazily on the first volume change.",
+          "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under a live canvas."
+        ],
+        "name" : "init",
+        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Discards the readout canvas so the next change rebuilds it with the current `hudStyle`.",
+          ""
+        ],
+        "doc" : "Discards the readout canvas so the next change rebuilds it with the current `hudStyle`.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:rebuild() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:rebuild() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "rebuild",
+        "desc" : "Discards the readout canvas so the next change rebuilds it with the current `hudStyle`."
+      },
+      {
+        "parameters" : [
+          " * level - The percentage to set",
+          " * device - An optional `hs.audiodevice` to act on; defaults to the current default output device",
+          " * now - An optional timestamp, used internally to stamp the ramp cache",
+          ""
+        ],
+        "stripped_doc" : [
+          "Sets the output volume to an absolute level, clamped to 0-100.",
+          ""
+        ],
+        "doc" : "Sets the output volume to an absolute level, clamped to 0-100.\n\nParameters:\n * level - The percentage to set\n * device - An optional `hs.audiodevice` to act on; defaults to the current default output device\n * now - An optional timestamp, used internally to stamp the ramp cache\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:setVolume(level, [device], [now]) -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:setVolume(level, [device], [now]) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "setVolume",
+        "desc" : "Sets the output volume to an absolute level, clamped to 0-100."
+      },
+      {
+        "parameters" : [
+          " * level - The percentage to display",
+          ""
+        ],
+        "stripped_doc" : [
+          "Puts the readout on screen at the given level and starts its hide countdown.",
+          ""
+        ],
+        "doc" : "Puts the readout on screen at the given level and starts its hide countdown.\n\nParameters:\n * level - The percentage to display\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:showVolume(level) -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:showVolume(level) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "showVolume",
+        "desc" : "Puts the readout on screen at the given level and starts its hide countdown."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Enables the Spoon's hotkeys.",
+          ""
+        ],
+        "doc" : "Enables the Spoon's hotkeys.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:start() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:start() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "start",
+        "desc" : "Enables the Spoon's hotkeys."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+          ""
+        ],
+        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `device`, `volume`, `muted`, `target`, `targetAge`, `shown` and `hotkeys` keys\n\n`target` is the level this Spoon last set and `targetAge` how long ago; once `targetAge` exceeds `VolumeControl.resyncAfter`, the next step re-reads `volume` from the device instead.",
+        "def" : "VolumeControl:status() -> table",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:status() -> table",
+        "type" : "Method",
+        "returns" : [
+          " * A table with `running`, `device`, `volume`, `muted`, `target`, `targetAge`, `shown` and `hotkeys` keys",
+          "",
+          "`target` is the level this Spoon last set and `targetAge` how long ago; once `targetAge` exceeds `VolumeControl.resyncAfter`, the next step re-reads `volume` from the device instead."
+        ],
+        "name" : "status",
+        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console."
+      },
+      {
+        "parameters" : [
+          " * delta - Percentage points to add; negative lowers the volume",
+          ""
+        ],
+        "stripped_doc" : [
+          "Adds `delta` percentage points to the output volume, clamped to 0-100.",
+          ""
+        ],
+        "doc" : "Adds `delta` percentage points to the output volume, clamped to 0-100.\n\nParameters:\n * delta - Percentage points to add; negative lowers the volume\n\nReturns:\n * The VolumeControl object\n\nReads the device once per call. Within `VolumeControl.resyncAfter` seconds of the previous step it starts from its own figure rather than re-reading, which keeps a held ramp even.",
+        "def" : "VolumeControl:step(delta) -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:step(delta) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object",
+          "",
+          "Reads the device once per call. Within `VolumeControl.resyncAfter` seconds of the previous step it starts from its own figure rather than re-reading, which keeps a held ramp even."
+        ],
+        "name" : "step",
+        "desc" : "Adds `delta` percentage points to the output volume, clamped to 0-100."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Disables the Spoon's hotkeys and removes the readout.",
+          ""
+        ],
+        "doc" : "Disables the Spoon's hotkeys and removes the readout.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object\n\nSafe to call more than once. Unlike the other Spoons here, this one disables its hotkeys rather than leaving them live, since a volume key that still changed the volume would mean `stop()` had stopped nothing. The bindings survive, so `start()` brings them back; use `VolumeControl:unbindHotkeys()` to remove them outright.",
+        "def" : "VolumeControl:stop() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:stop() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object",
+          "",
+          "Safe to call more than once. Unlike the other Spoons here, this one disables its hotkeys rather than leaving them live, since a volume key that still changed the volume would mean `stop()` had stopped nothing. The bindings survive, so `start()` brings them back; use `VolumeControl:unbindHotkeys()` to remove them outright."
+        ],
+        "name" : "stop",
+        "desc" : "Disables the Spoon's hotkeys and removes the readout."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Deletes every hotkey bound by `VolumeControl:bindHotkeys()`.",
+          ""
+        ],
+        "doc" : "Deletes every hotkey bound by `VolumeControl:bindHotkeys()`.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:unbindHotkeys() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:unbindHotkeys() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "unbindHotkeys",
+        "desc" : "Deletes every hotkey bound by `VolumeControl:bindHotkeys()`."
+      }
+    ],
+    "Method" : [
+      {
+        "parameters" : [
+          " * level - The percentage to display",
+          ""
+        ],
+        "stripped_doc" : [
+          "Puts the readout on screen at the given level and starts its hide countdown.",
+          ""
+        ],
+        "doc" : "Puts the readout on screen at the given level and starts its hide countdown.\n\nParameters:\n * level - The percentage to display\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:showVolume(level) -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:showVolume(level) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "showVolume",
+        "desc" : "Puts the readout on screen at the given level and starts its hide countdown."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Discards the readout canvas so the next change rebuilds it with the current `hudStyle`.",
+          ""
+        ],
+        "doc" : "Discards the readout canvas so the next change rebuilds it with the current `hudStyle`.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:rebuild() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:rebuild() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "rebuild",
+        "desc" : "Discards the readout canvas so the next change rebuilds it with the current `hudStyle`."
+      },
+      {
+        "parameters" : [
+          " * delta - Percentage points to add; negative lowers the volume",
+          ""
+        ],
+        "stripped_doc" : [
+          "Adds `delta` percentage points to the output volume, clamped to 0-100.",
+          ""
+        ],
+        "doc" : "Adds `delta` percentage points to the output volume, clamped to 0-100.\n\nParameters:\n * delta - Percentage points to add; negative lowers the volume\n\nReturns:\n * The VolumeControl object\n\nReads the device once per call. Within `VolumeControl.resyncAfter` seconds of the previous step it starts from its own figure rather than re-reading, which keeps a held ramp even.",
+        "def" : "VolumeControl:step(delta) -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:step(delta) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object",
+          "",
+          "Reads the device once per call. Within `VolumeControl.resyncAfter` seconds of the previous step it starts from its own figure rather than re-reading, which keeps a held ramp even."
+        ],
+        "name" : "step",
+        "desc" : "Adds `delta` percentage points to the output volume, clamped to 0-100."
+      },
+      {
+        "parameters" : [
+          " * level - The percentage to set",
+          " * device - An optional `hs.audiodevice` to act on; defaults to the current default output device",
+          " * now - An optional timestamp, used internally to stamp the ramp cache",
+          ""
+        ],
+        "stripped_doc" : [
+          "Sets the output volume to an absolute level, clamped to 0-100.",
+          ""
+        ],
+        "doc" : "Sets the output volume to an absolute level, clamped to 0-100.\n\nParameters:\n * level - The percentage to set\n * device - An optional `hs.audiodevice` to act on; defaults to the current default output device\n * now - An optional timestamp, used internally to stamp the ramp cache\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:setVolume(level, [device], [now]) -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:setVolume(level, [device], [now]) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "setVolume",
+        "desc" : "Sets the output volume to an absolute level, clamped to 0-100."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+          ""
+        ],
+        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object\n\nDeliberately starts nothing. The canvas is built lazily on the first volume change.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under a live canvas.",
+        "def" : "VolumeControl:init() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:init() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object",
+          "",
+          "Deliberately starts nothing. The canvas is built lazily on the first volume change.",
+          "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under a live canvas."
+        ],
+        "name" : "init",
+        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Enables the Spoon's hotkeys.",
+          ""
+        ],
+        "doc" : "Enables the Spoon's hotkeys.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:start() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:start() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "start",
+        "desc" : "Enables the Spoon's hotkeys."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Disables the Spoon's hotkeys and removes the readout.",
+          ""
+        ],
+        "doc" : "Disables the Spoon's hotkeys and removes the readout.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object\n\nSafe to call more than once. Unlike the other Spoons here, this one disables its hotkeys rather than leaving them live, since a volume key that still changed the volume would mean `stop()` had stopped nothing. The bindings survive, so `start()` brings them back; use `VolumeControl:unbindHotkeys()` to remove them outright.",
+        "def" : "VolumeControl:stop() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:stop() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object",
+          "",
+          "Safe to call more than once. Unlike the other Spoons here, this one disables its hotkeys rather than leaving them live, since a volume key that still changed the volume would mean `stop()` had stopped nothing. The bindings survive, so `start()` brings them back; use `VolumeControl:unbindHotkeys()` to remove them outright."
+        ],
+        "name" : "stop",
+        "desc" : "Disables the Spoon's hotkeys and removes the readout."
+      },
+      {
+        "parameters" : [
+          " * mapping - A table containing hotkey modifier\/key details for the following items:",
+          "   * up - Raise the volume by `VolumeControl.increment`",
+          "   * down - Lower the volume by `VolumeControl.increment`",
+          ""
+        ],
+        "stripped_doc" : [
+          "Binds hotkeys for VolumeControl.",
+          ""
+        ],
+        "doc" : "Binds hotkeys for VolumeControl.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * up - Raise the volume by `VolumeControl.increment`\n   * down - Lower the volume by `VolumeControl.increment`\n\nReturns:\n * The VolumeControl object\n\nFor example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`\nBound directly with `hs.hotkey.bind` rather than through `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`; each key is given the same function as its `repeatfn` too, so holding it ramps the volume instead of moving it one step.",
+        "def" : "VolumeControl:bindHotkeys(mapping) -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:bindHotkeys(mapping) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object",
+          "",
+          "For example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`",
+          "Bound directly with `hs.hotkey.bind` rather than through `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`; each key is given the same function as its `repeatfn` too, so holding it ramps the volume instead of moving it one step."
+        ],
+        "name" : "bindHotkeys",
+        "desc" : "Binds hotkeys for VolumeControl."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Deletes every hotkey bound by `VolumeControl:bindHotkeys()`.",
+          ""
+        ],
+        "doc" : "Deletes every hotkey bound by `VolumeControl:bindHotkeys()`.\n\nParameters:\n * None\n\nReturns:\n * The VolumeControl object",
+        "def" : "VolumeControl:unbindHotkeys() -> self",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:unbindHotkeys() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The VolumeControl object"
+        ],
+        "name" : "unbindHotkeys",
+        "desc" : "Deletes every hotkey bound by `VolumeControl:bindHotkeys()`."
+      },
+      {
+        "parameters" : [
+          " * None",
+          ""
+        ],
+        "stripped_doc" : [
+          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+          ""
+        ],
+        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `device`, `volume`, `muted`, `target`, `targetAge`, `shown` and `hotkeys` keys\n\n`target` is the level this Spoon last set and `targetAge` how long ago; once `targetAge` exceeds `VolumeControl.resyncAfter`, the next step re-reads `volume` from the device instead.",
+        "def" : "VolumeControl:status() -> table",
+        "notes" : [
+
+        ],
+        "signature" : "VolumeControl:status() -> table",
+        "type" : "Method",
+        "returns" : [
+          " * A table with `running`, `device`, `volume`, `muted`, `target`, `targetAge`, `shown` and `hotkeys` keys",
+          "",
+          "`target` is the level this Spoon last set and `targetAge` how long ago; once `targetAge` exceeds `VolumeControl.resyncAfter`, the next step re-reads `volume` from the device instead."
+        ],
+        "name" : "status",
+        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console."
+      }
+    ],
+    "Command" : [
+
+    ],
+    "Field" : [
+
+    ],
+    "doc" : "Steps the default output device's volume from a hotkey, with an on-screen readout.\n\nThe readout is a single canvas, built once and then only re-textured, so holding the key down\ncosts one attribute write per repeat rather than a new window. It is the Spoon's own canvas\nrather than an `hs.alert`, so it never disturbs messages other Spoons have put on screen.",
+    "name" : "VolumeControl"
+  }
+]
