@@ -1,886 +1,714 @@
 [
   {
-    "Constant" : [
-
-    ],
-    "submodules" : [
-
-    ],
-    "Function" : [
-
-    ],
-    "Variable" : [
+    "Command": [],
+    "Constant": [],
+    "Constructor": [],
+    "Deprecated": [],
+    "Field": [],
+    "Function": [],
+    "Method": [
       {
-        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "stripped_doc" : [
-          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
-        ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.logger",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "logger",
-        "def" : "FocusBorder.logger"
-      },
-      {
-        "doc" : "Width in points of the band drawn outside the window frame. Defaults to `2`.\n\nBaked into the canvas at build time, so assigning this does nothing to a border already on screen. Set it before `FocusBorder:start()`, or use `FocusBorder:setWidth()`, which rebuilds.",
-        "stripped_doc" : [
-          "Width in points of the band drawn outside the window frame. Defaults to `2`.",
-          "",
-          "Baked into the canvas at build time, so assigning this does nothing to a border already on screen. Set it before `FocusBorder:start()`, or use `FocusBorder:setWidth()`, which rebuilds."
-        ],
-        "desc" : "Width in points of the band drawn outside the window frame. Defaults to `2`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.borderWidth",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "borderWidth",
-        "def" : "FocusBorder.borderWidth"
-      },
-      {
-        "doc" : "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.\n\nCarries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border.",
-        "stripped_doc" : [
-          "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.",
-          "",
-          "Carries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border."
-        ],
-        "desc" : "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.borderColor",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "borderColor",
-        "def" : "FocusBorder.borderColor"
-      },
-      {
-        "doc" : "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.\n\nNo API exposes the real figure, so this is meant to be eyeballed: too small and the border cuts across the corners, too large and it bulges past them. macOS 26 rounds them more than earlier releases.\nThe radius drawn is derived from this and `FocusBorder.borderWidth` at build time; use `FocusBorder:setCornerRadius()` to change it on a running border.",
-        "stripped_doc" : [
-          "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.",
-          "",
-          "No API exposes the real figure, so this is meant to be eyeballed: too small and the border cuts across the corners, too large and it bulges past them. macOS 26 rounds them more than earlier releases.",
-          "The radius drawn is derived from this and `FocusBorder.borderWidth` at build time; use `FocusBorder:setCornerRadius()` to change it on a running border."
-        ],
-        "desc" : "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.cornerRadius",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "cornerRadius",
-        "def" : "FocusBorder.cornerRadius"
-      },
-      {
-        "doc" : "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`.",
-        "stripped_doc" : [
-          "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`."
-        ],
-        "desc" : "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.fullscreenSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "fullscreenSettle",
-        "def" : "FocusBorder.fullscreenSettle"
-      },
-      {
-        "doc" : "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.\n\nImmediately after a switch, `hs.spaces.focusedSpace()` still reports the old Space.",
-        "stripped_doc" : [
-          "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.",
-          "",
-          "Immediately after a switch, `hs.spaces.focusedSpace()` still reports the old Space."
-        ],
-        "desc" : "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.spaceSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "spaceSettle",
-        "def" : "FocusBorder.spaceSettle"
-      },
-      {
-        "doc" : "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
-        "stripped_doc" : [
-          "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`."
-        ],
-        "desc" : "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.screenSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "screenSettle",
-        "def" : "FocusBorder.screenSettle"
-      },
-      {
-        "doc" : "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`.",
-        "stripped_doc" : [
-          "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`."
-        ],
-        "desc" : "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.appSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "appSettle",
-        "def" : "FocusBorder.appSettle"
-      },
-      {
-        "doc" : "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.\n\n`start()` runs while the config is still loading, when the accessibility bridge is least responsive. This retry keeps a cold start from leaving the border stuck until the next app switch.",
-        "stripped_doc" : [
-          "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.",
-          "",
-          "`start()` runs while the config is still loading, when the accessibility bridge is least responsive. This retry keeps a cold start from leaving the border stuck until the next app switch."
-        ],
-        "desc" : "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.startRetry",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "startRetry",
-        "def" : "FocusBorder.startRetry"
-      },
-      {
-        "doc" : "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`.",
-        "stripped_doc" : [
-          "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`."
-        ],
-        "desc" : "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.fullTolerance",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "fullTolerance",
-        "def" : "FocusBorder.fullTolerance"
-      }
-    ],
-    "stripped_doc" : [
-
-    ],
-    "type" : "Module",
-    "Deprecated" : [
-
-    ],
-    "desc" : "Draws a red border around the focused window, hidden while that window is fullscreen.",
-    "Constructor" : [
-
-    ],
-    "doc" : "Draws a red border around the focused window, hidden while that window is fullscreen.\n\nThe border occupies a band just OUTSIDE the window frame, so it never covers the window's\nown content -- the trade-off being that it is clipped where a window sits flush against a\nscreen edge.",
-    "Method" : [
-      {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nDeliberately starts nothing. Every watcher and timer belongs to `FocusBorder:start()`, and the canvas is built lazily on the first redraw.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.",
-        "stripped_doc" : [
-          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
-          ""
-        ],
-        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
-        "parameters" : [
+        "def": "FocusBorder:init() -> self",
+        "desc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "doc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nDeliberately starts nothing. Every watcher and timer belongs to `FocusBorder:start()`, and the canvas is built lazily on the first redraw.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.",
+        "name": "init",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:init() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "Deliberately starts nothing. Every watcher and timer belongs to `FocusBorder:start()`, and the canvas is built lazily on the first redraw.",
           "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers."
         ],
-        "name" : "init",
-        "def" : "FocusBorder:init() -> self"
-      },
-      {
-        "doc" : "Starts watching for focus changes and draws the border around the focused window.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nCalling this on an already-started Spoon restarts it cleanly.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
-        "stripped_doc" : [
-          "Starts watching for focus changes and draws the border around the focused window.",
+        "signature": "FocusBorder:init() -> self",
+        "stripped_doc": [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
           ""
         ],
-        "desc" : "Starts watching for focus changes and draws the border around the focused window.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:start() -> self",
+        "desc": "Starts watching for focus changes and draws the border around the focused window.",
+        "doc": "Starts watching for focus changes and draws the border around the focused window.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nCalling this on an already-started Spoon restarts it cleanly.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
+        "name": "start",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:start() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "Calling this on an already-started Spoon restarts it cleanly.",
           "Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
         ],
-        "name" : "start",
-        "def" : "FocusBorder:start() -> self"
-      },
-      {
-        "doc" : "Stops the Spoon, removing the border and every watcher and timer it owns.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nAny hotkeys bound with `FocusBorder:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
-        "stripped_doc" : [
-          "Stops the Spoon, removing the border and every watcher and timer it owns.",
+        "signature": "FocusBorder:start() -> self",
+        "stripped_doc": [
+          "Starts watching for focus changes and draws the border around the focused window.",
           ""
         ],
-        "desc" : "Stops the Spoon, removing the border and every watcher and timer it owns.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:stop() -> self",
+        "desc": "Stops the Spoon, removing the border and every watcher and timer it owns.",
+        "doc": "Stops the Spoon, removing the border and every watcher and timer it owns.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nAny hotkeys bound with `FocusBorder:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:stop() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "Any hotkeys bound with `FocusBorder:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
-        "name" : "stop",
-        "def" : "FocusBorder:stop() -> self"
-      },
-      {
-        "doc" : "Binds hotkeys for FocusBorder.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * toggle - Show or hide the border without tearing the watchers down\n\nReturns:\n * The FocusBorder object\n\nFor example: `spoon.FocusBorder:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`",
-        "stripped_doc" : [
-          "Binds hotkeys for FocusBorder.",
+        "signature": "FocusBorder:stop() -> self",
+        "stripped_doc": [
+          "Stops the Spoon, removing the border and every watcher and timer it owns.",
           ""
         ],
-        "desc" : "Binds hotkeys for FocusBorder.",
-        "parameters" : [
-          " * mapping - A table containing hotkey modifier\/key details for the following items:",
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for FocusBorder.",
+        "doc": "Binds hotkeys for FocusBorder.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * toggle - Show or hide the border without tearing the watchers down\n\nReturns:\n * The FocusBorder object\n\nFor example: `spoon.FocusBorder:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - A table containing hotkey modifier/key details for the following items:",
           "   * toggle - Show or hide the border without tearing the watchers down",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:bindHotkeys(mapping) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "For example: `spoon.FocusBorder:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`"
         ],
-        "name" : "bindHotkeys",
-        "def" : "FocusBorder:bindHotkeys(mapping) -> self"
-      },
-      {
-        "doc" : "Shows or hides the border without tearing the watchers down.\n\nParameters:\n * state - An optional boolean. `true` shows the border, `false` hides it. If omitted, the current state is flipped.\n\nReturns:\n * The FocusBorder object",
-        "stripped_doc" : [
-          "Shows or hides the border without tearing the watchers down.",
+        "signature": "FocusBorder:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for FocusBorder.",
           ""
         ],
-        "desc" : "Shows or hides the border without tearing the watchers down.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:toggle([state]) -> self",
+        "desc": "Shows or hides the border without tearing the watchers down.",
+        "doc": "Shows or hides the border without tearing the watchers down.\n\nParameters:\n * state - An optional boolean. `true` shows the border, `false` hides it. If omitted, the current state is flipped.\n\nReturns:\n * The FocusBorder object",
+        "name": "toggle",
+        "notes": [],
+        "parameters": [
           " * state - An optional boolean. `true` shows the border, `false` hides it. If omitted, the current state is flipped.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:toggle([state]) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object"
         ],
-        "name" : "toggle",
-        "def" : "FocusBorder:toggle([state]) -> self"
-      },
-      {
-        "doc" : "Changes the border colour and redraws.\n\nParameters:\n * color - Any table `hs.drawing.color` understands, e.g. `{ red = 0, green = 0.6, blue = 1 }`. Anything that is not a table is ignored.\n\nReturns:\n * The FocusBorder object",
-        "stripped_doc" : [
-          "Changes the border colour and redraws.",
+        "signature": "FocusBorder:toggle([state]) -> self",
+        "stripped_doc": [
+          "Shows or hides the border without tearing the watchers down.",
           ""
         ],
-        "desc" : "Changes the border colour and redraws.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:setColor(color) -> self",
+        "desc": "Changes the border colour and redraws.",
+        "doc": "Changes the border colour and redraws.\n\nParameters:\n * color - Any table `hs.drawing.color` understands, e.g. `{ red = 0, green = 0.6, blue = 1 }`. Anything that is not a table is ignored.\n\nReturns:\n * The FocusBorder object",
+        "name": "setColor",
+        "notes": [],
+        "parameters": [
           " * color - Any table `hs.drawing.color` understands, e.g. `{ red = 0, green = 0.6, blue = 1 }`. Anything that is not a table is ignored.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:setColor(color) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object"
         ],
-        "name" : "setColor",
-        "def" : "FocusBorder:setColor(color) -> self"
-      },
-      {
-        "doc" : "Changes the border thickness and redraws.\n\nParameters:\n * width - Thickness in points. Values that are not a positive number are ignored.\n\nReturns:\n * The FocusBorder object",
-        "stripped_doc" : [
-          "Changes the border thickness and redraws.",
+        "signature": "FocusBorder:setColor(color) -> self",
+        "stripped_doc": [
+          "Changes the border colour and redraws.",
           ""
         ],
-        "desc" : "Changes the border thickness and redraws.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:setWidth(width) -> self",
+        "desc": "Changes the border thickness and redraws.",
+        "doc": "Changes the border thickness and redraws.\n\nParameters:\n * width - Thickness in points. Values that are not a positive number are ignored.\n\nReturns:\n * The FocusBorder object",
+        "name": "setWidth",
+        "notes": [],
+        "parameters": [
           " * width - Thickness in points. Values that are not a positive number are ignored.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:setWidth(width) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object"
         ],
-        "name" : "setWidth",
-        "def" : "FocusBorder:setWidth(width) -> self"
-      },
-      {
-        "doc" : "Changes the assumed window corner rounding and redraws.\n\nParameters:\n * radius - The window's own corner rounding in points. Values that are not a positive number are ignored.\n\nReturns:\n * The FocusBorder object\n\nThis is the one setting meant to be eyeballed against your macOS version, so it exists mainly to let you try values from the Console without reloading.",
-        "stripped_doc" : [
-          "Changes the assumed window corner rounding and redraws.",
+        "signature": "FocusBorder:setWidth(width) -> self",
+        "stripped_doc": [
+          "Changes the border thickness and redraws.",
           ""
         ],
-        "desc" : "Changes the assumed window corner rounding and redraws.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:setCornerRadius(radius) -> self",
+        "desc": "Changes the assumed window corner rounding and redraws.",
+        "doc": "Changes the assumed window corner rounding and redraws.\n\nParameters:\n * radius - The window's own corner rounding in points. Values that are not a positive number are ignored.\n\nReturns:\n * The FocusBorder object\n\nThis is the one setting meant to be eyeballed against your macOS version, so it exists mainly to let you try values from the Console without reloading.",
+        "name": "setCornerRadius",
+        "notes": [],
+        "parameters": [
           " * radius - The window's own corner rounding in points. Values that are not a positive number are ignored.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:setCornerRadius(radius) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "This is the one setting meant to be eyeballed against your macOS version, so it exists mainly to let you try values from the Console without reloading."
         ],
-        "name" : "setCornerRadius",
-        "def" : "FocusBorder:setCornerRadius(radius) -> self"
-      },
-      {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `enabled`, `trackedId`, `tracking`, `trackingApp`, `appPid`, `fullScreen` and `borderWidth` keys\n\n`trackingApp` being false while `running` is true is the signature of the same-app focus stall: the application observer is what makes a window switch inside one app visible.",
-        "stripped_doc" : [
-          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "signature": "FocusBorder:setCornerRadius(radius) -> self",
+        "stripped_doc": [
+          "Changes the assumed window corner rounding and redraws.",
           ""
         ],
-        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:status() -> table",
+        "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `enabled`, `trackedId`, `tracking`, `trackingApp`, `appPid`, `fullScreen` and `borderWidth` keys\n\n`trackingApp` being false while `running` is true is the signature of the same-app focus stall: the application observer is what makes a window switch inside one app visible.",
+        "name": "status",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:status() -> table",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * A table with `running`, `enabled`, `trackedId`, `tracking`, `trackingApp`, `appPid`, `fullScreen` and `borderWidth` keys",
           "",
           "`trackingApp` being false while `running` is true is the signature of the same-app focus stall: the application observer is what makes a window switch inside one app visible."
         ],
-        "name" : "status",
-        "def" : "FocusBorder:status() -> table"
+        "signature": "FocusBorder:status() -> table",
+        "stripped_doc": [
+          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+          ""
+        ],
+        "type": "Method"
       }
     ],
-    "Command" : [
-
-    ],
-    "items" : [
+    "Variable": [
       {
-        "doc" : "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`.",
-        "stripped_doc" : [
-          "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`."
+        "def": "FocusBorder.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.logger",
+        "stripped_doc": [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
         ],
-        "desc" : "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.appSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "appSettle",
-        "def" : "FocusBorder.appSettle"
+        "type": "Variable"
       },
       {
-        "doc" : "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.\n\nCarries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border.",
-        "stripped_doc" : [
-          "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.",
-          "",
-          "Carries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border."
-        ],
-        "desc" : "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.borderColor",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "borderColor",
-        "def" : "FocusBorder.borderColor"
-      },
-      {
-        "doc" : "Width in points of the band drawn outside the window frame. Defaults to `2`.\n\nBaked into the canvas at build time, so assigning this does nothing to a border already on screen. Set it before `FocusBorder:start()`, or use `FocusBorder:setWidth()`, which rebuilds.",
-        "stripped_doc" : [
+        "def": "FocusBorder.borderWidth",
+        "desc": "Width in points of the band drawn outside the window frame. Defaults to `2`.",
+        "doc": "Width in points of the band drawn outside the window frame. Defaults to `2`.\n\nBaked into the canvas at build time, so assigning this does nothing to a border already on screen. Set it before `FocusBorder:start()`, or use `FocusBorder:setWidth()`, which rebuilds.",
+        "name": "borderWidth",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.borderWidth",
+        "stripped_doc": [
           "Width in points of the band drawn outside the window frame. Defaults to `2`.",
           "",
           "Baked into the canvas at build time, so assigning this does nothing to a border already on screen. Set it before `FocusBorder:start()`, or use `FocusBorder:setWidth()`, which rebuilds."
         ],
-        "desc" : "Width in points of the band drawn outside the window frame. Defaults to `2`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.borderWidth",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "borderWidth",
-        "def" : "FocusBorder.borderWidth"
+        "type": "Variable"
       },
       {
-        "doc" : "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.\n\nNo API exposes the real figure, so this is meant to be eyeballed: too small and the border cuts across the corners, too large and it bulges past them. macOS 26 rounds them more than earlier releases.\nThe radius drawn is derived from this and `FocusBorder.borderWidth` at build time; use `FocusBorder:setCornerRadius()` to change it on a running border.",
-        "stripped_doc" : [
+        "def": "FocusBorder.borderColor",
+        "desc": "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.",
+        "doc": "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.\n\nCarries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border.",
+        "name": "borderColor",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.borderColor",
+        "stripped_doc": [
+          "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.",
+          "",
+          "Carries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.cornerRadius",
+        "desc": "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.",
+        "doc": "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.\n\nNo API exposes the real figure, so this is meant to be eyeballed: too small and the border cuts across the corners, too large and it bulges past them. macOS 26 rounds them more than earlier releases.\nThe radius drawn is derived from this and `FocusBorder.borderWidth` at build time; use `FocusBorder:setCornerRadius()` to change it on a running border.",
+        "name": "cornerRadius",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.cornerRadius",
+        "stripped_doc": [
           "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.",
           "",
           "No API exposes the real figure, so this is meant to be eyeballed: too small and the border cuts across the corners, too large and it bulges past them. macOS 26 rounds them more than earlier releases.",
           "The radius drawn is derived from this and `FocusBorder.borderWidth` at build time; use `FocusBorder:setCornerRadius()` to change it on a running border."
         ],
-        "desc" : "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.cornerRadius",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "cornerRadius",
-        "def" : "FocusBorder.cornerRadius"
+        "type": "Variable"
       },
       {
-        "doc" : "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`.",
-        "stripped_doc" : [
-          "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`."
-        ],
-        "desc" : "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.fullTolerance",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "fullTolerance",
-        "def" : "FocusBorder.fullTolerance"
-      },
-      {
-        "doc" : "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`.",
-        "stripped_doc" : [
+        "def": "FocusBorder.fullscreenSettle",
+        "desc": "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`.",
+        "doc": "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`.",
+        "name": "fullscreenSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.fullscreenSettle",
+        "stripped_doc": [
           "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`."
         ],
-        "desc" : "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.fullscreenSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "fullscreenSettle",
-        "def" : "FocusBorder.fullscreenSettle"
+        "type": "Variable"
       },
       {
-        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "stripped_doc" : [
-          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
-        ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.logger",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "logger",
-        "def" : "FocusBorder.logger"
-      },
-      {
-        "doc" : "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
-        "stripped_doc" : [
-          "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`."
-        ],
-        "desc" : "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.screenSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "screenSettle",
-        "def" : "FocusBorder.screenSettle"
-      },
-      {
-        "doc" : "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.\n\nImmediately after a switch, `hs.spaces.focusedSpace()` still reports the old Space.",
-        "stripped_doc" : [
+        "def": "FocusBorder.spaceSettle",
+        "desc": "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.",
+        "doc": "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.\n\nImmediately after a switch, `hs.spaces.focusedSpace()` still reports the old Space.",
+        "name": "spaceSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.spaceSettle",
+        "stripped_doc": [
           "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.",
           "",
           "Immediately after a switch, `hs.spaces.focusedSpace()` still reports the old Space."
         ],
-        "desc" : "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.spaceSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "spaceSettle",
-        "def" : "FocusBorder.spaceSettle"
+        "type": "Variable"
       },
       {
-        "doc" : "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.\n\n`start()` runs while the config is still loading, when the accessibility bridge is least responsive. This retry keeps a cold start from leaving the border stuck until the next app switch.",
-        "stripped_doc" : [
+        "def": "FocusBorder.screenSettle",
+        "desc": "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
+        "doc": "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
+        "name": "screenSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.screenSettle",
+        "stripped_doc": [
+          "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.appSettle",
+        "desc": "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`.",
+        "doc": "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`.",
+        "name": "appSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.appSettle",
+        "stripped_doc": [
+          "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.startRetry",
+        "desc": "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.",
+        "doc": "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.\n\n`start()` runs while the config is still loading, when the accessibility bridge is least responsive. This retry keeps a cold start from leaving the border stuck until the next app switch.",
+        "name": "startRetry",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.startRetry",
+        "stripped_doc": [
           "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.",
           "",
           "`start()` runs while the config is still loading, when the accessibility bridge is least responsive. This retry keeps a cold start from leaving the border stuck until the next app switch."
         ],
-        "desc" : "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder.startRetry",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "startRetry",
-        "def" : "FocusBorder.startRetry"
+        "type": "Variable"
       },
       {
-        "doc" : "Binds hotkeys for FocusBorder.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * toggle - Show or hide the border without tearing the watchers down\n\nReturns:\n * The FocusBorder object\n\nFor example: `spoon.FocusBorder:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`",
-        "stripped_doc" : [
-          "Binds hotkeys for FocusBorder.",
-          ""
+        "def": "FocusBorder.fullTolerance",
+        "desc": "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`.",
+        "doc": "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`.",
+        "name": "fullTolerance",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.fullTolerance",
+        "stripped_doc": [
+          "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`."
         ],
-        "desc" : "Binds hotkeys for FocusBorder.",
-        "parameters" : [
-          " * mapping - A table containing hotkey modifier\/key details for the following items:",
+        "type": "Variable"
+      }
+    ],
+    "desc": "Draws a red border around the focused window, hidden while that window is fullscreen.",
+    "doc": "Draws a red border around the focused window, hidden while that window is fullscreen.\n\nThe border occupies a band just OUTSIDE the window frame, so it never covers the window's\nown content -- the trade-off being that it is clipped where a window sits flush against a\nscreen edge.",
+    "items": [
+      {
+        "def": "FocusBorder.appSettle",
+        "desc": "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`.",
+        "doc": "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`.",
+        "name": "appSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.appSettle",
+        "stripped_doc": [
+          "Seconds to let macOS settle on a focused window after an application change. Defaults to `0.15`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.borderColor",
+        "desc": "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.",
+        "doc": "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.\n\nCarries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border.",
+        "name": "borderColor",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.borderColor",
+        "stripped_doc": [
+          "Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.",
+          "",
+          "Carries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.borderWidth",
+        "desc": "Width in points of the band drawn outside the window frame. Defaults to `2`.",
+        "doc": "Width in points of the band drawn outside the window frame. Defaults to `2`.\n\nBaked into the canvas at build time, so assigning this does nothing to a border already on screen. Set it before `FocusBorder:start()`, or use `FocusBorder:setWidth()`, which rebuilds.",
+        "name": "borderWidth",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.borderWidth",
+        "stripped_doc": [
+          "Width in points of the band drawn outside the window frame. Defaults to `2`.",
+          "",
+          "Baked into the canvas at build time, so assigning this does nothing to a border already on screen. Set it before `FocusBorder:start()`, or use `FocusBorder:setWidth()`, which rebuilds."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.cornerRadius",
+        "desc": "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.",
+        "doc": "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.\n\nNo API exposes the real figure, so this is meant to be eyeballed: too small and the border cuts across the corners, too large and it bulges past them. macOS 26 rounds them more than earlier releases.\nThe radius drawn is derived from this and `FocusBorder.borderWidth` at build time; use `FocusBorder:setCornerRadius()` to change it on a running border.",
+        "name": "cornerRadius",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.cornerRadius",
+        "stripped_doc": [
+          "The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.",
+          "",
+          "No API exposes the real figure, so this is meant to be eyeballed: too small and the border cuts across the corners, too large and it bulges past them. macOS 26 rounds them more than earlier releases.",
+          "The radius drawn is derived from this and `FocusBorder.borderWidth` at build time; use `FocusBorder:setCornerRadius()` to change it on a running border."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.fullTolerance",
+        "desc": "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`.",
+        "doc": "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`.",
+        "name": "fullTolerance",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.fullTolerance",
+        "stripped_doc": [
+          "Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.fullscreenSettle",
+        "desc": "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`.",
+        "doc": "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`.",
+        "name": "fullscreenSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.fullscreenSettle",
+        "stripped_doc": [
+          "Seconds to hide the border for while a fullscreen transition animates. Defaults to `0.6`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.logger",
+        "stripped_doc": [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.screenSettle",
+        "desc": "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
+        "doc": "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
+        "name": "screenSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.screenSettle",
+        "stripped_doc": [
+          "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.spaceSettle",
+        "desc": "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.",
+        "doc": "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.\n\nImmediately after a switch, `hs.spaces.focusedSpace()` still reports the old Space.",
+        "name": "spaceSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.spaceSettle",
+        "stripped_doc": [
+          "Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.",
+          "",
+          "Immediately after a switch, `hs.spaces.focusedSpace()` still reports the old Space."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder.startRetry",
+        "desc": "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.",
+        "doc": "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.\n\n`start()` runs while the config is still loading, when the accessibility bridge is least responsive. This retry keeps a cold start from leaving the border stuck until the next app switch.",
+        "name": "startRetry",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "FocusBorder.startRetry",
+        "stripped_doc": [
+          "Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.",
+          "",
+          "`start()` runs while the config is still loading, when the accessibility bridge is least responsive. This retry keeps a cold start from leaving the border stuck until the next app switch."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "FocusBorder:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for FocusBorder.",
+        "doc": "Binds hotkeys for FocusBorder.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * toggle - Show or hide the border without tearing the watchers down\n\nReturns:\n * The FocusBorder object\n\nFor example: `spoon.FocusBorder:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - A table containing hotkey modifier/key details for the following items:",
           "   * toggle - Show or hide the border without tearing the watchers down",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:bindHotkeys(mapping) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "For example: `spoon.FocusBorder:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`"
         ],
-        "name" : "bindHotkeys",
-        "def" : "FocusBorder:bindHotkeys(mapping) -> self"
-      },
-      {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nDeliberately starts nothing. Every watcher and timer belongs to `FocusBorder:start()`, and the canvas is built lazily on the first redraw.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.",
-        "stripped_doc" : [
-          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "signature": "FocusBorder:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for FocusBorder.",
           ""
         ],
-        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:init() -> self",
+        "desc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "doc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nDeliberately starts nothing. Every watcher and timer belongs to `FocusBorder:start()`, and the canvas is built lazily on the first redraw.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.",
+        "name": "init",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:init() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "Deliberately starts nothing. Every watcher and timer belongs to `FocusBorder:start()`, and the canvas is built lazily on the first redraw.",
           "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers."
         ],
-        "name" : "init",
-        "def" : "FocusBorder:init() -> self"
-      },
-      {
-        "doc" : "Changes the border colour and redraws.\n\nParameters:\n * color - Any table `hs.drawing.color` understands, e.g. `{ red = 0, green = 0.6, blue = 1 }`. Anything that is not a table is ignored.\n\nReturns:\n * The FocusBorder object",
-        "stripped_doc" : [
-          "Changes the border colour and redraws.",
+        "signature": "FocusBorder:init() -> self",
+        "stripped_doc": [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
           ""
         ],
-        "desc" : "Changes the border colour and redraws.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:setColor(color) -> self",
+        "desc": "Changes the border colour and redraws.",
+        "doc": "Changes the border colour and redraws.\n\nParameters:\n * color - Any table `hs.drawing.color` understands, e.g. `{ red = 0, green = 0.6, blue = 1 }`. Anything that is not a table is ignored.\n\nReturns:\n * The FocusBorder object",
+        "name": "setColor",
+        "notes": [],
+        "parameters": [
           " * color - Any table `hs.drawing.color` understands, e.g. `{ red = 0, green = 0.6, blue = 1 }`. Anything that is not a table is ignored.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:setColor(color) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object"
         ],
-        "name" : "setColor",
-        "def" : "FocusBorder:setColor(color) -> self"
-      },
-      {
-        "doc" : "Changes the assumed window corner rounding and redraws.\n\nParameters:\n * radius - The window's own corner rounding in points. Values that are not a positive number are ignored.\n\nReturns:\n * The FocusBorder object\n\nThis is the one setting meant to be eyeballed against your macOS version, so it exists mainly to let you try values from the Console without reloading.",
-        "stripped_doc" : [
-          "Changes the assumed window corner rounding and redraws.",
+        "signature": "FocusBorder:setColor(color) -> self",
+        "stripped_doc": [
+          "Changes the border colour and redraws.",
           ""
         ],
-        "desc" : "Changes the assumed window corner rounding and redraws.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:setCornerRadius(radius) -> self",
+        "desc": "Changes the assumed window corner rounding and redraws.",
+        "doc": "Changes the assumed window corner rounding and redraws.\n\nParameters:\n * radius - The window's own corner rounding in points. Values that are not a positive number are ignored.\n\nReturns:\n * The FocusBorder object\n\nThis is the one setting meant to be eyeballed against your macOS version, so it exists mainly to let you try values from the Console without reloading.",
+        "name": "setCornerRadius",
+        "notes": [],
+        "parameters": [
           " * radius - The window's own corner rounding in points. Values that are not a positive number are ignored.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:setCornerRadius(radius) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "This is the one setting meant to be eyeballed against your macOS version, so it exists mainly to let you try values from the Console without reloading."
         ],
-        "name" : "setCornerRadius",
-        "def" : "FocusBorder:setCornerRadius(radius) -> self"
-      },
-      {
-        "doc" : "Changes the border thickness and redraws.\n\nParameters:\n * width - Thickness in points. Values that are not a positive number are ignored.\n\nReturns:\n * The FocusBorder object",
-        "stripped_doc" : [
-          "Changes the border thickness and redraws.",
+        "signature": "FocusBorder:setCornerRadius(radius) -> self",
+        "stripped_doc": [
+          "Changes the assumed window corner rounding and redraws.",
           ""
         ],
-        "desc" : "Changes the border thickness and redraws.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:setWidth(width) -> self",
+        "desc": "Changes the border thickness and redraws.",
+        "doc": "Changes the border thickness and redraws.\n\nParameters:\n * width - Thickness in points. Values that are not a positive number are ignored.\n\nReturns:\n * The FocusBorder object",
+        "name": "setWidth",
+        "notes": [],
+        "parameters": [
           " * width - Thickness in points. Values that are not a positive number are ignored.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:setWidth(width) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object"
         ],
-        "name" : "setWidth",
-        "def" : "FocusBorder:setWidth(width) -> self"
-      },
-      {
-        "doc" : "Starts watching for focus changes and draws the border around the focused window.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nCalling this on an already-started Spoon restarts it cleanly.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
-        "stripped_doc" : [
-          "Starts watching for focus changes and draws the border around the focused window.",
+        "signature": "FocusBorder:setWidth(width) -> self",
+        "stripped_doc": [
+          "Changes the border thickness and redraws.",
           ""
         ],
-        "desc" : "Starts watching for focus changes and draws the border around the focused window.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:start() -> self",
+        "desc": "Starts watching for focus changes and draws the border around the focused window.",
+        "doc": "Starts watching for focus changes and draws the border around the focused window.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nCalling this on an already-started Spoon restarts it cleanly.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
+        "name": "start",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:start() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "Calling this on an already-started Spoon restarts it cleanly.",
           "Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
         ],
-        "name" : "start",
-        "def" : "FocusBorder:start() -> self"
-      },
-      {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `enabled`, `trackedId`, `tracking`, `trackingApp`, `appPid`, `fullScreen` and `borderWidth` keys\n\n`trackingApp` being false while `running` is true is the signature of the same-app focus stall: the application observer is what makes a window switch inside one app visible.",
-        "stripped_doc" : [
-          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "signature": "FocusBorder:start() -> self",
+        "stripped_doc": [
+          "Starts watching for focus changes and draws the border around the focused window.",
           ""
         ],
-        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:status() -> table",
+        "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `enabled`, `trackedId`, `tracking`, `trackingApp`, `appPid`, `fullScreen` and `borderWidth` keys\n\n`trackingApp` being false while `running` is true is the signature of the same-app focus stall: the application observer is what makes a window switch inside one app visible.",
+        "name": "status",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:status() -> table",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * A table with `running`, `enabled`, `trackedId`, `tracking`, `trackingApp`, `appPid`, `fullScreen` and `borderWidth` keys",
           "",
           "`trackingApp` being false while `running` is true is the signature of the same-app focus stall: the application observer is what makes a window switch inside one app visible."
         ],
-        "name" : "status",
-        "def" : "FocusBorder:status() -> table"
-      },
-      {
-        "doc" : "Stops the Spoon, removing the border and every watcher and timer it owns.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nAny hotkeys bound with `FocusBorder:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
-        "stripped_doc" : [
-          "Stops the Spoon, removing the border and every watcher and timer it owns.",
+        "signature": "FocusBorder:status() -> table",
+        "stripped_doc": [
+          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
           ""
         ],
-        "desc" : "Stops the Spoon, removing the border and every watcher and timer it owns.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:stop() -> self",
+        "desc": "Stops the Spoon, removing the border and every watcher and timer it owns.",
+        "doc": "Stops the Spoon, removing the border and every watcher and timer it owns.\n\nParameters:\n * None\n\nReturns:\n * The FocusBorder object\n\nAny hotkeys bound with `FocusBorder:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:stop() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object",
           "",
           "Any hotkeys bound with `FocusBorder:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
-        "name" : "stop",
-        "def" : "FocusBorder:stop() -> self"
-      },
-      {
-        "doc" : "Shows or hides the border without tearing the watchers down.\n\nParameters:\n * state - An optional boolean. `true` shows the border, `false` hides it. If omitted, the current state is flipped.\n\nReturns:\n * The FocusBorder object",
-        "stripped_doc" : [
-          "Shows or hides the border without tearing the watchers down.",
+        "signature": "FocusBorder:stop() -> self",
+        "stripped_doc": [
+          "Stops the Spoon, removing the border and every watcher and timer it owns.",
           ""
         ],
-        "desc" : "Shows or hides the border without tearing the watchers down.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "FocusBorder:toggle([state]) -> self",
+        "desc": "Shows or hides the border without tearing the watchers down.",
+        "doc": "Shows or hides the border without tearing the watchers down.\n\nParameters:\n * state - An optional boolean. `true` shows the border, `false` hides it. If omitted, the current state is flipped.\n\nReturns:\n * The FocusBorder object",
+        "name": "toggle",
+        "notes": [],
+        "parameters": [
           " * state - An optional boolean. `true` shows the border, `false` hides it. If omitted, the current state is flipped.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "FocusBorder:toggle([state]) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The FocusBorder object"
         ],
-        "name" : "toggle",
-        "def" : "FocusBorder:toggle([state]) -> self"
+        "signature": "FocusBorder:toggle([state]) -> self",
+        "stripped_doc": [
+          "Shows or hides the border without tearing the watchers down.",
+          ""
+        ],
+        "type": "Method"
       }
     ],
-    "Field" : [
-
-    ],
-    "name" : "FocusBorder"
+    "name": "FocusBorder",
+    "stripped_doc": [],
+    "submodules": [],
+    "type": "Module"
   }
 ]

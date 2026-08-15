@@ -1,1020 +1,820 @@
 [
   {
-    "Constant" : [
-
-    ],
-    "submodules" : [
-
-    ],
-    "Function" : [
-
-    ],
-    "Variable" : [
+    "Command": [],
+    "Constant": [],
+    "Constructor": [],
+    "Deprecated": [],
+    "Field": [],
+    "Function": [],
+    "Method": [
       {
-        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "stripped_doc" : [
-          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
-        ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.logger",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "logger",
-        "def" : "ClipboardHistory.logger"
-      },
-      {
-        "doc" : "How many entries to keep. Defaults to `50`.\n\nThe whole history is serialised on every save, so this trades against how much work a save is.",
-        "stripped_doc" : [
-          "How many entries to keep. Defaults to `50`.",
-          "",
-          "The whole history is serialised on every save, so this trades against how much work a save is."
-        ],
-        "desc" : "How many entries to keep. Defaults to `50`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.historySize",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "historySize",
-        "def" : "ClipboardHistory.historySize"
-      },
-      {
-        "doc" : "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).\n\nA storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`.",
-        "stripped_doc" : [
-          "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
-          "",
-          "A storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`."
-        ],
-        "desc" : "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.maxItemSize",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "maxItemSize",
-        "def" : "ClipboardHistory.maxItemSize"
-      },
-      {
-        "doc" : "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.\n\nDisplay only. The full text is what gets put back on the clipboard.",
-        "stripped_doc" : [
-          "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.",
-          "",
-          "Display only. The full text is what gets put back on the clipboard."
-        ],
-        "desc" : "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.labelLength",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "labelLength",
-        "def" : "ClipboardHistory.labelLength"
-      },
-      {
-        "doc" : "How many recent entries to list inline in the menubar menu. Defaults to `10`.\n\n`Search…` opens the chooser over the whole history.",
-        "stripped_doc" : [
-          "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
-          "",
-          "`Search…` opens the chooser over the whole history."
-        ],
-        "desc" : "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.menuItems",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "menuItems",
-        "def" : "ClipboardHistory.menuItems"
-      },
-      {
-        "doc" : "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.\n\n`hs.settings.set` serialises synchronously, so writes are coalesced behind this delay and flushed by `ClipboardHistory:stop()`.\nThe cost is that entries copied in the last few seconds before a crash are lost. A clean quit or reload loses nothing.",
-        "stripped_doc" : [
-          "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.",
-          "",
-          "`hs.settings.set` serialises synchronously, so writes are coalesced behind this delay and flushed by `ClipboardHistory:stop()`.",
-          "The cost is that entries copied in the last few seconds before a crash are lost. A clean quit or reload loses nothing."
-        ],
-        "desc" : "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.saveDelay",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "saveDelay",
-        "def" : "ClipboardHistory.saveDelay"
-      },
-      {
-        "doc" : "How many rows the chooser shows at once. Defaults to `10`.",
-        "stripped_doc" : [
-          "How many rows the chooser shows at once. Defaults to `10`."
-        ],
-        "desc" : "How many rows the chooser shows at once. Defaults to `10`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.chooserRows",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "chooserRows",
-        "def" : "ClipboardHistory.chooserRows"
-      },
-      {
-        "doc" : "Chooser width as a percentage of the screen. Defaults to `40`.",
-        "stripped_doc" : [
-          "Chooser width as a percentage of the screen. Defaults to `40`."
-        ],
-        "desc" : "Chooser width as a percentage of the screen. Defaults to `40`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.chooserWidth",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "chooserWidth",
-        "def" : "ClipboardHistory.chooserWidth"
-      },
-      {
-        "doc" : "Whether to place an item in the menubar. Defaults to `true`.",
-        "stripped_doc" : [
-          "Whether to place an item in the menubar. Defaults to `true`."
-        ],
-        "desc" : "Whether to place an item in the menubar. Defaults to `true`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.showInMenubar",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "showInMenubar",
-        "def" : "ClipboardHistory.showInMenubar"
-      },
-      {
-        "doc" : "Menubar title while recording. Defaults to a clipboard glyph.",
-        "stripped_doc" : [
-          "Menubar title while recording. Defaults to a clipboard glyph."
-        ],
-        "desc" : "Menubar title while recording. Defaults to a clipboard glyph.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.menubarTitle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "menubarTitle",
-        "def" : "ClipboardHistory.menubarTitle"
-      },
-      {
-        "doc" : "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.\n\nDeliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.",
-        "stripped_doc" : [
-          "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
-          "",
-          "Deliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off."
-        ],
-        "desc" : "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.menubarTitlePaused",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "menubarTitlePaused",
-        "def" : "ClipboardHistory.menubarTitlePaused"
-      },
-      {
-        "doc" : "Pasteboard types that mark content as not worth remembering, from http:\/\/nspasteboard.org. An entry carrying any of these is never recorded.\n\nThis is how password managers ask not to be logged.\nAdvisory only: an app that sets no marker is recorded like anything else. Use `ClipboardHistory:togglePause()` for anything sensitive from an app you do not trust to mark it.",
-        "stripped_doc" : [
-          "Pasteboard types that mark content as not worth remembering, from http:\/\/nspasteboard.org. An entry carrying any of these is never recorded.",
-          "",
-          "This is how password managers ask not to be logged.",
-          "Advisory only: an app that sets no marker is recorded like anything else. Use `ClipboardHistory:togglePause()` for anything sensitive from an app you do not trust to mark it."
-        ],
-        "desc" : "Pasteboard types that mark content as not worth remembering, from http:\/\/nspasteboard.org. An entry carrying any of these is never recorded.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.ignoredIdentifiers",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "ignoredIdentifiers",
-        "def" : "ClipboardHistory.ignoredIdentifiers"
-      }
-    ],
-    "stripped_doc" : [
-
-    ],
-    "type" : "Module",
-    "Deprecated" : [
-
-    ],
-    "desc" : "A searchable clipboard history that survives a Hammerspoon restart.",
-    "Constructor" : [
-
-    ],
-    "doc" : "A searchable clipboard history that survives a Hammerspoon restart.\n\nWatches the pasteboard, keeps the last `ClipboardHistory.historySize` text entries, and\noffers them back through a chooser or a menubar menu. Selecting an entry puts it back on\nthe clipboard; pasting stays a manual cmd+v.\n\nThe history is written to `hs.settings`, so it lands on disk in plain text. Entries marked\nconcealed or transient (see `ClipboardHistory.ignoredIdentifiers`) are never recorded, and\nrecording can be paused from the menu -- but the markers are advisory, so treat the\nhistory as readable by anything that can read your home directory.",
-    "Method" : [
-      {
-        "doc" : "Adds text to the history, or moves it to the top if it is already there.\n\nParameters:\n * text - the string to record\n\nReturns:\n * `true` if the history changed, `false` if the entry was rejected\n\nCalled for you by the pasteboard watcher; exposed so the history can be seeded from the Console.\nRejects empty or whitespace-only text and anything larger than `ClipboardHistory.maxItemSize`.",
-        "stripped_doc" : [
-          "Adds text to the history, or moves it to the top if it is already there.",
-          ""
-        ],
-        "desc" : "Adds text to the history, or moves it to the top if it is already there.",
-        "parameters" : [
+        "def": "ClipboardHistory:record(text) -> boolean",
+        "desc": "Adds text to the history, or moves it to the top if it is already there.",
+        "doc": "Adds text to the history, or moves it to the top if it is already there.\n\nParameters:\n * text - the string to record\n\nReturns:\n * `true` if the history changed, `false` if the entry was rejected\n\nCalled for you by the pasteboard watcher; exposed so the history can be seeded from the Console.\nRejects empty or whitespace-only text and anything larger than `ClipboardHistory.maxItemSize`.",
+        "name": "record",
+        "notes": [],
+        "parameters": [
           " * text - the string to record",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:record(text) -> boolean",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * `true` if the history changed, `false` if the entry was rejected",
           "",
           "Called for you by the pasteboard watcher; exposed so the history can be seeded from the Console.",
           "Rejects empty or whitespace-only text and anything larger than `ClipboardHistory.maxItemSize`."
         ],
-        "name" : "record",
-        "def" : "ClipboardHistory:record(text) -> boolean"
+        "signature": "ClipboardHistory:record(text) -> boolean",
+        "stripped_doc": [
+          "Adds text to the history, or moves it to the top if it is already there.",
+          ""
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Discards the whole history, in memory and on disk.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
+        "def": "ClipboardHistory:clear() -> self",
+        "desc": "Discards the whole history, in memory and on disk.",
+        "doc": "Discards the whole history, in memory and on disk.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "name": "clear",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The ClipboardHistory object"
+        ],
+        "signature": "ClipboardHistory:clear() -> self",
+        "stripped_doc": [
           "Discards the whole history, in memory and on disk.",
           ""
         ],
-        "desc" : "Discards the whole history, in memory and on disk.",
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:clear() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The ClipboardHistory object"
-        ],
-        "name" : "clear",
-        "def" : "ClipboardHistory:clear() -> self"
+        "type": "Method"
       },
       {
-        "doc" : "Builds the chooser's list of choices from the current history.\n\nParameters:\n * None\n\nReturns:\n * A list of `hs.chooser` choice tables\n\nEach choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.",
-        "stripped_doc" : [
-          "Builds the chooser's list of choices from the current history.",
-          ""
-        ],
-        "desc" : "Builds the chooser's list of choices from the current history.",
-        "parameters" : [
+        "def": "ClipboardHistory:choiceList() -> table",
+        "desc": "Builds the chooser's list of choices from the current history.",
+        "doc": "Builds the chooser's list of choices from the current history.\n\nParameters:\n * None\n\nReturns:\n * A list of `hs.chooser` choice tables\n\nEach choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.",
+        "name": "choiceList",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:choiceList() -> table",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * A list of `hs.chooser` choice tables",
           "",
           "Each choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked."
         ],
-        "name" : "choiceList",
-        "def" : "ClipboardHistory:choiceList() -> table"
-      },
-      {
-        "doc" : "Puts the full text of a history entry back on the clipboard.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and copied\n\nThis fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here.",
-        "stripped_doc" : [
-          "Puts the full text of a history entry back on the clipboard.",
+        "signature": "ClipboardHistory:choiceList() -> table",
+        "stripped_doc": [
+          "Builds the chooser's list of choices from the current history.",
           ""
         ],
-        "desc" : "Puts the full text of a history entry back on the clipboard.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:copyById(id) -> boolean",
+        "desc": "Puts the full text of a history entry back on the clipboard.",
+        "doc": "Puts the full text of a history entry back on the clipboard.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and copied\n\nThis fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here.",
+        "name": "copyById",
+        "notes": [],
+        "parameters": [
           " * id - the `id` field of the entry, as carried by a chooser choice",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:copyById(id) -> boolean",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * `true` if the entry was found and copied",
           "",
           "This fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here."
         ],
-        "name" : "copyById",
-        "def" : "ClipboardHistory:copyById(id) -> boolean"
-      },
-      {
-        "doc" : "Suspends or resumes recording.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nThe watcher keeps running while paused and its callback discards what it is given, so resuming rebuilds nothing.\nThe flag is persisted, so a Spoon paused before a reload comes back paused.",
-        "stripped_doc" : [
-          "Suspends or resumes recording.",
+        "signature": "ClipboardHistory:copyById(id) -> boolean",
+        "stripped_doc": [
+          "Puts the full text of a history entry back on the clipboard.",
           ""
         ],
-        "desc" : "Suspends or resumes recording.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:togglePause() -> self",
+        "desc": "Suspends or resumes recording.",
+        "doc": "Suspends or resumes recording.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nThe watcher keeps running while paused and its callback discards what it is given, so resuming rebuilds nothing.\nThe flag is persisted, so a Spoon paused before a reload comes back paused.",
+        "name": "togglePause",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:togglePause() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object",
           "",
           "The watcher keeps running while paused and its callback discards what it is given, so resuming rebuilds nothing.",
           "The flag is persisted, so a Spoon paused before a reload comes back paused."
         ],
-        "name" : "togglePause",
-        "def" : "ClipboardHistory:togglePause() -> self"
+        "signature": "ClipboardHistory:togglePause() -> self",
+        "stripped_doc": [
+          "Suspends or resumes recording.",
+          ""
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Opens the chooser over the clipboard history.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
+        "def": "ClipboardHistory:show() -> self",
+        "desc": "Opens the chooser over the clipboard history.",
+        "doc": "Opens the chooser over the clipboard history.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "name": "show",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The ClipboardHistory object"
+        ],
+        "signature": "ClipboardHistory:show() -> self",
+        "stripped_doc": [
           "Opens the chooser over the clipboard history.",
           ""
         ],
-        "desc" : "Opens the chooser over the clipboard history.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:hide() -> self",
+        "desc": "Closes the chooser if it is open.",
+        "doc": "Closes the chooser if it is open.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "name": "hide",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:show() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object"
         ],
-        "name" : "show",
-        "def" : "ClipboardHistory:show() -> self"
-      },
-      {
-        "doc" : "Closes the chooser if it is open.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
+        "signature": "ClipboardHistory:hide() -> self",
+        "stripped_doc": [
           "Closes the chooser if it is open.",
           ""
         ],
-        "desc" : "Closes the chooser if it is open.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:start() -> self",
+        "desc": "Loads the saved history and begins watching the pasteboard.",
+        "doc": "Loads the saved history and begins watching the pasteboard.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "name": "start",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:hide() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object"
         ],
-        "name" : "hide",
-        "def" : "ClipboardHistory:hide() -> self"
-      },
-      {
-        "doc" : "Loads the saved history and begins watching the pasteboard.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
+        "signature": "ClipboardHistory:start() -> self",
+        "stripped_doc": [
           "Loads the saved history and begins watching the pasteboard.",
           ""
         ],
-        "desc" : "Loads the saved history and begins watching the pasteboard.",
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:start() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The ClipboardHistory object"
-        ],
-        "name" : "start",
-        "def" : "ClipboardHistory:start() -> self"
+        "type": "Method"
       },
       {
-        "doc" : "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nAny hotkeys bound with `ClipboardHistory:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
-        "stripped_doc" : [
-          "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.",
-          ""
-        ],
-        "desc" : "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.",
-        "parameters" : [
+        "def": "ClipboardHistory:stop() -> self",
+        "desc": "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.",
+        "doc": "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nAny hotkeys bound with `ClipboardHistory:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:stop() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object",
           "",
           "Any hotkeys bound with `ClipboardHistory:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
-        "name" : "stop",
-        "def" : "ClipboardHistory:stop() -> self"
-      },
-      {
-        "doc" : "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier\/key details for the following items:\n  * show - open the chooser over the clipboard history\n  * togglePause - suspend or resume recording\n  * clear - discard the whole history\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
-          "Binds hotkeys for this Spoon.",
+        "signature": "ClipboardHistory:stop() -> self",
+        "stripped_doc": [
+          "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.",
           ""
         ],
-        "desc" : "Binds hotkeys for this Spoon.",
-        "parameters" : [
-          " * mapping - a table containing hotkey modifier\/key details for the following items:",
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for this Spoon.",
+        "doc": "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier/key details for the following items:\n  * show - open the chooser over the clipboard history\n  * togglePause - suspend or resume recording\n  * clear - discard the whole history\n\nReturns:\n * The ClipboardHistory object",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - a table containing hotkey modifier/key details for the following items:",
           "  * show - open the chooser over the clipboard history",
           "  * togglePause - suspend or resume recording",
           "  * clear - discard the whole history",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:bindHotkeys(mapping) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object"
         ],
-        "name" : "bindHotkeys",
-        "def" : "ClipboardHistory:bindHotkeys(mapping) -> self"
+        "signature": "ClipboardHistory:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for this Spoon.",
+          ""
+        ],
+        "type": "Method"
       }
     ],
-    "Command" : [
-
-    ],
-    "items" : [
+    "Variable": [
       {
-        "doc" : "How many rows the chooser shows at once. Defaults to `10`.",
-        "stripped_doc" : [
-          "How many rows the chooser shows at once. Defaults to `10`."
+        "def": "ClipboardHistory.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.logger",
+        "stripped_doc": [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
         ],
-        "desc" : "How many rows the chooser shows at once. Defaults to `10`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.chooserRows",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "chooserRows",
-        "def" : "ClipboardHistory.chooserRows"
+        "type": "Variable"
       },
       {
-        "doc" : "Chooser width as a percentage of the screen. Defaults to `40`.",
-        "stripped_doc" : [
-          "Chooser width as a percentage of the screen. Defaults to `40`."
-        ],
-        "desc" : "Chooser width as a percentage of the screen. Defaults to `40`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.chooserWidth",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "chooserWidth",
-        "def" : "ClipboardHistory.chooserWidth"
-      },
-      {
-        "doc" : "How many entries to keep. Defaults to `50`.\n\nThe whole history is serialised on every save, so this trades against how much work a save is.",
-        "stripped_doc" : [
+        "def": "ClipboardHistory.historySize",
+        "desc": "How many entries to keep. Defaults to `50`.",
+        "doc": "How many entries to keep. Defaults to `50`.\n\nThe whole history is serialised on every save, so this trades against how much work a save is.",
+        "name": "historySize",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.historySize",
+        "stripped_doc": [
           "How many entries to keep. Defaults to `50`.",
           "",
           "The whole history is serialised on every save, so this trades against how much work a save is."
         ],
-        "desc" : "How many entries to keep. Defaults to `50`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.historySize",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "historySize",
-        "def" : "ClipboardHistory.historySize"
+        "type": "Variable"
       },
       {
-        "doc" : "Pasteboard types that mark content as not worth remembering, from http:\/\/nspasteboard.org. An entry carrying any of these is never recorded.\n\nThis is how password managers ask not to be logged.\nAdvisory only: an app that sets no marker is recorded like anything else. Use `ClipboardHistory:togglePause()` for anything sensitive from an app you do not trust to mark it.",
-        "stripped_doc" : [
-          "Pasteboard types that mark content as not worth remembering, from http:\/\/nspasteboard.org. An entry carrying any of these is never recorded.",
-          "",
-          "This is how password managers ask not to be logged.",
-          "Advisory only: an app that sets no marker is recorded like anything else. Use `ClipboardHistory:togglePause()` for anything sensitive from an app you do not trust to mark it."
-        ],
-        "desc" : "Pasteboard types that mark content as not worth remembering, from http:\/\/nspasteboard.org. An entry carrying any of these is never recorded.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.ignoredIdentifiers",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "ignoredIdentifiers",
-        "def" : "ClipboardHistory.ignoredIdentifiers"
-      },
-      {
-        "doc" : "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.\n\nDisplay only. The full text is what gets put back on the clipboard.",
-        "stripped_doc" : [
-          "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.",
-          "",
-          "Display only. The full text is what gets put back on the clipboard."
-        ],
-        "desc" : "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.labelLength",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "labelLength",
-        "def" : "ClipboardHistory.labelLength"
-      },
-      {
-        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "stripped_doc" : [
-          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
-        ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.logger",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "logger",
-        "def" : "ClipboardHistory.logger"
-      },
-      {
-        "doc" : "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).\n\nA storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`.",
-        "stripped_doc" : [
+        "def": "ClipboardHistory.maxItemSize",
+        "desc": "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
+        "doc": "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).\n\nA storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`.",
+        "name": "maxItemSize",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.maxItemSize",
+        "stripped_doc": [
           "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
           "",
           "A storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`."
         ],
-        "desc" : "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.maxItemSize",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "maxItemSize",
-        "def" : "ClipboardHistory.maxItemSize"
+        "type": "Variable"
       },
       {
-        "doc" : "How many recent entries to list inline in the menubar menu. Defaults to `10`.\n\n`Search…` opens the chooser over the whole history.",
-        "stripped_doc" : [
+        "def": "ClipboardHistory.labelLength",
+        "desc": "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.",
+        "doc": "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.\n\nDisplay only. The full text is what gets put back on the clipboard.",
+        "name": "labelLength",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.labelLength",
+        "stripped_doc": [
+          "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.",
+          "",
+          "Display only. The full text is what gets put back on the clipboard."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.menuItems",
+        "desc": "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
+        "doc": "How many recent entries to list inline in the menubar menu. Defaults to `10`.\n\n`Search…` opens the chooser over the whole history.",
+        "name": "menuItems",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.menuItems",
+        "stripped_doc": [
           "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
           "",
           "`Search…` opens the chooser over the whole history."
         ],
-        "desc" : "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.menuItems",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "menuItems",
-        "def" : "ClipboardHistory.menuItems"
+        "type": "Variable"
       },
       {
-        "doc" : "Menubar title while recording. Defaults to a clipboard glyph.",
-        "stripped_doc" : [
-          "Menubar title while recording. Defaults to a clipboard glyph."
-        ],
-        "desc" : "Menubar title while recording. Defaults to a clipboard glyph.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.menubarTitle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "menubarTitle",
-        "def" : "ClipboardHistory.menubarTitle"
-      },
-      {
-        "doc" : "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.\n\nDeliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.",
-        "stripped_doc" : [
-          "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
-          "",
-          "Deliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off."
-        ],
-        "desc" : "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.menubarTitlePaused",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "menubarTitlePaused",
-        "def" : "ClipboardHistory.menubarTitlePaused"
-      },
-      {
-        "doc" : "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.\n\n`hs.settings.set` serialises synchronously, so writes are coalesced behind this delay and flushed by `ClipboardHistory:stop()`.\nThe cost is that entries copied in the last few seconds before a crash are lost. A clean quit or reload loses nothing.",
-        "stripped_doc" : [
+        "def": "ClipboardHistory.saveDelay",
+        "desc": "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.",
+        "doc": "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.\n\n`hs.settings.set` serialises synchronously, so writes are coalesced behind this delay and flushed by `ClipboardHistory:stop()`.\nThe cost is that entries copied in the last few seconds before a crash are lost. A clean quit or reload loses nothing.",
+        "name": "saveDelay",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.saveDelay",
+        "stripped_doc": [
           "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.",
           "",
           "`hs.settings.set` serialises synchronously, so writes are coalesced behind this delay and flushed by `ClipboardHistory:stop()`.",
           "The cost is that entries copied in the last few seconds before a crash are lost. A clean quit or reload loses nothing."
         ],
-        "desc" : "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.saveDelay",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "saveDelay",
-        "def" : "ClipboardHistory.saveDelay"
+        "type": "Variable"
       },
       {
-        "doc" : "Whether to place an item in the menubar. Defaults to `true`.",
-        "stripped_doc" : [
+        "def": "ClipboardHistory.chooserRows",
+        "desc": "How many rows the chooser shows at once. Defaults to `10`.",
+        "doc": "How many rows the chooser shows at once. Defaults to `10`.",
+        "name": "chooserRows",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.chooserRows",
+        "stripped_doc": [
+          "How many rows the chooser shows at once. Defaults to `10`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.chooserWidth",
+        "desc": "Chooser width as a percentage of the screen. Defaults to `40`.",
+        "doc": "Chooser width as a percentage of the screen. Defaults to `40`.",
+        "name": "chooserWidth",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.chooserWidth",
+        "stripped_doc": [
+          "Chooser width as a percentage of the screen. Defaults to `40`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.showInMenubar",
+        "desc": "Whether to place an item in the menubar. Defaults to `true`.",
+        "doc": "Whether to place an item in the menubar. Defaults to `true`.",
+        "name": "showInMenubar",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.showInMenubar",
+        "stripped_doc": [
           "Whether to place an item in the menubar. Defaults to `true`."
         ],
-        "desc" : "Whether to place an item in the menubar. Defaults to `true`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory.showInMenubar",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "showInMenubar",
-        "def" : "ClipboardHistory.showInMenubar"
+        "type": "Variable"
       },
       {
-        "doc" : "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier\/key details for the following items:\n  * show - open the chooser over the clipboard history\n  * togglePause - suspend or resume recording\n  * clear - discard the whole history\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
-          "Binds hotkeys for this Spoon.",
-          ""
+        "def": "ClipboardHistory.menubarTitle",
+        "desc": "Menubar title while recording. Defaults to a clipboard glyph.",
+        "doc": "Menubar title while recording. Defaults to a clipboard glyph.",
+        "name": "menubarTitle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.menubarTitle",
+        "stripped_doc": [
+          "Menubar title while recording. Defaults to a clipboard glyph."
         ],
-        "desc" : "Binds hotkeys for this Spoon.",
-        "parameters" : [
-          " * mapping - a table containing hotkey modifier\/key details for the following items:",
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.menubarTitlePaused",
+        "desc": "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
+        "doc": "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.\n\nDeliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.",
+        "name": "menubarTitlePaused",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.menubarTitlePaused",
+        "stripped_doc": [
+          "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
+          "",
+          "Deliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.ignoredIdentifiers",
+        "desc": "Pasteboard types that mark content as not worth remembering, from http://nspasteboard.org. An entry carrying any of these is never recorded.",
+        "doc": "Pasteboard types that mark content as not worth remembering, from http://nspasteboard.org. An entry carrying any of these is never recorded.\n\nThis is how password managers ask not to be logged.\nAdvisory only: an app that sets no marker is recorded like anything else. Use `ClipboardHistory:togglePause()` for anything sensitive from an app you do not trust to mark it.",
+        "name": "ignoredIdentifiers",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.ignoredIdentifiers",
+        "stripped_doc": [
+          "Pasteboard types that mark content as not worth remembering, from http://nspasteboard.org. An entry carrying any of these is never recorded.",
+          "",
+          "This is how password managers ask not to be logged.",
+          "Advisory only: an app that sets no marker is recorded like anything else. Use `ClipboardHistory:togglePause()` for anything sensitive from an app you do not trust to mark it."
+        ],
+        "type": "Variable"
+      }
+    ],
+    "desc": "A searchable clipboard history that survives a Hammerspoon restart.",
+    "doc": "A searchable clipboard history that survives a Hammerspoon restart.\n\nWatches the pasteboard, keeps the last `ClipboardHistory.historySize` text entries, and\noffers them back through a chooser or a menubar menu. Selecting an entry puts it back on\nthe clipboard; pasting stays a manual cmd+v.\n\nThe history is written to `hs.settings`, so it lands on disk in plain text. Entries marked\nconcealed or transient (see `ClipboardHistory.ignoredIdentifiers`) are never recorded, and\nrecording can be paused from the menu -- but the markers are advisory, so treat the\nhistory as readable by anything that can read your home directory.",
+    "items": [
+      {
+        "def": "ClipboardHistory.chooserRows",
+        "desc": "How many rows the chooser shows at once. Defaults to `10`.",
+        "doc": "How many rows the chooser shows at once. Defaults to `10`.",
+        "name": "chooserRows",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.chooserRows",
+        "stripped_doc": [
+          "How many rows the chooser shows at once. Defaults to `10`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.chooserWidth",
+        "desc": "Chooser width as a percentage of the screen. Defaults to `40`.",
+        "doc": "Chooser width as a percentage of the screen. Defaults to `40`.",
+        "name": "chooserWidth",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.chooserWidth",
+        "stripped_doc": [
+          "Chooser width as a percentage of the screen. Defaults to `40`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.historySize",
+        "desc": "How many entries to keep. Defaults to `50`.",
+        "doc": "How many entries to keep. Defaults to `50`.\n\nThe whole history is serialised on every save, so this trades against how much work a save is.",
+        "name": "historySize",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.historySize",
+        "stripped_doc": [
+          "How many entries to keep. Defaults to `50`.",
+          "",
+          "The whole history is serialised on every save, so this trades against how much work a save is."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.ignoredIdentifiers",
+        "desc": "Pasteboard types that mark content as not worth remembering, from http://nspasteboard.org. An entry carrying any of these is never recorded.",
+        "doc": "Pasteboard types that mark content as not worth remembering, from http://nspasteboard.org. An entry carrying any of these is never recorded.\n\nThis is how password managers ask not to be logged.\nAdvisory only: an app that sets no marker is recorded like anything else. Use `ClipboardHistory:togglePause()` for anything sensitive from an app you do not trust to mark it.",
+        "name": "ignoredIdentifiers",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.ignoredIdentifiers",
+        "stripped_doc": [
+          "Pasteboard types that mark content as not worth remembering, from http://nspasteboard.org. An entry carrying any of these is never recorded.",
+          "",
+          "This is how password managers ask not to be logged.",
+          "Advisory only: an app that sets no marker is recorded like anything else. Use `ClipboardHistory:togglePause()` for anything sensitive from an app you do not trust to mark it."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.labelLength",
+        "desc": "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.",
+        "doc": "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.\n\nDisplay only. The full text is what gets put back on the clipboard.",
+        "name": "labelLength",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.labelLength",
+        "stripped_doc": [
+          "Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.",
+          "",
+          "Display only. The full text is what gets put back on the clipboard."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.logger",
+        "stripped_doc": [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.maxItemSize",
+        "desc": "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
+        "doc": "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).\n\nA storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`.",
+        "name": "maxItemSize",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.maxItemSize",
+        "stripped_doc": [
+          "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
+          "",
+          "A storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.menuItems",
+        "desc": "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
+        "doc": "How many recent entries to list inline in the menubar menu. Defaults to `10`.\n\n`Search…` opens the chooser over the whole history.",
+        "name": "menuItems",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.menuItems",
+        "stripped_doc": [
+          "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
+          "",
+          "`Search…` opens the chooser over the whole history."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.menubarTitle",
+        "desc": "Menubar title while recording. Defaults to a clipboard glyph.",
+        "doc": "Menubar title while recording. Defaults to a clipboard glyph.",
+        "name": "menubarTitle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.menubarTitle",
+        "stripped_doc": [
+          "Menubar title while recording. Defaults to a clipboard glyph."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.menubarTitlePaused",
+        "desc": "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
+        "doc": "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.\n\nDeliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.",
+        "name": "menubarTitlePaused",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.menubarTitlePaused",
+        "stripped_doc": [
+          "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
+          "",
+          "Deliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.saveDelay",
+        "desc": "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.",
+        "doc": "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.\n\n`hs.settings.set` serialises synchronously, so writes are coalesced behind this delay and flushed by `ClipboardHistory:stop()`.\nThe cost is that entries copied in the last few seconds before a crash are lost. A clean quit or reload loses nothing.",
+        "name": "saveDelay",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.saveDelay",
+        "stripped_doc": [
+          "Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.",
+          "",
+          "`hs.settings.set` serialises synchronously, so writes are coalesced behind this delay and flushed by `ClipboardHistory:stop()`.",
+          "The cost is that entries copied in the last few seconds before a crash are lost. A clean quit or reload loses nothing."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.showInMenubar",
+        "desc": "Whether to place an item in the menubar. Defaults to `true`.",
+        "doc": "Whether to place an item in the menubar. Defaults to `true`.",
+        "name": "showInMenubar",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.showInMenubar",
+        "stripped_doc": [
+          "Whether to place an item in the menubar. Defaults to `true`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for this Spoon.",
+        "doc": "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier/key details for the following items:\n  * show - open the chooser over the clipboard history\n  * togglePause - suspend or resume recording\n  * clear - discard the whole history\n\nReturns:\n * The ClipboardHistory object",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - a table containing hotkey modifier/key details for the following items:",
           "  * show - open the chooser over the clipboard history",
           "  * togglePause - suspend or resume recording",
           "  * clear - discard the whole history",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:bindHotkeys(mapping) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object"
         ],
-        "name" : "bindHotkeys",
-        "def" : "ClipboardHistory:bindHotkeys(mapping) -> self"
-      },
-      {
-        "doc" : "Builds the chooser's list of choices from the current history.\n\nParameters:\n * None\n\nReturns:\n * A list of `hs.chooser` choice tables\n\nEach choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.",
-        "stripped_doc" : [
-          "Builds the chooser's list of choices from the current history.",
+        "signature": "ClipboardHistory:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for this Spoon.",
           ""
         ],
-        "desc" : "Builds the chooser's list of choices from the current history.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:choiceList() -> table",
+        "desc": "Builds the chooser's list of choices from the current history.",
+        "doc": "Builds the chooser's list of choices from the current history.\n\nParameters:\n * None\n\nReturns:\n * A list of `hs.chooser` choice tables\n\nEach choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.",
+        "name": "choiceList",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:choiceList() -> table",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * A list of `hs.chooser` choice tables",
           "",
           "Each choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked."
         ],
-        "name" : "choiceList",
-        "def" : "ClipboardHistory:choiceList() -> table"
-      },
-      {
-        "doc" : "Discards the whole history, in memory and on disk.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
-          "Discards the whole history, in memory and on disk.",
+        "signature": "ClipboardHistory:choiceList() -> table",
+        "stripped_doc": [
+          "Builds the chooser's list of choices from the current history.",
           ""
         ],
-        "desc" : "Discards the whole history, in memory and on disk.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:clear() -> self",
+        "desc": "Discards the whole history, in memory and on disk.",
+        "doc": "Discards the whole history, in memory and on disk.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "name": "clear",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:clear() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object"
         ],
-        "name" : "clear",
-        "def" : "ClipboardHistory:clear() -> self"
-      },
-      {
-        "doc" : "Puts the full text of a history entry back on the clipboard.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and copied\n\nThis fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here.",
-        "stripped_doc" : [
-          "Puts the full text of a history entry back on the clipboard.",
+        "signature": "ClipboardHistory:clear() -> self",
+        "stripped_doc": [
+          "Discards the whole history, in memory and on disk.",
           ""
         ],
-        "desc" : "Puts the full text of a history entry back on the clipboard.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:copyById(id) -> boolean",
+        "desc": "Puts the full text of a history entry back on the clipboard.",
+        "doc": "Puts the full text of a history entry back on the clipboard.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and copied\n\nThis fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here.",
+        "name": "copyById",
+        "notes": [],
+        "parameters": [
           " * id - the `id` field of the entry, as carried by a chooser choice",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:copyById(id) -> boolean",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * `true` if the entry was found and copied",
           "",
           "This fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here."
         ],
-        "name" : "copyById",
-        "def" : "ClipboardHistory:copyById(id) -> boolean"
-      },
-      {
-        "doc" : "Closes the chooser if it is open.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
-          "Closes the chooser if it is open.",
+        "signature": "ClipboardHistory:copyById(id) -> boolean",
+        "stripped_doc": [
+          "Puts the full text of a history entry back on the clipboard.",
           ""
         ],
-        "desc" : "Closes the chooser if it is open.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:hide() -> self",
+        "desc": "Closes the chooser if it is open.",
+        "doc": "Closes the chooser if it is open.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "name": "hide",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:hide() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object"
         ],
-        "name" : "hide",
-        "def" : "ClipboardHistory:hide() -> self"
-      },
-      {
-        "doc" : "Adds text to the history, or moves it to the top if it is already there.\n\nParameters:\n * text - the string to record\n\nReturns:\n * `true` if the history changed, `false` if the entry was rejected\n\nCalled for you by the pasteboard watcher; exposed so the history can be seeded from the Console.\nRejects empty or whitespace-only text and anything larger than `ClipboardHistory.maxItemSize`.",
-        "stripped_doc" : [
-          "Adds text to the history, or moves it to the top if it is already there.",
+        "signature": "ClipboardHistory:hide() -> self",
+        "stripped_doc": [
+          "Closes the chooser if it is open.",
           ""
         ],
-        "desc" : "Adds text to the history, or moves it to the top if it is already there.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:record(text) -> boolean",
+        "desc": "Adds text to the history, or moves it to the top if it is already there.",
+        "doc": "Adds text to the history, or moves it to the top if it is already there.\n\nParameters:\n * text - the string to record\n\nReturns:\n * `true` if the history changed, `false` if the entry was rejected\n\nCalled for you by the pasteboard watcher; exposed so the history can be seeded from the Console.\nRejects empty or whitespace-only text and anything larger than `ClipboardHistory.maxItemSize`.",
+        "name": "record",
+        "notes": [],
+        "parameters": [
           " * text - the string to record",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:record(text) -> boolean",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * `true` if the history changed, `false` if the entry was rejected",
           "",
           "Called for you by the pasteboard watcher; exposed so the history can be seeded from the Console.",
           "Rejects empty or whitespace-only text and anything larger than `ClipboardHistory.maxItemSize`."
         ],
-        "name" : "record",
-        "def" : "ClipboardHistory:record(text) -> boolean"
+        "signature": "ClipboardHistory:record(text) -> boolean",
+        "stripped_doc": [
+          "Adds text to the history, or moves it to the top if it is already there.",
+          ""
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Opens the chooser over the clipboard history.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
+        "def": "ClipboardHistory:show() -> self",
+        "desc": "Opens the chooser over the clipboard history.",
+        "doc": "Opens the chooser over the clipboard history.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "name": "show",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The ClipboardHistory object"
+        ],
+        "signature": "ClipboardHistory:show() -> self",
+        "stripped_doc": [
           "Opens the chooser over the clipboard history.",
           ""
         ],
-        "desc" : "Opens the chooser over the clipboard history.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:start() -> self",
+        "desc": "Loads the saved history and begins watching the pasteboard.",
+        "doc": "Loads the saved history and begins watching the pasteboard.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "name": "start",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:show() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object"
         ],
-        "name" : "show",
-        "def" : "ClipboardHistory:show() -> self"
-      },
-      {
-        "doc" : "Loads the saved history and begins watching the pasteboard.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
-        "stripped_doc" : [
+        "signature": "ClipboardHistory:start() -> self",
+        "stripped_doc": [
           "Loads the saved history and begins watching the pasteboard.",
           ""
         ],
-        "desc" : "Loads the saved history and begins watching the pasteboard.",
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:start() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The ClipboardHistory object"
-        ],
-        "name" : "start",
-        "def" : "ClipboardHistory:start() -> self"
+        "type": "Method"
       },
       {
-        "doc" : "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nAny hotkeys bound with `ClipboardHistory:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
-        "stripped_doc" : [
-          "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.",
-          ""
-        ],
-        "desc" : "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.",
-        "parameters" : [
+        "def": "ClipboardHistory:stop() -> self",
+        "desc": "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.",
+        "doc": "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nAny hotkeys bound with `ClipboardHistory:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:stop() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object",
           "",
           "Any hotkeys bound with `ClipboardHistory:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
-        "name" : "stop",
-        "def" : "ClipboardHistory:stop() -> self"
-      },
-      {
-        "doc" : "Suspends or resumes recording.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nThe watcher keeps running while paused and its callback discards what it is given, so resuming rebuilds nothing.\nThe flag is persisted, so a Spoon paused before a reload comes back paused.",
-        "stripped_doc" : [
-          "Suspends or resumes recording.",
+        "signature": "ClipboardHistory:stop() -> self",
+        "stripped_doc": [
+          "Stops watching the pasteboard, flushes the history to disk and removes the menubar item.",
           ""
         ],
-        "desc" : "Suspends or resumes recording.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:togglePause() -> self",
+        "desc": "Suspends or resumes recording.",
+        "doc": "Suspends or resumes recording.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nThe watcher keeps running while paused and its callback discards what it is given, so resuming rebuilds nothing.\nThe flag is persisted, so a Spoon paused before a reload comes back paused.",
+        "name": "togglePause",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "ClipboardHistory:togglePause() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The ClipboardHistory object",
           "",
           "The watcher keeps running while paused and its callback discards what it is given, so resuming rebuilds nothing.",
           "The flag is persisted, so a Spoon paused before a reload comes back paused."
         ],
-        "name" : "togglePause",
-        "def" : "ClipboardHistory:togglePause() -> self"
+        "signature": "ClipboardHistory:togglePause() -> self",
+        "stripped_doc": [
+          "Suspends or resumes recording.",
+          ""
+        ],
+        "type": "Method"
       }
     ],
-    "Field" : [
-
-    ],
-    "name" : "ClipboardHistory"
+    "name": "ClipboardHistory",
+    "stripped_doc": [],
+    "submodules": [],
+    "type": "Module"
   }
 ]

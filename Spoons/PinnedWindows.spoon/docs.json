@@ -1,1000 +1,792 @@
 [
   {
-    "Constant" : [
-
-    ],
-    "submodules" : [
-
-    ],
-    "Function" : [
-
-    ],
-    "Variable" : [
+    "Command": [],
+    "Constant": [],
+    "Constructor": [],
+    "Deprecated": [],
+    "Field": [],
+    "Function": [],
+    "Method": [
       {
-        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "stripped_doc" : [
-          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
-        ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.logger",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "logger",
-        "def" : "PinnedWindows.logger"
-      },
-      {
-        "doc" : "Seconds between safety-net enforcement passes. Defaults to `1.0`.\n\nThe poll only runs while something is pinned. An idle repeating timer defeats CPU idle states, which matters on a laptop.",
-        "stripped_doc" : [
-          "Seconds between safety-net enforcement passes. Defaults to `1.0`.",
-          "",
-          "The poll only runs while something is pinned. An idle repeating timer defeats CPU idle states, which matters on a laptop."
-        ],
-        "desc" : "Seconds between safety-net enforcement passes. Defaults to `1.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.pollInterval",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "pollInterval",
-        "def" : "PinnedWindows.pollInterval"
-      },
-      {
-        "doc" : "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`.",
-        "stripped_doc" : [
-          "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`."
-        ],
-        "desc" : "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.raiseCoalesce",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "raiseCoalesce",
-        "def" : "PinnedWindows.raiseCoalesce"
-      },
-      {
-        "doc" : "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`.",
-        "stripped_doc" : [
-          "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`."
-        ],
-        "desc" : "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.raiseMinGap",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "raiseMinGap",
-        "def" : "PinnedWindows.raiseMinGap"
-      },
-      {
-        "doc" : "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`.",
-        "stripped_doc" : [
-          "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`."
-        ],
-        "desc" : "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.frameTolerance",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "frameTolerance",
-        "def" : "PinnedWindows.frameTolerance"
-      },
-      {
-        "doc" : "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`.",
-        "stripped_doc" : [
-          "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`."
-        ],
-        "desc" : "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.suppressEcho",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "suppressEcho",
-        "def" : "PinnedWindows.suppressEcho"
-      },
-      {
-        "doc" : "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.\n\nSome windows cannot reach the requested frame: Terminal snaps to a character grid, fixed dialogs refuse outright. On hitting this limit the current frame becomes the new target.",
-        "stripped_doc" : [
-          "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.",
-          "",
-          "Some windows cannot reach the requested frame: Terminal snaps to a character grid, fixed dialogs refuse outright. On hitting this limit the current frame becomes the new target."
-        ],
-        "desc" : "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.failLimit",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "failLimit",
-        "def" : "PinnedWindows.failLimit"
-      },
-      {
-        "doc" : "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`.",
-        "stripped_doc" : [
-          "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`."
-        ],
-        "desc" : "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.failWindow",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "failWindow",
-        "def" : "PinnedWindows.failWindow"
-      },
-      {
-        "doc" : "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`.",
-        "stripped_doc" : [
-          "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`."
-        ],
-        "desc" : "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.spaceSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "spaceSettle",
-        "def" : "PinnedWindows.spaceSettle"
-      },
-      {
-        "doc" : "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
-        "stripped_doc" : [
-          "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`."
-        ],
-        "desc" : "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.screenSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "screenSettle",
-        "def" : "PinnedWindows.screenSettle"
-      },
-      {
-        "doc" : "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`.",
-        "stripped_doc" : [
-          "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`."
-        ],
-        "desc" : "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.titleMax",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "titleMax",
-        "def" : "PinnedWindows.titleMax"
-      },
-      {
-        "doc" : "Cap on how many windows one app contributes to its submenu. Defaults to `20`.",
-        "stripped_doc" : [
-          "Cap on how many windows one app contributes to its submenu. Defaults to `20`."
-        ],
-        "desc" : "Cap on how many windows one app contributes to its submenu. Defaults to `20`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.maxWindowsPerApp",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "maxWindowsPerApp",
-        "def" : "PinnedWindows.maxWindowsPerApp"
-      },
-      {
-        "doc" : "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.\n\nOrdered most specific first, so \"Always on Top\" wins over a bare \"on top\" match.\nEvery hint must name a *toggle* the app keeps set, never a one-shot action such as Window > \"Bring All to Front\": that exists in nearly every Cocoa app, so it would match where no real toggle exists and yank every window forward again on unpin.\nExtend this list for an app whose float menu item is worded differently, e.g. `table.insert(spoon.PinnedWindows.floatHints, 1, \"pin window\")`.",
-        "stripped_doc" : [
-          "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.",
-          "",
-          "Ordered most specific first, so \"Always on Top\" wins over a bare \"on top\" match.",
-          "Every hint must name a *toggle* the app keeps set, never a one-shot action such as Window > \"Bring All to Front\": that exists in nearly every Cocoa app, so it would match where no real toggle exists and yank every window forward again on unpin.",
-          "Extend this list for an app whose float menu item is worded differently, e.g. `table.insert(spoon.PinnedWindows.floatHints, 1, \"pin window\")`."
-        ],
-        "desc" : "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.floatHints",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "floatHints",
-        "def" : "PinnedWindows.floatHints"
-      }
-    ],
-    "stripped_doc" : [
-
-    ],
-    "type" : "Module",
-    "Deprecated" : [
-
-    ],
-    "desc" : "A menubar item for pinning windows: always on top, locked size, locked position.",
-    "Constructor" : [
-
-    ],
-    "doc" : "A menubar item for pinning windows: always on top, locked size, locked position.\n\nmacOS gives no public API for one app to change another app's window level, so\n\"always on top\" is emulated: whenever something else comes forward, the pinned window is\nre-raised. Size and position are held by snapshotting the frame and restoring it.\n\nWhere an app offers its own \"always on top\" menu item, that is used instead: it is\nimplemented in-process, where macOS does allow it. See `PinnedWindows.floatHints`.",
-    "Method" : [
-      {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nDeliberately starts nothing. The menubar item, every watcher and every timer belong to `PinnedWindows:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing `pinned` here would orphan the accessibility watchers of anything already pinned.",
-        "stripped_doc" : [
-          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
-          ""
-        ],
-        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
-        "parameters" : [
+        "def": "PinnedWindows:init() -> self",
+        "desc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "doc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nDeliberately starts nothing. The menubar item, every watcher and every timer belong to `PinnedWindows:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing `pinned` here would orphan the accessibility watchers of anything already pinned.",
+        "name": "init",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:init() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object",
           "",
           "Deliberately starts nothing. The menubar item, every watcher and every timer belong to `PinnedWindows:start()`.",
           "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing `pinned` here would orphan the accessibility watchers of anything already pinned."
         ],
-        "name" : "init",
-        "def" : "PinnedWindows:init() -> self"
-      },
-      {
-        "doc" : "Adds the menubar item and starts watching for the events that pinning depends on.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nCalling this on an already-started Spoon restarts it cleanly.\nNo polling or focus tracking begins until the first window is pinned, so an idle session costs nothing.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
-        "stripped_doc" : [
-          "Adds the menubar item and starts watching for the events that pinning depends on.",
+        "signature": "PinnedWindows:init() -> self",
+        "stripped_doc": [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
           ""
         ],
-        "desc" : "Adds the menubar item and starts watching for the events that pinning depends on.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "PinnedWindows:start() -> self",
+        "desc": "Adds the menubar item and starts watching for the events that pinning depends on.",
+        "doc": "Adds the menubar item and starts watching for the events that pinning depends on.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nCalling this on an already-started Spoon restarts it cleanly.\nNo polling or focus tracking begins until the first window is pinned, so an idle session costs nothing.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
+        "name": "start",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:start() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object",
           "",
           "Calling this on an already-started Spoon restarts it cleanly.",
           "No polling or focus tracking begins until the first window is pinned, so an idle session costs nothing.",
           "Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
         ],
-        "name" : "start",
-        "def" : "PinnedWindows:start() -> self"
-      },
-      {
-        "doc" : "Unpins everything and removes the menubar item, every watcher and every timer.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nAny hotkeys bound with `PinnedWindows:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
-        "stripped_doc" : [
-          "Unpins everything and removes the menubar item, every watcher and every timer.",
+        "signature": "PinnedWindows:start() -> self",
+        "stripped_doc": [
+          "Adds the menubar item and starts watching for the events that pinning depends on.",
           ""
         ],
-        "desc" : "Unpins everything and removes the menubar item, every watcher and every timer.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "PinnedWindows:stop() -> self",
+        "desc": "Unpins everything and removes the menubar item, every watcher and every timer.",
+        "doc": "Unpins everything and removes the menubar item, every watcher and every timer.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nAny hotkeys bound with `PinnedWindows:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:stop() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object",
           "",
           "Any hotkeys bound with `PinnedWindows:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
-        "name" : "stop",
-        "def" : "PinnedWindows:stop() -> self"
-      },
-      {
-        "doc" : "Binds hotkeys for PinnedWindows.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * togglePin - Pin or unpin the frontmost window\n   * unpinAll - Unpin every pinned window\n\nReturns:\n * The PinnedWindows object\n\nFor example: `spoon.PinnedWindows:bindHotkeys({ togglePin = { { \"cmd\", \"alt\", \"shift\" }, \"P\" } })`",
-        "stripped_doc" : [
-          "Binds hotkeys for PinnedWindows.",
+        "signature": "PinnedWindows:stop() -> self",
+        "stripped_doc": [
+          "Unpins everything and removes the menubar item, every watcher and every timer.",
           ""
         ],
-        "desc" : "Binds hotkeys for PinnedWindows.",
-        "parameters" : [
-          " * mapping - A table containing hotkey modifier\/key details for the following items:",
+        "type": "Method"
+      },
+      {
+        "def": "PinnedWindows:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for PinnedWindows.",
+        "doc": "Binds hotkeys for PinnedWindows.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * togglePin - Pin or unpin the frontmost window\n   * unpinAll - Unpin every pinned window\n\nReturns:\n * The PinnedWindows object\n\nFor example: `spoon.PinnedWindows:bindHotkeys({ togglePin = { { \"cmd\", \"alt\", \"shift\" }, \"P\" } })`",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - A table containing hotkey modifier/key details for the following items:",
           "   * togglePin - Pin or unpin the frontmost window",
           "   * unpinAll - Unpin every pinned window",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:bindHotkeys(mapping) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object",
           "",
           "For example: `spoon.PinnedWindows:bindHotkeys({ togglePin = { { \"cmd\", \"alt\", \"shift\" }, \"P\" } })`"
         ],
-        "name" : "bindHotkeys",
-        "def" : "PinnedWindows:bindHotkeys(mapping) -> self"
+        "signature": "PinnedWindows:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for PinnedWindows.",
+          ""
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Pins the frontmost window, or unpins it if it is already pinned.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
-        "stripped_doc" : [
+        "def": "PinnedWindows:togglePinFrontmost() -> self",
+        "desc": "Pins the frontmost window, or unpins it if it is already pinned.",
+        "doc": "Pins the frontmost window, or unpins it if it is already pinned.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
+        "name": "togglePinFrontmost",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PinnedWindows object"
+        ],
+        "signature": "PinnedWindows:togglePinFrontmost() -> self",
+        "stripped_doc": [
           "Pins the frontmost window, or unpins it if it is already pinned.",
           ""
         ],
-        "desc" : "Pins the frontmost window, or unpins it if it is already pinned.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "PinnedWindows:unpinAll() -> self",
+        "desc": "Unpins every currently pinned window.",
+        "doc": "Unpins every currently pinned window.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
+        "name": "unpinAll",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:togglePinFrontmost() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object"
         ],
-        "name" : "togglePinFrontmost",
-        "def" : "PinnedWindows:togglePinFrontmost() -> self"
-      },
-      {
-        "doc" : "Unpins every currently pinned window.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
-        "stripped_doc" : [
+        "signature": "PinnedWindows:unpinAll() -> self",
+        "stripped_doc": [
           "Unpins every currently pinned window.",
           ""
         ],
-        "desc" : "Unpins every currently pinned window.",
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:unpinAll() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The PinnedWindows object"
-        ],
-        "name" : "unpinAll",
-        "def" : "PinnedWindows:unpinAll() -> self"
+        "type": "Method"
       },
       {
-        "doc" : "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.\n\nParameters:\n * delay - Optional seconds to wait before measuring. Defaults to `0`, which measures immediately.\n\nReturns:\n * The report text when run immediately, or a short acknowledgement when a delay was given. Either way the full report is printed to the Console.\n\nPass a delay and click the app covering your pinned window during it, so the measurement is taken while a DIFFERENT app is frontmost; running straight from the Console measures Hammerspoon instead. For example: `spoon.PinnedWindows:diagnose(6)`",
-        "stripped_doc" : [
-          "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.",
-          ""
-        ],
-        "desc" : "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.",
-        "parameters" : [
+        "def": "PinnedWindows:diagnose([delay]) -> string",
+        "desc": "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.",
+        "doc": "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.\n\nParameters:\n * delay - Optional seconds to wait before measuring. Defaults to `0`, which measures immediately.\n\nReturns:\n * The report text when run immediately, or a short acknowledgement when a delay was given. Either way the full report is printed to the Console.\n\nPass a delay and click the app covering your pinned window during it, so the measurement is taken while a DIFFERENT app is frontmost; running straight from the Console measures Hammerspoon instead. For example: `spoon.PinnedWindows:diagnose(6)`",
+        "name": "diagnose",
+        "notes": [],
+        "parameters": [
           " * delay - Optional seconds to wait before measuring. Defaults to `0`, which measures immediately.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:diagnose([delay]) -> string",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The report text when run immediately, or a short acknowledgement when a delay was given. Either way the full report is printed to the Console.",
           "",
           "Pass a delay and click the app covering your pinned window during it, so the measurement is taken while a DIFFERENT app is frontmost; running straight from the Console measures Hammerspoon instead. For example: `spoon.PinnedWindows:diagnose(6)`"
         ],
-        "name" : "diagnose",
-        "def" : "PinnedWindows:diagnose([delay]) -> string"
+        "signature": "PinnedWindows:diagnose([delay]) -> string",
+        "stripped_doc": [
+          "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.",
+          ""
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Resets the event counters, so the next `diagnose()` reflects only what happened since.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
-        "stripped_doc" : [
+        "def": "PinnedWindows:resetStats() -> self",
+        "desc": "Resets the event counters, so the next `diagnose()` reflects only what happened since.",
+        "doc": "Resets the event counters, so the next `diagnose()` reflects only what happened since.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
+        "name": "resetStats",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PinnedWindows object"
+        ],
+        "signature": "PinnedWindows:resetStats() -> self",
+        "stripped_doc": [
           "Resets the event counters, so the next `diagnose()` reflects only what happened since.",
           ""
         ],
-        "desc" : "Resets the event counters, so the next `diagnose()` reflects only what happened since.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "PinnedWindows:status() -> table",
+        "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `pinnedCount`, `polling` and `pins` keys",
+        "name": "status",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
+        "returns": [
+          " * A table with `running`, `pinnedCount`, `polling` and `pins` keys"
         ],
-        "signature" : "PinnedWindows:resetStats() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The PinnedWindows object"
-        ],
-        "name" : "resetStats",
-        "def" : "PinnedWindows:resetStats() -> self"
-      },
-      {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `pinnedCount`, `polling` and `pins` keys",
-        "stripped_doc" : [
+        "signature": "PinnedWindows:status() -> table",
+        "stripped_doc": [
           "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
           ""
         ],
-        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:status() -> table",
-        "type" : "Method",
-        "returns" : [
-          " * A table with `running`, `pinnedCount`, `polling` and `pins` keys"
-        ],
-        "name" : "status",
-        "def" : "PinnedWindows:status() -> table"
+        "type": "Method"
       }
     ],
-    "Command" : [
-
-    ],
-    "items" : [
+    "Variable": [
       {
-        "doc" : "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.\n\nSome windows cannot reach the requested frame: Terminal snaps to a character grid, fixed dialogs refuse outright. On hitting this limit the current frame becomes the new target.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.logger",
+        "stripped_doc": [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.pollInterval",
+        "desc": "Seconds between safety-net enforcement passes. Defaults to `1.0`.",
+        "doc": "Seconds between safety-net enforcement passes. Defaults to `1.0`.\n\nThe poll only runs while something is pinned. An idle repeating timer defeats CPU idle states, which matters on a laptop.",
+        "name": "pollInterval",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.pollInterval",
+        "stripped_doc": [
+          "Seconds between safety-net enforcement passes. Defaults to `1.0`.",
+          "",
+          "The poll only runs while something is pinned. An idle repeating timer defeats CPU idle states, which matters on a laptop."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.raiseCoalesce",
+        "desc": "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`.",
+        "doc": "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`.",
+        "name": "raiseCoalesce",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.raiseCoalesce",
+        "stripped_doc": [
+          "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.raiseMinGap",
+        "desc": "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`.",
+        "doc": "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`.",
+        "name": "raiseMinGap",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.raiseMinGap",
+        "stripped_doc": [
+          "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.frameTolerance",
+        "desc": "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`.",
+        "doc": "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`.",
+        "name": "frameTolerance",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.frameTolerance",
+        "stripped_doc": [
+          "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.suppressEcho",
+        "desc": "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`.",
+        "doc": "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`.",
+        "name": "suppressEcho",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.suppressEcho",
+        "stripped_doc": [
+          "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.failLimit",
+        "desc": "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.",
+        "doc": "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.\n\nSome windows cannot reach the requested frame: Terminal snaps to a character grid, fixed dialogs refuse outright. On hitting this limit the current frame becomes the new target.",
+        "name": "failLimit",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.failLimit",
+        "stripped_doc": [
           "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.",
           "",
           "Some windows cannot reach the requested frame: Terminal snaps to a character grid, fixed dialogs refuse outright. On hitting this limit the current frame becomes the new target."
         ],
-        "desc" : "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.failLimit",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "failLimit",
-        "def" : "PinnedWindows.failLimit"
+        "type": "Variable"
       },
       {
-        "doc" : "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.failWindow",
+        "desc": "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`.",
+        "doc": "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`.",
+        "name": "failWindow",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.failWindow",
+        "stripped_doc": [
           "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`."
         ],
-        "desc" : "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.failWindow",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "failWindow",
-        "def" : "PinnedWindows.failWindow"
+        "type": "Variable"
       },
       {
-        "doc" : "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.\n\nOrdered most specific first, so \"Always on Top\" wins over a bare \"on top\" match.\nEvery hint must name a *toggle* the app keeps set, never a one-shot action such as Window > \"Bring All to Front\": that exists in nearly every Cocoa app, so it would match where no real toggle exists and yank every window forward again on unpin.\nExtend this list for an app whose float menu item is worded differently, e.g. `table.insert(spoon.PinnedWindows.floatHints, 1, \"pin window\")`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.spaceSettle",
+        "desc": "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`.",
+        "doc": "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`.",
+        "name": "spaceSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.spaceSettle",
+        "stripped_doc": [
+          "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.screenSettle",
+        "desc": "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
+        "doc": "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
+        "name": "screenSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.screenSettle",
+        "stripped_doc": [
+          "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.titleMax",
+        "desc": "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`.",
+        "doc": "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`.",
+        "name": "titleMax",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.titleMax",
+        "stripped_doc": [
+          "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.maxWindowsPerApp",
+        "desc": "Cap on how many windows one app contributes to its submenu. Defaults to `20`.",
+        "doc": "Cap on how many windows one app contributes to its submenu. Defaults to `20`.",
+        "name": "maxWindowsPerApp",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.maxWindowsPerApp",
+        "stripped_doc": [
+          "Cap on how many windows one app contributes to its submenu. Defaults to `20`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.floatHints",
+        "desc": "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.",
+        "doc": "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.\n\nOrdered most specific first, so \"Always on Top\" wins over a bare \"on top\" match.\nEvery hint must name a *toggle* the app keeps set, never a one-shot action such as Window > \"Bring All to Front\": that exists in nearly every Cocoa app, so it would match where no real toggle exists and yank every window forward again on unpin.\nExtend this list for an app whose float menu item is worded differently, e.g. `table.insert(spoon.PinnedWindows.floatHints, 1, \"pin window\")`.",
+        "name": "floatHints",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.floatHints",
+        "stripped_doc": [
           "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.",
           "",
           "Ordered most specific first, so \"Always on Top\" wins over a bare \"on top\" match.",
           "Every hint must name a *toggle* the app keeps set, never a one-shot action such as Window > \"Bring All to Front\": that exists in nearly every Cocoa app, so it would match where no real toggle exists and yank every window forward again on unpin.",
           "Extend this list for an app whose float menu item is worded differently, e.g. `table.insert(spoon.PinnedWindows.floatHints, 1, \"pin window\")`."
         ],
-        "desc" : "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.",
-        "parameters" : [
-
+        "type": "Variable"
+      }
+    ],
+    "desc": "A menubar item for pinning windows: always on top, locked size, locked position.",
+    "doc": "A menubar item for pinning windows: always on top, locked size, locked position.\n\nmacOS gives no public API for one app to change another app's window level, so\n\"always on top\" is emulated: whenever something else comes forward, the pinned window is\nre-raised. Size and position are held by snapshotting the frame and restoring it.\n\nWhere an app offers its own \"always on top\" menu item, that is used instead: it is\nimplemented in-process, where macOS does allow it. See `PinnedWindows.floatHints`.",
+    "items": [
+      {
+        "def": "PinnedWindows.failLimit",
+        "desc": "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.",
+        "doc": "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.\n\nSome windows cannot reach the requested frame: Terminal snaps to a character grid, fixed dialogs refuse outright. On hitting this limit the current frame becomes the new target.",
+        "name": "failLimit",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.failLimit",
+        "stripped_doc": [
+          "Consecutive failed frame restores before the Spoon stops fighting the window. Defaults to `5`.",
+          "",
+          "Some windows cannot reach the requested frame: Terminal snaps to a character grid, fixed dialogs refuse outright. On hitting this limit the current frame becomes the new target."
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.floatHints",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "floatHints",
-        "def" : "PinnedWindows.floatHints"
+        "type": "Variable"
       },
       {
-        "doc" : "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.failWindow",
+        "desc": "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`.",
+        "doc": "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`.",
+        "name": "failWindow",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.failWindow",
+        "stripped_doc": [
+          "Seconds; failures spread wider apart than this reset the failure streak. Defaults to `2.0`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.floatHints",
+        "desc": "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.",
+        "doc": "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.\n\nOrdered most specific first, so \"Always on Top\" wins over a bare \"on top\" match.\nEvery hint must name a *toggle* the app keeps set, never a one-shot action such as Window > \"Bring All to Front\": that exists in nearly every Cocoa app, so it would match where no real toggle exists and yank every window forward again on unpin.\nExtend this list for an app whose float menu item is worded differently, e.g. `table.insert(spoon.PinnedWindows.floatHints, 1, \"pin window\")`.",
+        "name": "floatHints",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.floatHints",
+        "stripped_doc": [
+          "Lower-case substrings matched against menu item titles when hunting for an app's own \"always on top\" toggle.",
+          "",
+          "Ordered most specific first, so \"Always on Top\" wins over a bare \"on top\" match.",
+          "Every hint must name a *toggle* the app keeps set, never a one-shot action such as Window > \"Bring All to Front\": that exists in nearly every Cocoa app, so it would match where no real toggle exists and yank every window forward again on unpin.",
+          "Extend this list for an app whose float menu item is worded differently, e.g. `table.insert(spoon.PinnedWindows.floatHints, 1, \"pin window\")`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PinnedWindows.frameTolerance",
+        "desc": "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`.",
+        "doc": "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`.",
+        "name": "frameTolerance",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.frameTolerance",
+        "stripped_doc": [
           "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`."
         ],
-        "desc" : "Points; a frame closer than this to the target counts as \"already correct\". Defaults to `2`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.frameTolerance",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "frameTolerance",
-        "def" : "PinnedWindows.frameTolerance"
+        "type": "Variable"
       },
       {
-        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.logger",
+        "stripped_doc": [
           "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
         ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.logger",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "logger",
-        "def" : "PinnedWindows.logger"
+        "type": "Variable"
       },
       {
-        "doc" : "Cap on how many windows one app contributes to its submenu. Defaults to `20`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.maxWindowsPerApp",
+        "desc": "Cap on how many windows one app contributes to its submenu. Defaults to `20`.",
+        "doc": "Cap on how many windows one app contributes to its submenu. Defaults to `20`.",
+        "name": "maxWindowsPerApp",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.maxWindowsPerApp",
+        "stripped_doc": [
           "Cap on how many windows one app contributes to its submenu. Defaults to `20`."
         ],
-        "desc" : "Cap on how many windows one app contributes to its submenu. Defaults to `20`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.maxWindowsPerApp",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "maxWindowsPerApp",
-        "def" : "PinnedWindows.maxWindowsPerApp"
+        "type": "Variable"
       },
       {
-        "doc" : "Seconds between safety-net enforcement passes. Defaults to `1.0`.\n\nThe poll only runs while something is pinned. An idle repeating timer defeats CPU idle states, which matters on a laptop.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.pollInterval",
+        "desc": "Seconds between safety-net enforcement passes. Defaults to `1.0`.",
+        "doc": "Seconds between safety-net enforcement passes. Defaults to `1.0`.\n\nThe poll only runs while something is pinned. An idle repeating timer defeats CPU idle states, which matters on a laptop.",
+        "name": "pollInterval",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.pollInterval",
+        "stripped_doc": [
           "Seconds between safety-net enforcement passes. Defaults to `1.0`.",
           "",
           "The poll only runs while something is pinned. An idle repeating timer defeats CPU idle states, which matters on a laptop."
         ],
-        "desc" : "Seconds between safety-net enforcement passes. Defaults to `1.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.pollInterval",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "pollInterval",
-        "def" : "PinnedWindows.pollInterval"
+        "type": "Variable"
       },
       {
-        "doc" : "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.raiseCoalesce",
+        "desc": "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`.",
+        "doc": "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`.",
+        "name": "raiseCoalesce",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.raiseCoalesce",
+        "stripped_doc": [
           "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`."
         ],
-        "desc" : "Seconds over which a burst of focus events is collapsed into one raise pass. Defaults to `0.06`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.raiseCoalesce",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "raiseCoalesce",
-        "def" : "PinnedWindows.raiseCoalesce"
+        "type": "Variable"
       },
       {
-        "doc" : "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.raiseMinGap",
+        "desc": "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`.",
+        "doc": "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`.",
+        "name": "raiseMinGap",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.raiseMinGap",
+        "stripped_doc": [
           "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`."
         ],
-        "desc" : "Minimum seconds between `raise()` calls for any one window. Defaults to `0.20`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.raiseMinGap",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "raiseMinGap",
-        "def" : "PinnedWindows.raiseMinGap"
+        "type": "Variable"
       },
       {
-        "doc" : "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.screenSettle",
+        "desc": "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
+        "doc": "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
+        "name": "screenSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.screenSettle",
+        "stripped_doc": [
           "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`."
         ],
-        "desc" : "Seconds to debounce display reconfiguration, which fires several events. Defaults to `1.0`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.screenSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "screenSettle",
-        "def" : "PinnedWindows.screenSettle"
+        "type": "Variable"
       },
       {
-        "doc" : "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.spaceSettle",
+        "desc": "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`.",
+        "doc": "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`.",
+        "name": "spaceSettle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.spaceSettle",
+        "stripped_doc": [
           "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`."
         ],
-        "desc" : "Seconds to let a Space-switch animation finish before re-enforcing. Defaults to `0.35`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.spaceSettle",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "spaceSettle",
-        "def" : "PinnedWindows.spaceSettle"
+        "type": "Variable"
       },
       {
-        "doc" : "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.suppressEcho",
+        "desc": "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`.",
+        "doc": "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`.",
+        "name": "suppressEcho",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.suppressEcho",
+        "stripped_doc": [
           "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`."
         ],
-        "desc" : "Seconds for which the accessibility echo of our own `setFrame` is ignored. Defaults to `0.05`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.suppressEcho",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "suppressEcho",
-        "def" : "PinnedWindows.suppressEcho"
+        "type": "Variable"
       },
       {
-        "doc" : "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`.",
-        "stripped_doc" : [
+        "def": "PinnedWindows.titleMax",
+        "desc": "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`.",
+        "doc": "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`.",
+        "name": "titleMax",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PinnedWindows.titleMax",
+        "stripped_doc": [
           "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`."
         ],
-        "desc" : "Maximum length of a window title in the menu before it is middle-ellipsised. Defaults to `45`.",
-        "parameters" : [
-
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows.titleMax",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "name" : "titleMax",
-        "def" : "PinnedWindows.titleMax"
+        "type": "Variable"
       },
       {
-        "doc" : "Binds hotkeys for PinnedWindows.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * togglePin - Pin or unpin the frontmost window\n   * unpinAll - Unpin every pinned window\n\nReturns:\n * The PinnedWindows object\n\nFor example: `spoon.PinnedWindows:bindHotkeys({ togglePin = { { \"cmd\", \"alt\", \"shift\" }, \"P\" } })`",
-        "stripped_doc" : [
-          "Binds hotkeys for PinnedWindows.",
-          ""
-        ],
-        "desc" : "Binds hotkeys for PinnedWindows.",
-        "parameters" : [
-          " * mapping - A table containing hotkey modifier\/key details for the following items:",
+        "def": "PinnedWindows:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for PinnedWindows.",
+        "doc": "Binds hotkeys for PinnedWindows.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * togglePin - Pin or unpin the frontmost window\n   * unpinAll - Unpin every pinned window\n\nReturns:\n * The PinnedWindows object\n\nFor example: `spoon.PinnedWindows:bindHotkeys({ togglePin = { { \"cmd\", \"alt\", \"shift\" }, \"P\" } })`",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - A table containing hotkey modifier/key details for the following items:",
           "   * togglePin - Pin or unpin the frontmost window",
           "   * unpinAll - Unpin every pinned window",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:bindHotkeys(mapping) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object",
           "",
           "For example: `spoon.PinnedWindows:bindHotkeys({ togglePin = { { \"cmd\", \"alt\", \"shift\" }, \"P\" } })`"
         ],
-        "name" : "bindHotkeys",
-        "def" : "PinnedWindows:bindHotkeys(mapping) -> self"
-      },
-      {
-        "doc" : "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.\n\nParameters:\n * delay - Optional seconds to wait before measuring. Defaults to `0`, which measures immediately.\n\nReturns:\n * The report text when run immediately, or a short acknowledgement when a delay was given. Either way the full report is printed to the Console.\n\nPass a delay and click the app covering your pinned window during it, so the measurement is taken while a DIFFERENT app is frontmost; running straight from the Console measures Hammerspoon instead. For example: `spoon.PinnedWindows:diagnose(6)`",
-        "stripped_doc" : [
-          "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.",
+        "signature": "PinnedWindows:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for PinnedWindows.",
           ""
         ],
-        "desc" : "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "PinnedWindows:diagnose([delay]) -> string",
+        "desc": "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.",
+        "doc": "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.\n\nParameters:\n * delay - Optional seconds to wait before measuring. Defaults to `0`, which measures immediately.\n\nReturns:\n * The report text when run immediately, or a short acknowledgement when a delay was given. Either way the full report is printed to the Console.\n\nPass a delay and click the app covering your pinned window during it, so the measurement is taken while a DIFFERENT app is frontmost; running straight from the Console measures Hammerspoon instead. For example: `spoon.PinnedWindows:diagnose(6)`",
+        "name": "diagnose",
+        "notes": [],
+        "parameters": [
           " * delay - Optional seconds to wait before measuring. Defaults to `0`, which measures immediately.",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:diagnose([delay]) -> string",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The report text when run immediately, or a short acknowledgement when a delay was given. Either way the full report is printed to the Console.",
           "",
           "Pass a delay and click the app covering your pinned window during it, so the measurement is taken while a DIFFERENT app is frontmost; running straight from the Console measures Hammerspoon instead. For example: `spoon.PinnedWindows:diagnose(6)`"
         ],
-        "name" : "diagnose",
-        "def" : "PinnedWindows:diagnose([delay]) -> string"
-      },
-      {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nDeliberately starts nothing. The menubar item, every watcher and every timer belong to `PinnedWindows:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing `pinned` here would orphan the accessibility watchers of anything already pinned.",
-        "stripped_doc" : [
-          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "signature": "PinnedWindows:diagnose([delay]) -> string",
+        "stripped_doc": [
+          "Reports why always-on-top is or is not working, by measuring real window z-order before and after a raise.",
           ""
         ],
-        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "PinnedWindows:init() -> self",
+        "desc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "doc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nDeliberately starts nothing. The menubar item, every watcher and every timer belong to `PinnedWindows:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing `pinned` here would orphan the accessibility watchers of anything already pinned.",
+        "name": "init",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:init() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object",
           "",
           "Deliberately starts nothing. The menubar item, every watcher and every timer belong to `PinnedWindows:start()`.",
           "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing `pinned` here would orphan the accessibility watchers of anything already pinned."
         ],
-        "name" : "init",
-        "def" : "PinnedWindows:init() -> self"
+        "signature": "PinnedWindows:init() -> self",
+        "stripped_doc": [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+          ""
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Resets the event counters, so the next `diagnose()` reflects only what happened since.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
-        "stripped_doc" : [
+        "def": "PinnedWindows:resetStats() -> self",
+        "desc": "Resets the event counters, so the next `diagnose()` reflects only what happened since.",
+        "doc": "Resets the event counters, so the next `diagnose()` reflects only what happened since.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
+        "name": "resetStats",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PinnedWindows object"
+        ],
+        "signature": "PinnedWindows:resetStats() -> self",
+        "stripped_doc": [
           "Resets the event counters, so the next `diagnose()` reflects only what happened since.",
           ""
         ],
-        "desc" : "Resets the event counters, so the next `diagnose()` reflects only what happened since.",
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:resetStats() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The PinnedWindows object"
-        ],
-        "name" : "resetStats",
-        "def" : "PinnedWindows:resetStats() -> self"
+        "type": "Method"
       },
       {
-        "doc" : "Adds the menubar item and starts watching for the events that pinning depends on.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nCalling this on an already-started Spoon restarts it cleanly.\nNo polling or focus tracking begins until the first window is pinned, so an idle session costs nothing.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
-        "stripped_doc" : [
-          "Adds the menubar item and starts watching for the events that pinning depends on.",
-          ""
-        ],
-        "desc" : "Adds the menubar item and starts watching for the events that pinning depends on.",
-        "parameters" : [
+        "def": "PinnedWindows:start() -> self",
+        "desc": "Adds the menubar item and starts watching for the events that pinning depends on.",
+        "doc": "Adds the menubar item and starts watching for the events that pinning depends on.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nCalling this on an already-started Spoon restarts it cleanly.\nNo polling or focus tracking begins until the first window is pinned, so an idle session costs nothing.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
+        "name": "start",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:start() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object",
           "",
           "Calling this on an already-started Spoon restarts it cleanly.",
           "No polling or focus tracking begins until the first window is pinned, so an idle session costs nothing.",
           "Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
         ],
-        "name" : "start",
-        "def" : "PinnedWindows:start() -> self"
+        "signature": "PinnedWindows:start() -> self",
+        "stripped_doc": [
+          "Adds the menubar item and starts watching for the events that pinning depends on.",
+          ""
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `pinnedCount`, `polling` and `pins` keys",
-        "stripped_doc" : [
+        "def": "PinnedWindows:status() -> table",
+        "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `pinnedCount`, `polling` and `pins` keys",
+        "name": "status",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * A table with `running`, `pinnedCount`, `polling` and `pins` keys"
+        ],
+        "signature": "PinnedWindows:status() -> table",
+        "stripped_doc": [
           "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
           ""
         ],
-        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:status() -> table",
-        "type" : "Method",
-        "returns" : [
-          " * A table with `running`, `pinnedCount`, `polling` and `pins` keys"
-        ],
-        "name" : "status",
-        "def" : "PinnedWindows:status() -> table"
+        "type": "Method"
       },
       {
-        "doc" : "Unpins everything and removes the menubar item, every watcher and every timer.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nAny hotkeys bound with `PinnedWindows:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
-        "stripped_doc" : [
-          "Unpins everything and removes the menubar item, every watcher and every timer.",
-          ""
-        ],
-        "desc" : "Unpins everything and removes the menubar item, every watcher and every timer.",
-        "parameters" : [
+        "def": "PinnedWindows:stop() -> self",
+        "desc": "Unpins everything and removes the menubar item, every watcher and every timer.",
+        "doc": "Unpins everything and removes the menubar item, every watcher and every timer.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object\n\nAny hotkeys bound with `PinnedWindows:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:stop() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object",
           "",
           "Any hotkeys bound with `PinnedWindows:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
-        "name" : "stop",
-        "def" : "PinnedWindows:stop() -> self"
+        "signature": "PinnedWindows:stop() -> self",
+        "stripped_doc": [
+          "Unpins everything and removes the menubar item, every watcher and every timer.",
+          ""
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Pins the frontmost window, or unpins it if it is already pinned.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
-        "stripped_doc" : [
+        "def": "PinnedWindows:togglePinFrontmost() -> self",
+        "desc": "Pins the frontmost window, or unpins it if it is already pinned.",
+        "doc": "Pins the frontmost window, or unpins it if it is already pinned.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
+        "name": "togglePinFrontmost",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PinnedWindows object"
+        ],
+        "signature": "PinnedWindows:togglePinFrontmost() -> self",
+        "stripped_doc": [
           "Pins the frontmost window, or unpins it if it is already pinned.",
           ""
         ],
-        "desc" : "Pins the frontmost window, or unpins it if it is already pinned.",
-        "parameters" : [
+        "type": "Method"
+      },
+      {
+        "def": "PinnedWindows:unpinAll() -> self",
+        "desc": "Unpins every currently pinned window.",
+        "doc": "Unpins every currently pinned window.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
+        "name": "unpinAll",
+        "notes": [],
+        "parameters": [
           " * None",
           ""
         ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:togglePinFrontmost() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The PinnedWindows object"
         ],
-        "name" : "togglePinFrontmost",
-        "def" : "PinnedWindows:togglePinFrontmost() -> self"
-      },
-      {
-        "doc" : "Unpins every currently pinned window.\n\nParameters:\n * None\n\nReturns:\n * The PinnedWindows object",
-        "stripped_doc" : [
+        "signature": "PinnedWindows:unpinAll() -> self",
+        "stripped_doc": [
           "Unpins every currently pinned window.",
           ""
         ],
-        "desc" : "Unpins every currently pinned window.",
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "notes" : [
-
-        ],
-        "signature" : "PinnedWindows:unpinAll() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The PinnedWindows object"
-        ],
-        "name" : "unpinAll",
-        "def" : "PinnedWindows:unpinAll() -> self"
+        "type": "Method"
       }
     ],
-    "Field" : [
-
-    ],
-    "name" : "PinnedWindows"
+    "name": "PinnedWindows",
+    "stripped_doc": [],
+    "submodules": [],
+    "type": "Module"
   }
 ]

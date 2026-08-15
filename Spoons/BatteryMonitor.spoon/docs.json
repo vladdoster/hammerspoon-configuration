@@ -1,146 +1,318 @@
 [
   {
-    "Constant" : [
-
-    ],
-    "submodules" : [
-
-    ],
-    "Function" : [
-
-    ],
-    "Variable" : [
+    "Command": [],
+    "Constant": [],
+    "Constructor": [],
+    "Deprecated": [],
+    "Field": [],
+    "Function": [],
+    "Method": [
       {
-        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "stripped_doc" : [
-          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+        "def": "BatteryMonitor:speak(text, [volume]) -> self",
+        "desc": "Speaks a line through `hs.speech`, unducking and restoring the output device around it.",
+        "doc": "Speaks a line through `hs.speech`, unducking and restoring the output device around it.\n\nParameters:\n * text - The text to speak\n * volume - An optional output volume, 0-100, for the duration of the utterance\n\nReturns:\n * The BatteryMonitor object\n\nDoes nothing while `BatteryMonitor.suppressAudio` is set. Only one utterance runs at a time; a second call cuts the first one off.",
+        "name": "speak",
+        "notes": [],
+        "parameters": [
+          " * text - The text to speak",
+          " * volume - An optional output volume, 0-100, for the duration of the utterance",
+          ""
         ],
-        "name" : "logger",
-        "def" : "BatteryMonitor.logger",
-        "notes" : [
-
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "Does nothing while `BatteryMonitor.suppressAudio` is set. Only one utterance runs at a time; a second call cuts the first one off."
         ],
-        "signature" : "BatteryMonitor.logger",
-        "type" : "Variable",
-        "returns" : [
-
+        "signature": "BatteryMonitor:speak(text, [volume]) -> self",
+        "stripped_doc": [
+          "Speaks a line through `hs.speech`, unducking and restoring the output device around it.",
+          ""
         ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "parameters" : [
-
-        ]
+        "type": "Method"
       },
       {
-        "doc" : "Seconds between fallback updates. Defaults to `60`.\n\nThis is NOT the polling rate. `hs.battery.watcher` reports power-source and charge changes as they happen; this timer exists only because the time-remaining estimate drifts without any IOKit notification to announce it. Read before `BatteryMonitor:start()`.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor:showDialog(message, informativeText) -> self",
+        "desc": "Raises a non-blocking alert panel.",
+        "doc": "Raises a non-blocking alert panel.\n\nParameters:\n * message - The bold headline of the panel\n * informativeText - The body text beneath it\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%.",
+        "name": "showDialog",
+        "notes": [],
+        "parameters": [
+          " * message - The bold headline of the panel",
+          " * informativeText - The body text beneath it",
+          ""
+        ],
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "Deliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%."
+        ],
+        "signature": "BatteryMonitor:showDialog(message, informativeText) -> self",
+        "stripped_doc": [
+          "Raises a non-blocking alert panel.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "BatteryMonitor:update([arming]) -> self",
+        "desc": "Reads the battery once and brings the menubar title and the rules up to date.",
+        "doc": "Reads the battery once and brings the menubar title and the rules up to date.\n\nParameters:\n * arming - An optional boolean. When true, rules whose threshold is already crossed are recorded as crossed without firing\n\nReturns:\n * The BatteryMonitor object\n\nCalled for you by the battery watcher and the fallback timer; exposed for prodding from the Console.",
+        "name": "update",
+        "notes": [],
+        "parameters": [
+          " * arming - An optional boolean. When true, rules whose threshold is already crossed are recorded as crossed without firing",
+          ""
+        ],
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "Called for you by the battery watcher and the fallback timer; exposed for prodding from the Console."
+        ],
+        "signature": "BatteryMonitor:update([arming]) -> self",
+        "stripped_doc": [
+          "Reads the battery once and brings the menubar title and the rules up to date.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "BatteryMonitor:init() -> self",
+        "desc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "doc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately starts nothing. The menubar item, the battery watcher and the timer all belong to `BatteryMonitor:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.",
+        "name": "init",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "Deliberately starts nothing. The menubar item, the battery watcher and the timer all belong to `BatteryMonitor:start()`.",
+          "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers."
+        ],
+        "signature": "BatteryMonitor:init() -> self",
+        "stripped_doc": [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "BatteryMonitor:start() -> self",
+        "desc": "Adds the menubar item and starts watching the battery.",
+        "doc": "Adds the menubar item and starts watching the battery.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nCalling this on an already-started Spoon restarts it cleanly. Rules whose threshold is already crossed at this point are recorded silently, so a reload on a nearly-flat battery does not announce itself.",
+        "name": "start",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "Calling this on an already-started Spoon restarts it cleanly. Rules whose threshold is already crossed at this point are recorded silently, so a reload on a nearly-flat battery does not announce itself."
+        ],
+        "signature": "BatteryMonitor:start() -> self",
+        "stripped_doc": [
+          "Adds the menubar item and starts watching the battery.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "BatteryMonitor:stop() -> self",
+        "desc": "Removes the menubar item and every watcher and timer the Spoon owns.",
+        "doc": "Removes the menubar item and every watcher and timer the Spoon owns.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nSafe to call more than once. Any hotkeys bound with `BatteryMonitor:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "Safe to call more than once. Any hotkeys bound with `BatteryMonitor:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
+        ],
+        "signature": "BatteryMonitor:stop() -> self",
+        "stripped_doc": [
+          "Removes the menubar item and every watcher and timer the Spoon owns.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "BatteryMonitor:setSuppressAudio([state]) -> self",
+        "desc": "Silences or restores spoken alerts, and remembers the choice across reloads.",
+        "doc": "Silences or restores spoken alerts, and remembers the choice across reloads.\n\nParameters:\n * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped\n\nReturns:\n * The BatteryMonitor object\n\nDialog and `hs.alert` warnings are unaffected; only speech is silenced.",
+        "name": "setSuppressAudio",
+        "notes": [],
+        "parameters": [
+          " * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped",
+          ""
+        ],
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "Dialog and `hs.alert` warnings are unaffected; only speech is silenced."
+        ],
+        "signature": "BatteryMonitor:setSuppressAudio([state]) -> self",
+        "stripped_doc": [
+          "Silences or restores spoken alerts, and remembers the choice across reloads.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "BatteryMonitor:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for BatteryMonitor.",
+        "doc": "Binds hotkeys for BatteryMonitor.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * toggleAudio - Silence or restore spoken alerts\n\nReturns:\n * The BatteryMonitor object\n\nFor example: `spoon.BatteryMonitor:bindHotkeys({ toggleAudio = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - A table containing hotkey modifier/key details for the following items:",
+          "   * toggleAudio - Silence or restore spoken alerts",
+          ""
+        ],
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "For example: `spoon.BatteryMonitor:bindHotkeys({ toggleAudio = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`"
+        ],
+        "signature": "BatteryMonitor:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for BatteryMonitor.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "BatteryMonitor:status() -> table",
+        "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys\n\nEach entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold.",
+        "name": "status",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys",
+          "",
+          "Each entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold."
+        ],
+        "signature": "BatteryMonitor:status() -> table",
+        "stripped_doc": [
+          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+          ""
+        ],
+        "type": "Method"
+      }
+    ],
+    "Variable": [
+      {
+        "def": "BatteryMonitor.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.logger",
+        "stripped_doc": [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "BatteryMonitor.updateInterval",
+        "desc": "Seconds between fallback updates. Defaults to `60`.",
+        "doc": "Seconds between fallback updates. Defaults to `60`.\n\nThis is NOT the polling rate. `hs.battery.watcher` reports power-source and charge changes as they happen; this timer exists only because the time-remaining estimate drifts without any IOKit notification to announce it. Read before `BatteryMonitor:start()`.",
+        "name": "updateInterval",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.updateInterval",
+        "stripped_doc": [
           "Seconds between fallback updates. Defaults to `60`.",
           "",
           "This is NOT the polling rate. `hs.battery.watcher` reports power-source and charge changes as they happen; this timer exists only because the time-remaining estimate drifts without any IOKit notification to announce it. Read before `BatteryMonitor:start()`."
         ],
-        "name" : "updateInterval",
-        "def" : "BatteryMonitor.updateInterval",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.updateInterval",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Seconds between fallback updates. Defaults to `60`.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.voice",
+        "desc": "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`.",
+        "doc": "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`.",
+        "name": "voice",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.voice",
+        "stripped_doc": [
           "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`."
         ],
-        "name" : "voice",
-        "def" : "BatteryMonitor.voice",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.voice",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.\n\nSet to `nil` to leave brightness alone.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.brightnessOnPowerChange",
+        "desc": "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.",
+        "doc": "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.\n\nSet to `nil` to leave brightness alone.",
+        "name": "brightnessOnPowerChange",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.brightnessOnPowerChange",
+        "stripped_doc": [
           "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.",
           "",
           "Set to `nil` to leave brightness alone."
         ],
-        "name" : "brightnessOnPowerChange",
-        "def" : "BatteryMonitor.brightnessOnPowerChange",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.brightnessOnPowerChange",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.titleFont",
+        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
+        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "name": "titleFont",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.titleFont",
+        "stripped_doc": [
           "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
           "",
           "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
         ],
-        "name" : "titleFont",
-        "def" : "BatteryMonitor.titleFont",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.titleFont",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.\n\nToggle it from the menubar item or with `BatteryMonitor:setSuppressAudio()`; assigning to it directly changes this session only.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.suppressAudio",
+        "desc": "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.",
+        "doc": "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.\n\nToggle it from the menubar item or with `BatteryMonitor:setSuppressAudio()`; assigning to it directly changes this session only.",
+        "name": "suppressAudio",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.suppressAudio",
+        "stripped_doc": [
           "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.",
           "",
           "Toggle it from the menubar item or with `BatteryMonitor:setSuppressAudio()`; assigning to it directly changes this session only."
         ],
-        "name" : "suppressAudio",
-        "def" : "BatteryMonitor.suppressAudio",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.suppressAudio",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "The alert rules, evaluated in order on every update.\n\nEach entry is a table:\n * onBattery - Boolean; the rule is inert unless the power source matches\n * percentage - Charge threshold. On battery it is a floor (fires at or below); on AC a ceiling (fires at or above)\n * timeRemaining - Minutes-remaining threshold, fires at or below. Mutually exclusive with `percentage`\n * repeatEvery - Seconds between repeats while the threshold stays crossed, or `false` to fire once per crossing\n * fn - Called as `fn(BatteryMonitor, snapshot)` when the rule fires\n\nA rule is only ever consulted while its threshold is met, so `repeatEvery` cannot nag about a battery that has since recovered.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.rules",
+        "desc": "The alert rules, evaluated in order on every update.",
+        "doc": "The alert rules, evaluated in order on every update.\n\nEach entry is a table:\n * onBattery - Boolean; the rule is inert unless the power source matches\n * percentage - Charge threshold. On battery it is a floor (fires at or below); on AC a ceiling (fires at or above)\n * timeRemaining - Minutes-remaining threshold, fires at or below. Mutually exclusive with `percentage`\n * repeatEvery - Seconds between repeats while the threshold stays crossed, or `false` to fire once per crossing\n * fn - Called as `fn(BatteryMonitor, snapshot)` when the rule fires\n\nA rule is only ever consulted while its threshold is met, so `repeatEvery` cannot nag about a battery that has since recovered.",
+        "name": "rules",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.rules",
+        "stripped_doc": [
           "The alert rules, evaluated in order on every update.",
           "",
           "Each entry is a table:",
@@ -152,308 +324,52 @@
           "",
           "A rule is only ever consulted while its threshold is met, so `repeatEvery` cannot nag about a battery that has since recovered."
         ],
-        "name" : "rules",
-        "def" : "BatteryMonitor.rules",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.rules",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "The alert rules, evaluated in order on every update.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       }
     ],
-    "stripped_doc" : [
-
-    ],
-    "Deprecated" : [
-
-    ],
-    "type" : "Module",
-    "desc" : "Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.",
-    "Constructor" : [
-
-    ],
-    "doc" : "Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.\n\nWakes on `hs.battery.watcher` rather than a stopwatch, and keeps a slow fallback timer only so the\ntime-remaining figure keeps counting down between IOKit notifications.\n\nEach rule in `BatteryMonitor.rules` fires on the RISING EDGE of its threshold and, optionally,\nrepeats while the threshold stays crossed. A rule whose threshold is not currently met can never\nfire, whatever its repeat cadence.",
-    "Method" : [
+    "desc": "Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.",
+    "doc": "Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.\n\nWakes on `hs.battery.watcher` rather than a stopwatch, and keeps a slow fallback timer only so the\ntime-remaining figure keeps counting down between IOKit notifications.\n\nEach rule in `BatteryMonitor.rules` fires on the RISING EDGE of its threshold and, optionally,\nrepeats while the threshold stays crossed. A rule whose threshold is not currently met can never\nfire, whatever its repeat cadence.",
+    "items": [
       {
-        "doc" : "Speaks a line through `hs.speech`, unducking and restoring the output device around it.\n\nParameters:\n * text - The text to speak\n * volume - An optional output volume, 0-100, for the duration of the utterance\n\nReturns:\n * The BatteryMonitor object\n\nDoes nothing while `BatteryMonitor.suppressAudio` is set. Only one utterance runs at a time; a second call cuts the first one off.",
-        "stripped_doc" : [
-          "Speaks a line through `hs.speech`, unducking and restoring the output device around it.",
-          ""
-        ],
-        "name" : "speak",
-        "def" : "BatteryMonitor:speak(text, [volume]) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:speak(text, [volume]) -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The BatteryMonitor object",
-          "",
-          "Does nothing while `BatteryMonitor.suppressAudio` is set. Only one utterance runs at a time; a second call cuts the first one off."
-        ],
-        "desc" : "Speaks a line through `hs.speech`, unducking and restoring the output device around it.",
-        "parameters" : [
-          " * text - The text to speak",
-          " * volume - An optional output volume, 0-100, for the duration of the utterance",
-          ""
-        ]
-      },
-      {
-        "doc" : "Raises a non-blocking alert panel.\n\nParameters:\n * message - The bold headline of the panel\n * informativeText - The body text beneath it\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%.",
-        "stripped_doc" : [
-          "Raises a non-blocking alert panel.",
-          ""
-        ],
-        "name" : "showDialog",
-        "def" : "BatteryMonitor:showDialog(message, informativeText) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:showDialog(message, informativeText) -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The BatteryMonitor object",
-          "",
-          "Deliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%."
-        ],
-        "desc" : "Raises a non-blocking alert panel.",
-        "parameters" : [
-          " * message - The bold headline of the panel",
-          " * informativeText - The body text beneath it",
-          ""
-        ]
-      },
-      {
-        "doc" : "Reads the battery once and brings the menubar title and the rules up to date.\n\nParameters:\n * arming - An optional boolean. When true, rules whose threshold is already crossed are recorded as crossed without firing\n\nReturns:\n * The BatteryMonitor object\n\nCalled for you by the battery watcher and the fallback timer; exposed for prodding from the Console.",
-        "stripped_doc" : [
-          "Reads the battery once and brings the menubar title and the rules up to date.",
-          ""
-        ],
-        "name" : "update",
-        "def" : "BatteryMonitor:update([arming]) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:update([arming]) -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The BatteryMonitor object",
-          "",
-          "Called for you by the battery watcher and the fallback timer; exposed for prodding from the Console."
-        ],
-        "desc" : "Reads the battery once and brings the menubar title and the rules up to date.",
-        "parameters" : [
-          " * arming - An optional boolean. When true, rules whose threshold is already crossed are recorded as crossed without firing",
-          ""
-        ]
-      },
-      {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately starts nothing. The menubar item, the battery watcher and the timer all belong to `BatteryMonitor:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.",
-        "stripped_doc" : [
-          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
-          ""
-        ],
-        "name" : "init",
-        "def" : "BatteryMonitor:init() -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:init() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The BatteryMonitor object",
-          "",
-          "Deliberately starts nothing. The menubar item, the battery watcher and the timer all belong to `BatteryMonitor:start()`.",
-          "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers."
-        ],
-        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
-        "parameters" : [
-          " * None",
-          ""
-        ]
-      },
-      {
-        "doc" : "Adds the menubar item and starts watching the battery.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nCalling this on an already-started Spoon restarts it cleanly. Rules whose threshold is already crossed at this point are recorded silently, so a reload on a nearly-flat battery does not announce itself.",
-        "stripped_doc" : [
-          "Adds the menubar item and starts watching the battery.",
-          ""
-        ],
-        "name" : "start",
-        "def" : "BatteryMonitor:start() -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:start() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The BatteryMonitor object",
-          "",
-          "Calling this on an already-started Spoon restarts it cleanly. Rules whose threshold is already crossed at this point are recorded silently, so a reload on a nearly-flat battery does not announce itself."
-        ],
-        "desc" : "Adds the menubar item and starts watching the battery.",
-        "parameters" : [
-          " * None",
-          ""
-        ]
-      },
-      {
-        "doc" : "Removes the menubar item and every watcher and timer the Spoon owns.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nSafe to call more than once. Any hotkeys bound with `BatteryMonitor:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
-        "stripped_doc" : [
-          "Removes the menubar item and every watcher and timer the Spoon owns.",
-          ""
-        ],
-        "name" : "stop",
-        "def" : "BatteryMonitor:stop() -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:stop() -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The BatteryMonitor object",
-          "",
-          "Safe to call more than once. Any hotkeys bound with `BatteryMonitor:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
-        ],
-        "desc" : "Removes the menubar item and every watcher and timer the Spoon owns.",
-        "parameters" : [
-          " * None",
-          ""
-        ]
-      },
-      {
-        "doc" : "Silences or restores spoken alerts, and remembers the choice across reloads.\n\nParameters:\n * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped\n\nReturns:\n * The BatteryMonitor object\n\nDialog and `hs.alert` warnings are unaffected; only speech is silenced.",
-        "stripped_doc" : [
-          "Silences or restores spoken alerts, and remembers the choice across reloads.",
-          ""
-        ],
-        "name" : "setSuppressAudio",
-        "def" : "BatteryMonitor:setSuppressAudio([state]) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:setSuppressAudio([state]) -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The BatteryMonitor object",
-          "",
-          "Dialog and `hs.alert` warnings are unaffected; only speech is silenced."
-        ],
-        "desc" : "Silences or restores spoken alerts, and remembers the choice across reloads.",
-        "parameters" : [
-          " * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped",
-          ""
-        ]
-      },
-      {
-        "doc" : "Binds hotkeys for BatteryMonitor.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * toggleAudio - Silence or restore spoken alerts\n\nReturns:\n * The BatteryMonitor object\n\nFor example: `spoon.BatteryMonitor:bindHotkeys({ toggleAudio = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`",
-        "stripped_doc" : [
-          "Binds hotkeys for BatteryMonitor.",
-          ""
-        ],
-        "name" : "bindHotkeys",
-        "def" : "BatteryMonitor:bindHotkeys(mapping) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:bindHotkeys(mapping) -> self",
-        "type" : "Method",
-        "returns" : [
-          " * The BatteryMonitor object",
-          "",
-          "For example: `spoon.BatteryMonitor:bindHotkeys({ toggleAudio = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`"
-        ],
-        "desc" : "Binds hotkeys for BatteryMonitor.",
-        "parameters" : [
-          " * mapping - A table containing hotkey modifier\/key details for the following items:",
-          "   * toggleAudio - Silence or restore spoken alerts",
-          ""
-        ]
-      },
-      {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys\n\nEach entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext\/battery.lua` did not hold.",
-        "stripped_doc" : [
-          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
-          ""
-        ],
-        "name" : "status",
-        "def" : "BatteryMonitor:status() -> table",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:status() -> table",
-        "type" : "Method",
-        "returns" : [
-          " * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys",
-          "",
-          "Each entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext\/battery.lua` did not hold."
-        ],
-        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
-        "parameters" : [
-          " * None",
-          ""
-        ]
-      }
-    ],
-    "Command" : [
-
-    ],
-    "Field" : [
-
-    ],
-    "items" : [
-      {
-        "doc" : "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.\n\nSet to `nil` to leave brightness alone.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.brightnessOnPowerChange",
+        "desc": "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.",
+        "doc": "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.\n\nSet to `nil` to leave brightness alone.",
+        "name": "brightnessOnPowerChange",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.brightnessOnPowerChange",
+        "stripped_doc": [
           "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.",
           "",
           "Set to `nil` to leave brightness alone."
         ],
-        "name" : "brightnessOnPowerChange",
-        "def" : "BatteryMonitor.brightnessOnPowerChange",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.brightnessOnPowerChange",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.logger",
+        "stripped_doc": [
           "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
         ],
-        "name" : "logger",
-        "def" : "BatteryMonitor.logger",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.logger",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "The alert rules, evaluated in order on every update.\n\nEach entry is a table:\n * onBattery - Boolean; the rule is inert unless the power source matches\n * percentage - Charge threshold. On battery it is a floor (fires at or below); on AC a ceiling (fires at or above)\n * timeRemaining - Minutes-remaining threshold, fires at or below. Mutually exclusive with `percentage`\n * repeatEvery - Seconds between repeats while the threshold stays crossed, or `false` to fire once per crossing\n * fn - Called as `fn(BatteryMonitor, snapshot)` when the rule fires\n\nA rule is only ever consulted while its threshold is met, so `repeatEvery` cannot nag about a battery that has since recovered.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.rules",
+        "desc": "The alert rules, evaluated in order on every update.",
+        "doc": "The alert rules, evaluated in order on every update.\n\nEach entry is a table:\n * onBattery - Boolean; the rule is inert unless the power source matches\n * percentage - Charge threshold. On battery it is a floor (fires at or below); on AC a ceiling (fires at or above)\n * timeRemaining - Minutes-remaining threshold, fires at or below. Mutually exclusive with `percentage`\n * repeatEvery - Seconds between repeats while the threshold stays crossed, or `false` to fire once per crossing\n * fn - Called as `fn(BatteryMonitor, snapshot)` when the rule fires\n\nA rule is only ever consulted while its threshold is met, so `repeatEvery` cannot nag about a battery that has since recovered.",
+        "name": "rules",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.rules",
+        "stripped_doc": [
           "The alert rules, evaluated in order on every update.",
           "",
           "Each entry is a table:",
@@ -465,328 +381,276 @@
           "",
           "A rule is only ever consulted while its threshold is met, so `repeatEvery` cannot nag about a battery that has since recovered."
         ],
-        "name" : "rules",
-        "def" : "BatteryMonitor.rules",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.rules",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "The alert rules, evaluated in order on every update.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.\n\nToggle it from the menubar item or with `BatteryMonitor:setSuppressAudio()`; assigning to it directly changes this session only.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.suppressAudio",
+        "desc": "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.",
+        "doc": "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.\n\nToggle it from the menubar item or with `BatteryMonitor:setSuppressAudio()`; assigning to it directly changes this session only.",
+        "name": "suppressAudio",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.suppressAudio",
+        "stripped_doc": [
           "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.",
           "",
           "Toggle it from the menubar item or with `BatteryMonitor:setSuppressAudio()`; assigning to it directly changes this session only."
         ],
-        "name" : "suppressAudio",
-        "def" : "BatteryMonitor.suppressAudio",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.suppressAudio",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.titleFont",
+        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
+        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "name": "titleFont",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.titleFont",
+        "stripped_doc": [
           "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
           "",
           "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
         ],
-        "name" : "titleFont",
-        "def" : "BatteryMonitor.titleFont",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.titleFont",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Seconds between fallback updates. Defaults to `60`.\n\nThis is NOT the polling rate. `hs.battery.watcher` reports power-source and charge changes as they happen; this timer exists only because the time-remaining estimate drifts without any IOKit notification to announce it. Read before `BatteryMonitor:start()`.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.updateInterval",
+        "desc": "Seconds between fallback updates. Defaults to `60`.",
+        "doc": "Seconds between fallback updates. Defaults to `60`.\n\nThis is NOT the polling rate. `hs.battery.watcher` reports power-source and charge changes as they happen; this timer exists only because the time-remaining estimate drifts without any IOKit notification to announce it. Read before `BatteryMonitor:start()`.",
+        "name": "updateInterval",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.updateInterval",
+        "stripped_doc": [
           "Seconds between fallback updates. Defaults to `60`.",
           "",
           "This is NOT the polling rate. `hs.battery.watcher` reports power-source and charge changes as they happen; this timer exists only because the time-remaining estimate drifts without any IOKit notification to announce it. Read before `BatteryMonitor:start()`."
         ],
-        "name" : "updateInterval",
-        "def" : "BatteryMonitor.updateInterval",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.updateInterval",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Seconds between fallback updates. Defaults to `60`.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor.voice",
+        "desc": "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`.",
+        "doc": "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`.",
+        "name": "voice",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.voice",
+        "stripped_doc": [
           "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`."
         ],
-        "name" : "voice",
-        "def" : "BatteryMonitor.voice",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor.voice",
-        "type" : "Variable",
-        "returns" : [
-
-        ],
-        "desc" : "Name of the `hs.speech` voice used for spoken alerts. Defaults to `\"Zarvox\"`.",
-        "parameters" : [
-
-        ]
+        "type": "Variable"
       },
       {
-        "doc" : "Binds hotkeys for BatteryMonitor.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * toggleAudio - Silence or restore spoken alerts\n\nReturns:\n * The BatteryMonitor object\n\nFor example: `spoon.BatteryMonitor:bindHotkeys({ toggleAudio = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`",
-        "stripped_doc" : [
-          "Binds hotkeys for BatteryMonitor.",
+        "def": "BatteryMonitor:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for BatteryMonitor.",
+        "doc": "Binds hotkeys for BatteryMonitor.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * toggleAudio - Silence or restore spoken alerts\n\nReturns:\n * The BatteryMonitor object\n\nFor example: `spoon.BatteryMonitor:bindHotkeys({ toggleAudio = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - A table containing hotkey modifier/key details for the following items:",
+          "   * toggleAudio - Silence or restore spoken alerts",
           ""
         ],
-        "name" : "bindHotkeys",
-        "def" : "BatteryMonitor:bindHotkeys(mapping) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:bindHotkeys(mapping) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The BatteryMonitor object",
           "",
           "For example: `spoon.BatteryMonitor:bindHotkeys({ toggleAudio = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`"
         ],
-        "desc" : "Binds hotkeys for BatteryMonitor.",
-        "parameters" : [
-          " * mapping - A table containing hotkey modifier\/key details for the following items:",
-          "   * toggleAudio - Silence or restore spoken alerts",
+        "signature": "BatteryMonitor:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for BatteryMonitor.",
           ""
-        ]
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately starts nothing. The menubar item, the battery watcher and the timer all belong to `BatteryMonitor:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.",
-        "stripped_doc" : [
-          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "def": "BatteryMonitor:init() -> self",
+        "desc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "doc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately starts nothing. The menubar item, the battery watcher and the timer all belong to `BatteryMonitor:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.",
+        "name": "init",
+        "notes": [],
+        "parameters": [
+          " * None",
           ""
         ],
-        "name" : "init",
-        "def" : "BatteryMonitor:init() -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:init() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The BatteryMonitor object",
           "",
           "Deliberately starts nothing. The menubar item, the battery watcher and the timer all belong to `BatteryMonitor:start()`.",
           "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers."
         ],
-        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
-        "parameters" : [
-          " * None",
+        "signature": "BatteryMonitor:init() -> self",
+        "stripped_doc": [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
           ""
-        ]
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Silences or restores spoken alerts, and remembers the choice across reloads.\n\nParameters:\n * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped\n\nReturns:\n * The BatteryMonitor object\n\nDialog and `hs.alert` warnings are unaffected; only speech is silenced.",
-        "stripped_doc" : [
-          "Silences or restores spoken alerts, and remembers the choice across reloads.",
+        "def": "BatteryMonitor:setSuppressAudio([state]) -> self",
+        "desc": "Silences or restores spoken alerts, and remembers the choice across reloads.",
+        "doc": "Silences or restores spoken alerts, and remembers the choice across reloads.\n\nParameters:\n * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped\n\nReturns:\n * The BatteryMonitor object\n\nDialog and `hs.alert` warnings are unaffected; only speech is silenced.",
+        "name": "setSuppressAudio",
+        "notes": [],
+        "parameters": [
+          " * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped",
           ""
         ],
-        "name" : "setSuppressAudio",
-        "def" : "BatteryMonitor:setSuppressAudio([state]) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:setSuppressAudio([state]) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The BatteryMonitor object",
           "",
           "Dialog and `hs.alert` warnings are unaffected; only speech is silenced."
         ],
-        "desc" : "Silences or restores spoken alerts, and remembers the choice across reloads.",
-        "parameters" : [
-          " * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped",
+        "signature": "BatteryMonitor:setSuppressAudio([state]) -> self",
+        "stripped_doc": [
+          "Silences or restores spoken alerts, and remembers the choice across reloads.",
           ""
-        ]
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Raises a non-blocking alert panel.\n\nParameters:\n * message - The bold headline of the panel\n * informativeText - The body text beneath it\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%.",
-        "stripped_doc" : [
-          "Raises a non-blocking alert panel.",
+        "def": "BatteryMonitor:showDialog(message, informativeText) -> self",
+        "desc": "Raises a non-blocking alert panel.",
+        "doc": "Raises a non-blocking alert panel.\n\nParameters:\n * message - The bold headline of the panel\n * informativeText - The body text beneath it\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%.",
+        "name": "showDialog",
+        "notes": [],
+        "parameters": [
+          " * message - The bold headline of the panel",
+          " * informativeText - The body text beneath it",
           ""
         ],
-        "name" : "showDialog",
-        "def" : "BatteryMonitor:showDialog(message, informativeText) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:showDialog(message, informativeText) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The BatteryMonitor object",
           "",
           "Deliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%."
         ],
-        "desc" : "Raises a non-blocking alert panel.",
-        "parameters" : [
-          " * message - The bold headline of the panel",
-          " * informativeText - The body text beneath it",
+        "signature": "BatteryMonitor:showDialog(message, informativeText) -> self",
+        "stripped_doc": [
+          "Raises a non-blocking alert panel.",
           ""
-        ]
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Speaks a line through `hs.speech`, unducking and restoring the output device around it.\n\nParameters:\n * text - The text to speak\n * volume - An optional output volume, 0-100, for the duration of the utterance\n\nReturns:\n * The BatteryMonitor object\n\nDoes nothing while `BatteryMonitor.suppressAudio` is set. Only one utterance runs at a time; a second call cuts the first one off.",
-        "stripped_doc" : [
-          "Speaks a line through `hs.speech`, unducking and restoring the output device around it.",
+        "def": "BatteryMonitor:speak(text, [volume]) -> self",
+        "desc": "Speaks a line through `hs.speech`, unducking and restoring the output device around it.",
+        "doc": "Speaks a line through `hs.speech`, unducking and restoring the output device around it.\n\nParameters:\n * text - The text to speak\n * volume - An optional output volume, 0-100, for the duration of the utterance\n\nReturns:\n * The BatteryMonitor object\n\nDoes nothing while `BatteryMonitor.suppressAudio` is set. Only one utterance runs at a time; a second call cuts the first one off.",
+        "name": "speak",
+        "notes": [],
+        "parameters": [
+          " * text - The text to speak",
+          " * volume - An optional output volume, 0-100, for the duration of the utterance",
           ""
         ],
-        "name" : "speak",
-        "def" : "BatteryMonitor:speak(text, [volume]) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:speak(text, [volume]) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The BatteryMonitor object",
           "",
           "Does nothing while `BatteryMonitor.suppressAudio` is set. Only one utterance runs at a time; a second call cuts the first one off."
         ],
-        "desc" : "Speaks a line through `hs.speech`, unducking and restoring the output device around it.",
-        "parameters" : [
-          " * text - The text to speak",
-          " * volume - An optional output volume, 0-100, for the duration of the utterance",
+        "signature": "BatteryMonitor:speak(text, [volume]) -> self",
+        "stripped_doc": [
+          "Speaks a line through `hs.speech`, unducking and restoring the output device around it.",
           ""
-        ]
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Adds the menubar item and starts watching the battery.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nCalling this on an already-started Spoon restarts it cleanly. Rules whose threshold is already crossed at this point are recorded silently, so a reload on a nearly-flat battery does not announce itself.",
-        "stripped_doc" : [
-          "Adds the menubar item and starts watching the battery.",
+        "def": "BatteryMonitor:start() -> self",
+        "desc": "Adds the menubar item and starts watching the battery.",
+        "doc": "Adds the menubar item and starts watching the battery.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nCalling this on an already-started Spoon restarts it cleanly. Rules whose threshold is already crossed at this point are recorded silently, so a reload on a nearly-flat battery does not announce itself.",
+        "name": "start",
+        "notes": [],
+        "parameters": [
+          " * None",
           ""
         ],
-        "name" : "start",
-        "def" : "BatteryMonitor:start() -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:start() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The BatteryMonitor object",
           "",
           "Calling this on an already-started Spoon restarts it cleanly. Rules whose threshold is already crossed at this point are recorded silently, so a reload on a nearly-flat battery does not announce itself."
         ],
-        "desc" : "Adds the menubar item and starts watching the battery.",
-        "parameters" : [
-          " * None",
+        "signature": "BatteryMonitor:start() -> self",
+        "stripped_doc": [
+          "Adds the menubar item and starts watching the battery.",
           ""
-        ]
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys\n\nEach entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext\/battery.lua` did not hold.",
-        "stripped_doc" : [
+        "def": "BatteryMonitor:status() -> table",
+        "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys\n\nEach entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold.",
+        "name": "status",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys",
+          "",
+          "Each entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold."
+        ],
+        "signature": "BatteryMonitor:status() -> table",
+        "stripped_doc": [
           "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
           ""
         ],
-        "name" : "status",
-        "def" : "BatteryMonitor:status() -> table",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:status() -> table",
-        "type" : "Method",
-        "returns" : [
-          " * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys",
-          "",
-          "Each entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext\/battery.lua` did not hold."
-        ],
-        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "type": "Method"
       },
       {
-        "doc" : "Removes the menubar item and every watcher and timer the Spoon owns.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nSafe to call more than once. Any hotkeys bound with `BatteryMonitor:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
-        "stripped_doc" : [
-          "Removes the menubar item and every watcher and timer the Spoon owns.",
+        "def": "BatteryMonitor:stop() -> self",
+        "desc": "Removes the menubar item and every watcher and timer the Spoon owns.",
+        "doc": "Removes the menubar item and every watcher and timer the Spoon owns.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nSafe to call more than once. Any hotkeys bound with `BatteryMonitor:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
+          " * None",
           ""
         ],
-        "name" : "stop",
-        "def" : "BatteryMonitor:stop() -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:stop() -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The BatteryMonitor object",
           "",
           "Safe to call more than once. Any hotkeys bound with `BatteryMonitor:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
-        "desc" : "Removes the menubar item and every watcher and timer the Spoon owns.",
-        "parameters" : [
-          " * None",
+        "signature": "BatteryMonitor:stop() -> self",
+        "stripped_doc": [
+          "Removes the menubar item and every watcher and timer the Spoon owns.",
           ""
-        ]
+        ],
+        "type": "Method"
       },
       {
-        "doc" : "Reads the battery once and brings the menubar title and the rules up to date.\n\nParameters:\n * arming - An optional boolean. When true, rules whose threshold is already crossed are recorded as crossed without firing\n\nReturns:\n * The BatteryMonitor object\n\nCalled for you by the battery watcher and the fallback timer; exposed for prodding from the Console.",
-        "stripped_doc" : [
-          "Reads the battery once and brings the menubar title and the rules up to date.",
+        "def": "BatteryMonitor:update([arming]) -> self",
+        "desc": "Reads the battery once and brings the menubar title and the rules up to date.",
+        "doc": "Reads the battery once and brings the menubar title and the rules up to date.\n\nParameters:\n * arming - An optional boolean. When true, rules whose threshold is already crossed are recorded as crossed without firing\n\nReturns:\n * The BatteryMonitor object\n\nCalled for you by the battery watcher and the fallback timer; exposed for prodding from the Console.",
+        "name": "update",
+        "notes": [],
+        "parameters": [
+          " * arming - An optional boolean. When true, rules whose threshold is already crossed are recorded as crossed without firing",
           ""
         ],
-        "name" : "update",
-        "def" : "BatteryMonitor:update([arming]) -> self",
-        "notes" : [
-
-        ],
-        "signature" : "BatteryMonitor:update([arming]) -> self",
-        "type" : "Method",
-        "returns" : [
+        "returns": [
           " * The BatteryMonitor object",
           "",
           "Called for you by the battery watcher and the fallback timer; exposed for prodding from the Console."
         ],
-        "desc" : "Reads the battery once and brings the menubar title and the rules up to date.",
-        "parameters" : [
-          " * arming - An optional boolean. When true, rules whose threshold is already crossed are recorded as crossed without firing",
+        "signature": "BatteryMonitor:update([arming]) -> self",
+        "stripped_doc": [
+          "Reads the battery once and brings the menubar title and the rules up to date.",
           ""
-        ]
+        ],
+        "type": "Method"
       }
     ],
-    "name" : "BatteryMonitor"
+    "name": "BatteryMonitor",
+    "stripped_doc": [],
+    "submodules": [],
+    "type": "Module"
   }
 ]
