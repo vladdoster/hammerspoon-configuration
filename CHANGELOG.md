@@ -1,3 +1,17 @@
+# [2.4.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.3.0...v2.4.0) (2026-08-15)
+
+
+### Bug Fixes
+
+* **battery:** avoid the IOBluetooth deadlock that aborts Hammerspoon ([20d00b5](https://github.com/vladdoster/hammerspoon-configuration/commit/20d00b56536494249b06d7b93cf6368bba6cab4e))
+* **battery:** stop the menubar menu crashing on click ([e448e58](https://github.com/vladdoster/hammerspoon-configuration/commit/e448e5833888ac9cf8223c9b8a7898dbed8869b4)), closes [#1](https://github.com/vladdoster/hammerspoon-configuration/issues/1)
+
+
+### Features
+
+* **battery:** show charge percentage in the menubar title ([74354db](https://github.com/vladdoster/hammerspoon-configuration/commit/74354db7f76b38f8afd54fb7adafcbc26e67d9b1))
+* **spoons:** add ClipboardHistory ([2b6be40](https://github.com/vladdoster/hammerspoon-configuration/commit/2b6be400f0fab524254e14f157b594d715a756ff))
+
 # [2.3.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.2.0...v2.3.0) (2026-08-15)
 
 
