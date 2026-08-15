@@ -28,7 +28,7 @@ obj.increment = 2
 
 --- VolumeControl.hudDuration
 --- Variable
---- Seconds the readout stays up after you stop adjusting. Defaults to `1`.
+--- Seconds the readout stays up after you stop adjusting. Defaults to `0.75`.
 ---
 --- The countdown restarts on every change, from a held key's repeats and from separate presses alike, so a burst of adjustments shows one continuous readout. Read it as "how long after the LAST change", not "how long each change is shown": a value shorter than the gap between deliberate presses makes the readout drop out mid-adjustment.
 obj.hudDuration = 0.75
