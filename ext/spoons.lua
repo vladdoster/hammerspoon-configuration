@@ -8,7 +8,6 @@ hs.loadSpoon('SpoonInstall')
 local hyper = { 'cmd', 'alt', 'ctrl' }
 
 obj.repos = {
-    -- KeyboardPrinter = { start = false },
     HeadphoneAutoPause = { start = true },
     KSheet = { hotkeys = { toggle = { hyper, '/' } } },
     MouseCircle = {
@@ -18,8 +17,6 @@ obj.repos = {
     },
     RoundedCorners = { start = true },
     SpeedMenu = {},
-    -- TextClipboardHistory is deliberately absent: the hand-written ClipboardHistory Spoon
-    -- covers the same ground. Installing both would watch and store the pasteboard twice.
 }
 
 for k, v in pairs(obj.repos) do

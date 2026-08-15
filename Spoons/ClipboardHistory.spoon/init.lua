@@ -2,22 +2,18 @@
 ---
 --- A searchable clipboard history that survives a Hammerspoon restart.
 ---
---- macOS keeps exactly one clipboard entry, so anything copied over is gone. This Spoon
---- watches the pasteboard, keeps the last `ClipboardHistory.historySize` text entries, and
+--- Watches the pasteboard, keeps the last `ClipboardHistory.historySize` text entries, and
 --- offers them back through a chooser or a menubar menu. Selecting an entry puts it back on
 --- the clipboard; pasting stays a manual cmd+v.
 ---
---- The history is written to `hs.settings`, which means it lands on disk in plain text. Two
---- things guard against that becoming a liability: entries whose pasteboard types are marked
---- concealed or transient (see `ClipboardHistory.ignoredIdentifiers`) are never recorded,
---- and recording can be paused outright from the menu. Neither is a guarantee -- the markers
---- are advisory and only as good as the app that sets them -- so treat the history as
---- readable by anything that can read your home directory.
+--- The history is written to `hs.settings`, so it lands on disk in plain text. Entries marked
+--- concealed or transient (see `ClipboardHistory.ignoredIdentifiers`) are never recorded, and
+--- recording can be paused from the menu -- but the markers are advisory, so treat the
+--- history as readable by anything that can read your home directory.
 
 local obj = {}
 obj.__index = obj
 
--- Metadata
 obj.name = 'ClipboardHistory'
 obj.version = '1.0'
 obj.author = 'Vladislav Doster <mvdoster@gmail.com>'
@@ -28,49 +24,42 @@ obj.license = 'MIT - https://opensource.org/licenses/MIT'
 --- Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.
 obj.logger = hs.logger.new('ClipboardHistory', 'info')
 
---------------------------------------------------------------------------------
 -- Configuration
---------------------------------------------------------------------------------
 
 --- ClipboardHistory.historySize
 --- Variable
 --- How many entries to keep. Defaults to `50`.
 ---
---- Notes:
----  * The whole history is serialised on every save, so this trades directly against how much work a save is. Several hundred entries of ordinary text is still cheap; several hundred entries of multi-kilobyte text is not.
+--- The whole history is serialised on every save, so this trades against how much work a save is.
 obj.historySize = 50
 
 --- ClipboardHistory.maxItemSize
 --- Variable
 --- Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).
 ---
---- Notes:
----  * This is a storage guard, not a display one -- oversized entries are dropped rather than truncated, because the point is to keep them out of the settings file. Truncation for display is `ClipboardHistory.labelLength` and applies to entries that were recorded.
+--- A storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`.
 obj.maxItemSize = 100 * 1024
 
 --- ClipboardHistory.labelLength
 --- Variable
 --- Maximum number of characters of an entry shown in a chooser row or menu item. Defaults to `80`.
 ---
---- Notes:
----  * Only affects display. The full text is always what gets put back on the clipboard.
+--- Display only. The full text is what gets put back on the clipboard.
 obj.labelLength = 80
 
 --- ClipboardHistory.menuItems
 --- Variable
 --- How many recent entries to list inline in the menubar menu. Defaults to `10`.
 ---
---- Notes:
----  * The menu is for the last few things you copied; `Search…` opens the chooser over the whole history.
+--- `Search…` opens the chooser over the whole history.
 obj.menuItems = 10
 
 --- ClipboardHistory.saveDelay
 --- Variable
 --- Seconds to wait after the last change before writing the history to `hs.settings`. Defaults to `5`.
 ---
---- Notes:
----  * `hs.settings.set` serialises synchronously, so writing on every copy would make a burst of copies stutter. Changes are coalesced behind this delay instead, and flushed by `ClipboardHistory:stop()` so a config reload does not lose the tail.
----  * The cost of the delay is that entries copied in the last few seconds before a crash are lost. A clean quit or reload is not a crash and loses nothing.
+--- `hs.settings.set` serialises synchronously, so writes are coalesced behind this delay and flushed by `ClipboardHistory:stop()`.
+--- The cost is that entries copied in the last few seconds before a crash are lost. A clean quit or reload loses nothing.
 obj.saveDelay = 5
 
 --- ClipboardHistory.chooserRows
@@ -97,17 +86,15 @@ obj.menubarTitle = '📋'
 --- Variable
 --- Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.
 ---
---- Notes:
----  * Deliberately different from `ClipboardHistory.menubarTitle`. A recorder that has silently stopped recording is worse than one that is obviously off.
+--- Deliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.
 obj.menubarTitlePaused = '📋⏸'
 
 --- ClipboardHistory.ignoredIdentifiers
 --- Variable
 --- Pasteboard types that mark content as not worth remembering, from http://nspasteboard.org. An entry carrying any of these is never recorded.
 ---
---- Notes:
----  * This is how password managers ask not to be logged: 1Password sets its own type, and anything setting `org.nspasteboard.ConcealedType` is asking to be left alone.
----  * It is advisory. An app that does not set a marker gets recorded like anything else, so this reduces the risk of copying a secret into the history but does not remove it. Use `ClipboardHistory:togglePause()` when handling something sensitive from an app you do not trust to mark it.
+--- This is how password managers ask not to be logged.
+--- Advisory only: an app that sets no marker is recorded like anything else. Use `ClipboardHistory:togglePause()` for anything sensitive from an app you do not trust to mark it.
 obj.ignoredIdentifiers = {
   ['Pasteboard generator type'] = true, -- Transient : Typinator
   ['com.agilebits.onepassword'] = true, -- Confidential : 1Password
@@ -118,24 +105,14 @@ obj.ignoredIdentifiers = {
   ['org.nspasteboard.TransientType'] = true, -- Universal, Transient
 }
 
---------------------------------------------------------------------------------
 -- Internal state
---------------------------------------------------------------------------------
 
--- Everything long-lived is a field on the Spoon object rather than a local inside start(),
--- because hs.menubar / hs.chooser / hs.pasteboard.watcher / hs.timer are userdata with a
--- __gc that tears down the real resource. hs.loadSpoon() keeps this object alive as
--- spoon.ClipboardHistory for the life of the config, so nothing here is collected out from
--- under a running watcher.
+-- Fields rather than locals in start(): userdata whose __gc would tear down the real resource
 obj.items = {} -- most recent first; each { text = string, at = epoch seconds, id = number }
 obj.paused = false
 obj.running = false
 
--- Row identity, handed to the chooser in place of the text (see choiceList). Deliberately a
--- plain counter rather than a content hash: hs.hash has no one-shot digest function any more
--- -- the hs.hash.MD5 the old ext/clipboard.lua called no longer exists -- and a counter has
--- no collision case to reason about. Ids are in-memory only and reassigned on load, since
--- nothing outside a single run ever refers to one.
+-- Row identity for the chooser (see choiceList); a counter, so there is no collision case
 obj.nextId = 1
 
 obj.watcher = nil
@@ -147,33 +124,16 @@ obj.warned = {}
 local SETTINGS_ITEMS = 'ClipboardHistory.items'
 local SETTINGS_PAUSED = 'ClipboardHistory.paused'
 
---------------------------------------------------------------------------------
 -- Stateless helpers
---------------------------------------------------------------------------------
 
--- These touch no Spoon state, so they stay plain locals rather than becoming methods.
 
--- Collapse every run of whitespace to a single space and trim the ends.
---
--- A clipboard entry is frequently a whole file, a stack trace, or a shell heredoc. Rendered
--- verbatim in a chooser row that is one line tall, all of those look identical: a fragment
--- followed by nothing. Flattening first means the row shows the first ~labelLength
--- characters of actual content instead of the first line and a lot of nothing.
+-- Flatten whitespace, so a one-line row shows content rather than a short first line
 local function oneLine(s)
   local flat = s:gsub('%s+', ' ')
   return (flat:gsub('^%s+', ''):gsub('%s+$', ''))
 end
 
--- Truncate to n characters, keeping the HEAD.
---
--- PinnedWindows truncates window titles in the middle, because a title is distinguishable at
--- both ends ("Quarterly Report — Google Docs"). Clipboard entries are the opposite: what
--- identifies them is how they start. Middle-ellipsising "curl -sSL https://example.com/x.sh"
--- would give "curl -sSL h…ple.com/x.sh", which is strictly worse than keeping the front.
---
--- utf8.len returns nil on invalid UTF-8, and the clipboard is perfectly capable of holding
--- bytes that are not valid UTF-8, so every step falls back to byte slicing rather than
--- assuming the string is well-formed.
+-- Keeps the HEAD, which is what identifies a clipboard entry; byte-slices invalid UTF-8
 local function truncate(s, n)
   if s == nil or s == '' then return '(empty)' end
   local len = utf8 and utf8.len and utf8.len(s)
@@ -200,9 +160,7 @@ local function formatAge(then_)
   return string.format('%d days ago', math.floor(secs / 86400))
 end
 
---------------------------------------------------------------------------------
 -- History
---------------------------------------------------------------------------------
 
 function obj:warnOnce(key, fmt, ...)
   if self.warned[key] then return end
@@ -216,11 +174,7 @@ function obj:assignId()
   return id
 end
 
--- Whether the current pasteboard is asking not to be remembered.
---
--- Read at callback time rather than carried with the contents, because the watcher hands
--- over the string only. The types belong to the same pasteboard change that woke us, so
--- reading them here is reading the state we are being told about.
+-- Read at callback time, since the watcher hands over the string without its types
 function obj:isIgnoredContent()
   local ok, types = pcall(hs.pasteboard.pasteboardTypes)
   if not ok or type(types) ~= 'table' then
@@ -246,9 +200,8 @@ end
 --- Returns:
 ---  * `true` if the history changed, `false` if the entry was rejected
 ---
---- Notes:
----  * Called for you by the pasteboard watcher. Exposed because it is also the honest way to seed the history from the Console.
----  * Rejects empty or whitespace-only text and anything larger than `ClipboardHistory.maxItemSize`.
+--- Called for you by the pasteboard watcher; exposed so the history can be seeded from the Console.
+--- Rejects empty or whitespace-only text and anything larger than `ClipboardHistory.maxItemSize`.
 function obj:record(text)
   if type(text) ~= 'string' then return false end
   if text:match('^%s*$') then return false end
@@ -258,11 +211,7 @@ function obj:record(text)
     return false
   end
 
-  -- Linear scan comparing the text itself. The list is historySize long -- tens of entries
-  -- -- so the scan is free, and Lua compares string length before contents, so entries of a
-  -- different size cost nothing to reject. An index keyed by a digest would have to be
-  -- rebuilt on load and kept correct through every insert, move and trim, which is a desync
-  -- waiting to happen in exchange for no measurable gain and a collision case.
+  -- Linear over tens of entries; a digest index would need keeping correct for no gain
   for i, item in ipairs(self.items) do
     if item.text == text then
       if i > 1 then
@@ -300,12 +249,9 @@ function obj:clear()
   return self
 end
 
---------------------------------------------------------------------------------
 -- Persistence
---------------------------------------------------------------------------------
 
--- Coalesce writes. hs.settings.set serialises the whole table synchronously, so a burst of
--- copies would otherwise pay that cost once per copy.
+-- Coalesce writes: hs.settings.set serialises the whole table synchronously
 function obj:scheduleSave()
   if self.saveTimer then self.saveTimer:stop() end
   self.saveTimer = hs.timer.doAfter(self.saveDelay, function()
@@ -320,8 +266,7 @@ function obj:saveNow()
     self.saveTimer:stop()
     self.saveTimer = nil
   end
-  -- Only text and timestamp are persisted. Ids are per-run and reassigned on load, so
-  -- writing them would store something nothing ever reads back.
+  -- Only text and timestamp are persisted; ids are per-run and reassigned on load
   local plain = {}
   for i, item in ipairs(self.items) do
     plain[i] = { text = item.text, at = item.at }
@@ -333,11 +278,7 @@ function obj:saveNow()
   if not okP then self.logger.wf('could not save the paused flag: %s', tostring(errP)) end
 end
 
--- Read the history back, discarding anything that does not look like an entry.
---
--- The settings file is plain text that a human can edit and an interrupted write can
--- truncate, so nothing about its shape is assumed. A missing timestamp is filled in rather
--- than being a reason to drop an otherwise good entry.
+-- Assumes nothing: the settings file is hand-editable and a broken write can truncate it
 function obj:load()
   local ok, stored = pcall(hs.settings.get, SETTINGS_ITEMS)
   if not ok or type(stored) ~= 'table' then
@@ -366,12 +307,9 @@ function obj:load()
   return self
 end
 
---------------------------------------------------------------------------------
 -- Display
---------------------------------------------------------------------------------
 
--- One row's worth of text. Flatten first, then truncate: truncating a multi-line string
--- first would spend the whole budget on the first line.
+-- Flatten first, then truncate: the other order spends the whole budget on the first line
 function obj:label(item) return truncate(oneLine(item.text), self.labelLength) end
 
 function obj:subLabel(item) return string.format('%s · %s', formatAge(item.at), formatSize(#item.text)) end
@@ -386,11 +324,10 @@ function obj:subLabel(item) return string.format('%s · %s', formatAge(item.at),
 --- Returns:
 ---  * A list of `hs.chooser` choice tables
 ---
---- Notes:
----  * Each choice carries the entry's `id`, never its text. `hs.chooser` retains every choice table it is given, so putting the full text in there would hand the chooser the entire history -- potentially megabytes -- every time the list opens. The id resolves back to the text through `ClipboardHistory:copyById()` only when a row is actually picked.
+--- Each choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.
 function obj:choiceList()
   if #self.items == 0 then
-    -- valid = false keeps the row from dismissing the chooser when it is selected.
+    -- valid = false keeps the row from dismissing the chooser when it is selected
     return {
       {
         text = 'Clipboard history is empty',
@@ -407,9 +344,7 @@ function obj:choiceList()
   return out
 end
 
---------------------------------------------------------------------------------
 -- Selection
---------------------------------------------------------------------------------
 
 --- ClipboardHistory:copyById(id) -> boolean
 --- Method
@@ -421,8 +356,7 @@ end
 --- Returns:
 ---  * `true` if the entry was found and copied
 ---
---- Notes:
----  * This changes the pasteboard, so our own watcher fires immediately afterwards. That is deliberate and needs no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is exactly the most-recently-used ordering wanted here.
+--- This fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here.
 function obj:copyById(id)
   for _, item in ipairs(self.items) do
     if item.id == id then
@@ -450,9 +384,8 @@ end
 --- Returns:
 ---  * The ClipboardHistory object
 ---
---- Notes:
----  * The watcher keeps running while paused; the callback simply discards what it is given. This costs nothing and means resuming does not have to rebuild anything.
----  * The flag is persisted, so a Spoon paused before a reload comes back paused rather than quietly resuming.
+--- The watcher keeps running while paused and its callback discards what it is given, so resuming rebuilds nothing.
+--- The flag is persisted, so a Spoon paused before a reload comes back paused.
 function obj:togglePause()
   self.paused = not self.paused
   self:saveNow()
@@ -462,15 +395,13 @@ function obj:togglePause()
   return self
 end
 
---------------------------------------------------------------------------------
 -- Chooser
---------------------------------------------------------------------------------
 
 function obj:ensureChooser()
   if self.chooser then return self.chooser end
 
   self.chooser = hs.chooser.new(function(choice)
-    -- nil when the chooser was dismissed with Escape rather than a selection.
+    -- nil when the chooser was dismissed with Escape rather than a selection
     if not choice or not choice.id then return end
     self:copyById(choice.id)
   end)
@@ -493,8 +424,7 @@ end
 ---  * The ClipboardHistory object
 function obj:show()
   local chooser = self:ensureChooser()
-  -- Choices are handed over as a static table rather than a callback, so the list is rebuilt
-  -- on every open. A callback would be cached until refreshChoicesCallback().
+  -- Static table, so the list rebuilds on open; a callback caches until refreshChoicesCallback()
   chooser:choices(self:choiceList())
   chooser:query('')
   chooser:show()
@@ -515,9 +445,7 @@ function obj:hide()
   return self
 end
 
---------------------------------------------------------------------------------
 -- Menubar
---------------------------------------------------------------------------------
 
 function obj:buildMenu()
   local menu = { { title = 'Search…', fn = function() self:show() end } }
@@ -528,8 +456,7 @@ function obj:buildMenu()
   else
     for i, item in ipairs(self.items) do
       if i > self.menuItems then break end
-      -- The id is captured rather than the index, so a history that changes between the menu
-      -- being built and an item being picked cannot copy the wrong entry.
+      -- The id, not the index: the history can change between the menu being built and picked
       local id = item.id
       menu[#menu + 1] = { title = self:label(item), fn = function() self:copyById(id) end }
     end
@@ -551,9 +478,7 @@ function obj:updateMenubar()
   self.menubarItem:setTooltip(self.paused and 'Clipboard recording is paused' or string.format('%d clipboard entries', #self.items))
 end
 
---------------------------------------------------------------------------------
 -- Lifecycle
---------------------------------------------------------------------------------
 
 function obj:init() return self end
 
@@ -571,12 +496,7 @@ function obj:start()
 
   self:load()
 
-  -- hs.pasteboard.watcher.new() creates AND starts the watcher, so there is no start() call
-  -- to follow it -- and correspondingly the handle has to be kept so stop() can end it.
-  --
-  -- The callback is handed the contents as a string, or nil when the pasteboard does not
-  -- hold a valid string. nil is the normal way images and file copies arrive here, so it is
-  -- an early return rather than a warning.
+  -- watcher.new() also starts it, so the handle is kept for stop(); nil contents are images
   self.watcher = hs.pasteboard.watcher.new(function(contents)
     if self.paused then return end
     if contents == nil then return end
@@ -590,22 +510,16 @@ function obj:start()
   end
 
   if self.showInMenubar then
-    -- The autosave name stays lower-case and distinct from the other Spoons': it is what
-    -- macOS keys the item's saved position in the menu bar on, so it has to be unique and
-    -- must never be renamed afterwards.
+    -- The autosave name keys the saved menu bar position: unique, and never renamed
     self.menubarItem = hs.menubar.new(true, 'clipboardhistory')
     if self.menubarItem then
-      -- Wrapped: an error thrown inside the menu callback would otherwise leave a dead
-      -- menubar icon with no way to recover short of reloading the config.
-      --
-      -- Setting a menu also disables setClickCallback, by design -- a click opens this menu,
-      -- and "Search…" at the top of it opens the chooser.
+      -- Wrapped: a throw inside the menu callback would leave a dead menubar icon
       self.menubarItem:setMenu(function()
         local ok, menu = pcall(self.buildMenu, self)
         if ok then return menu end
         self.logger.wf('menu build failed: %s', tostring(menu))
         return {
-          { title = 'Menu failed to build — see console', disabled = true },
+          { title = 'Menu failed to build - see console', disabled = true },
           { title = '-' },
           { title = 'Search…', fn = function() self:show() end },
         }
@@ -631,12 +545,9 @@ end
 --- Returns:
 ---  * The ClipboardHistory object
 ---
---- Notes:
----  * Any hotkeys bound with `ClipboardHistory:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.
+--- Any hotkeys bound with `ClipboardHistory:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.
 function obj:stop()
-  -- First, before any handle is dropped: saves are debounced, so there is very likely a
-  -- pending timer holding the only record of the last few copies. Flushing here is what
-  -- makes a config reload lossless.
+  -- First, before any handle is dropped: a debounced save holds the last few copies
   self:saveNow()
 
   if self.watcher then
@@ -680,6 +591,8 @@ function obj:bindHotkeys(mapping)
     clear = hs.fnutils.partial(self.clear, self),
   }
   hs.spoons.bindHotkeysToSpec(spec, mapping)
+  -- HSKeybindings.spoon walks loaded Spoons looking for a `mapping` field to display
+  self.mapping = mapping
   return self
 end
 

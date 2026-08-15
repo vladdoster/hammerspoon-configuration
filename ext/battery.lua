@@ -29,7 +29,7 @@ M.batteryNotifications = {
             if not suppressAudio then
                 local audio = require('hs.audiodevice').defaultOutputDevice()
                 local volume, muted = audio:volume(), audio:muted()
-                -- apparently some devices don't have a volume or mute...
+                -- apparently some devices don't have a volume or mute
                 if volume then audio:setVolume(25) end
                 if muted then audio:setMuted(false) end
                 local sp = speech
@@ -85,7 +85,6 @@ M.batteryNotifications = {
         doEvery = false,
         fn = function()
             if not suppressAudio then
-                -- I don't care if I miss this one, so... no volume changes
                 local sp = speech.new('Zarvox'):speak('Feeling returning to my circuits')
             end
         end,
@@ -96,7 +95,6 @@ M.batteryNotifications = {
         doEvery = false,
         fn = function()
             if not suppressAudio then
-                -- I don't care if I miss this one, so... no volume changes
                 local sp = speech
                     .new('Zarvox')
                     :speak("I'm feeling [[inpt PHON; rate 80]]+mUXC[[inpt TEXT; rset 0]] better [[emph +]]now")
@@ -112,17 +110,13 @@ local updateMenuTitle = function()
         local amp = battery.percentage()
         if amp then
             local text = string.format(' %d%%', amp)
-            -- Defaulted, because both of these return nil when the reading is unavailable
-            -- and the comparison below would throw on nil. -1 is already this module's
-            -- "still calculating" value, which is what an unavailable reading amounts to.
+            -- -1 is the "still calculating" value; both readings return nil when unavailable
             local timeValue = -999
             if batteryPowerSource() == 'AC Power' then
                 timeValue = battery.timeToFullCharge() or -1
             else
                 timeValue = battery.timeRemaining() or -1
             end
-            -- text = text
-            --     .. ((timeValue < 0) and '???' or string.format('%d:%02d', math.floor(timeValue / 60), timeValue % 60))
             local titleColor = { white = (host.interfaceStyle() == 'Dark') and 1 or 0 }
             additionalTitleText = styledtext.new(text, {
                 font = { name = 'Menlo', size = 12 },
@@ -202,13 +196,11 @@ local powerSourceChangeFN = function(justOn)
                     then
                         shouldWeDoSomething = true
                     end
-                    --                print("++ " .. tostring(i) .. " -- " .. hs.inspect(v))
                     if shouldWeDoSomething then
                         notificationStatus[i] = test.timeStamp
                         v.fn()
                     end
                 else
-                    -- remove stored status for wrong onBattery types...
                     if notificationStatus[i] then notificationStatus[i] = nil end
                 end
             end
@@ -237,24 +229,7 @@ local powerSourceChangeFN = function(justOn)
         end
     end
 end
--- local powerWatcher = battery.watcher.new(powerSourceChangeFN)
--- The readings behind "Raw Battery Data...", gathered WITHOUT hs.battery.getAll().
---
--- getAll() walks its own check list, and two entries on it reach Apple's Bluetooth stack:
--- privateBluetoothBatteryInfo() calls the private +[IOBluetoothDevice connectedDevices],
--- which blocks the calling thread on a semaphore inside IOBluetoothCoreBluetoothCoordinator's
--- initialiser. When the Bluetooth daemon does not answer, it never returns -- and since
--- hs.menubar builds its menu synchronously on the main thread, the whole app wedges there
--- and gets aborted:
---
---   -[IOBluetoothCoreBluetoothCoordinator init]  <- semaphore_wait_trap
---   +[IOBluetoothDevice connectedDevices]
---   libbattery.dylib battery_private
---
--- That is a native deadlock, not a Lua error, so wrapping the caller in pcall does nothing
--- for it -- the only fix is not to make the call. otherBatteryInfo() reports "non-PSU
--- batteries (e.g. Bluetooth accessories)" through the same framework and is omitted on the
--- same grounds. Everything else getAll() would have reported is still here.
+-- The readings behind "Raw Battery Data...", gathered WITHOUT hs.battery.getAll(), whose privateBluetoothBatteryInfo() and otherBatteryInfo() block the main thread on a semaphore when the Bluetooth daemon does not answer -- a native deadlock that pcall cannot catch
 local SAFE_BATTERY_KEYS = {
     'adapterSerialNumber',
     'amperage',
@@ -282,8 +257,7 @@ local safeBatteryData = function()
     local t = {}
     for _, key in ipairs(SAFE_BATTERY_KEYS) do
         local fn = battery[key]
-        -- Per-key pcall: these read live from IOKit, and one unavailable reading should cost
-        -- its own row rather than the whole submenu.
+        -- Per-key pcall, so one unavailable IOKit reading costs its own row, not the submenu
         if type(fn) == 'function' then
             local ok, value = pcall(fn)
             t[key] = (ok and value ~= nil) and value or 'n/a'
@@ -292,9 +266,7 @@ local safeBatteryData = function()
     return t
 end
 
--- Keys are stringified before they reach styledtext, and sorted as strings, because
--- styledtext.new() takes a string, a table or a styledtext object and throws on a number,
--- and sortByKeys' default comparator throws on any table mixing number and string keys.
+-- Keys are stringified and sorted as strings: styledtext.new() throws on a number, and sortByKeys' comparator throws on mixed number/string keys
 local rawBatteryData
 rawBatteryData = function(tbl)
     local data = {}
@@ -328,9 +300,7 @@ local displayBatteryData = function(modifier)
         })
     end
     table.insert(menuTable, { title = '-' })
-    -- The fallback has to replace the whole formatted value, not stand in as an argument to
-    -- it: percentage() returns nil when the capacity readings are unavailable, and
-    -- string.format('%.2f%%', 'n/a') throws rather than printing "n/a".
+    -- The fallback replaces the whole formatted value: string.format('%.2f%%', 'n/a') throws
     local percentage = battery.percentage()
     table.insert(menuTable, {
         title = utf8.codepointToUTF8(0x26A1)
@@ -380,18 +350,15 @@ end
 M.start = function()
     menuUserData, currentPowerSource = menubar.new(), ''
     powerSourceChangeFN(true)
-    -- Wrapped: hs.menubar calls this synchronously and expects a table back, so anything
-    -- thrown while building the menu takes the menu down with it and leaves a dead icon.
-    -- The battery data is read live from IOKit and its shape is not under our control, so
-    -- degrade to a visible row rather than trusting every future reading to be well-formed.
+    -- Wrapped: hs.menubar builds this synchronously, so a throw here leaves a dead icon
     menuUserData:setMenu(function(mods)
         local ok, menu = pcall(displayBatteryData, mods)
         if ok then return menu end
         M.logger.ef('battery menu build failed: %s', tostring(menu))
-        return { { title = 'Battery menu failed — see console', disabled = true } }
+        return { { title = 'Battery menu failed - see console', disabled = true } }
     end)
     M.menuTitleChanger = timer.doEvery(5, powerSourceChangeFN)
-    M.menuUserdata = menuUserData -- for debugging, may remove in the future
+    M.menuUserdata = menuUserData
     return M
 end
 M.stop = function()

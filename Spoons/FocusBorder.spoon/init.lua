@@ -2,16 +2,13 @@
 ---
 --- Draws a red border around the focused window, hidden while that window is fullscreen.
 ---
---- macOS signals keyboard focus with only a subtle title-bar tint, and borderless or
---- dark-themed apps drop even that. This Spoon draws an explicit outline instead. The
---- border occupies a band just OUTSIDE the window frame, so it never covers any of the
---- window's own content -- the trade-off being that it is clipped where a window sits
---- flush against a screen edge.
+--- The border occupies a band just OUTSIDE the window frame, so it never covers the window's
+--- own content -- the trade-off being that it is clipped where a window sits flush against a
+--- screen edge.
 
 local obj = {}
 obj.__index = obj
 
--- Metadata
 obj.name = 'FocusBorder'
 obj.version = '1.0'
 obj.author = 'Vladislav Doster <mvdoster@gmail.com>'
@@ -22,34 +19,28 @@ obj.license = 'MIT - https://opensource.org/licenses/MIT'
 --- Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.
 obj.logger = hs.logger.new('FocusBorder', 'info')
 
---------------------------------------------------------------------------------
 -- Configuration
---------------------------------------------------------------------------------
 
 --- FocusBorder.borderWidth
 --- Variable
 --- Width in points of the band drawn outside the window frame. Defaults to `2`.
 ---
---- Notes:
----  * The width is baked into the canvas when it is built, so assigning this field on its own does nothing to a border already on screen. Set it before `FocusBorder:start()`, or call `FocusBorder:setWidth()` afterwards, which rebuilds the canvas for you.
+--- Baked into the canvas at build time, so assigning this does nothing to a border already on screen. Set it before `FocusBorder:start()`, or use `FocusBorder:setWidth()`, which rebuilds.
 obj.borderWidth = 2
 
 --- FocusBorder.borderColor
 --- Variable
 --- Border colour, as any table `hs.drawing.color` understands. Defaults to red at 90% alpha.
 ---
---- Notes:
----  * Carries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border.
+--- Carries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setColor()` to change it on a running border.
 obj.borderColor = { red = 1, green = 0, blue = 0, alpha = 0.9 }
 
 --- FocusBorder.cornerRadius
 --- Variable
 --- The WINDOW's own corner rounding in points, not the border's. Defaults to `14`.
 ---
---- Notes:
----  * macOS 26 (Tahoe) rounds window corners noticeably more than earlier releases did, and the exact figure is not exposed by any API, so this is the one setting meant to be eyeballed: too small and the border cuts across the corners, too large and it bulges past them.
----  * The radius actually drawn is derived from this and `FocusBorder.borderWidth` when the canvas is built.
----  * Carries the same caveat as `FocusBorder.borderWidth`: use `FocusBorder:setCornerRadius()` to change it on a running border.
+--- No API exposes the real figure, so this is meant to be eyeballed: too small and the border cuts across the corners, too large and it bulges past them. macOS 26 rounds them more than earlier releases.
+--- The radius drawn is derived from this and `FocusBorder.borderWidth` at build time; use `FocusBorder:setCornerRadius()` to change it on a running border.
 obj.cornerRadius = 14
 
 --- FocusBorder.fullscreenSettle
@@ -61,8 +52,7 @@ obj.fullscreenSettle = 0.6
 --- Variable
 --- Seconds to wait after a Space switch before re-deriving the focused window. Defaults to `0.35`.
 ---
---- Notes:
----  * Immediately after a switch, `hs.spaces.focusedSpace()` still reports the old Space.
+--- Immediately after a switch, `hs.spaces.focusedSpace()` still reports the old Space.
 obj.spaceSettle = 0.35
 
 --- FocusBorder.screenSettle
@@ -79,8 +69,7 @@ obj.appSettle = 0.15
 --- Variable
 --- Seconds after `start()` at which the focused window is re-derived once. Defaults to `1.0`.
 ---
---- Notes:
----  * `start()` runs while the config is still loading, which is when the accessibility bridge is least responsive. This one retry is what keeps a cold start from leaving the border stuck until the next app switch.
+--- `start()` runs while the config is still loading, when the accessibility bridge is least responsive. This retry keeps a cold start from leaving the border stuck until the next app switch.
 obj.startRetry = 1.0
 
 --- FocusBorder.fullTolerance
@@ -88,15 +77,9 @@ obj.startRetry = 1.0
 --- Points; a window this close to the whole display on every edge counts as fullscreen. Defaults to `2`.
 obj.fullTolerance = 2
 
---------------------------------------------------------------------------------
 -- Internal state
---------------------------------------------------------------------------------
 
--- Everything long-lived is a field on the Spoon object rather than a local inside
--- start(), because hs.canvas / hs.timer / hs.window.filter / hs.uielement.watcher are
--- userdata with a __gc that tears down the real resource. hs.loadSpoon() keeps this
--- object alive as spoon.FocusBorder for the life of the config, so nothing here is
--- collected out from under a running watcher.
+-- Fields rather than locals in start(): userdata whose __gc would tear down the real resource
 obj.borderCanvas = nil
 obj.shown = false -- our own record; show() is makeKeyAndOrderFront, not free to repeat
 obj.lastRect = nil -- last canvas rect, so a pure move can skip the resize path
@@ -124,21 +107,29 @@ obj.warned = {}
 
 local AX = hs.uielement.watcher
 
---------------------------------------------------------------------------------
 -- Small helpers
---------------------------------------------------------------------------------
 
--- Stateless, so a plain local rather than a method.
+-- Stateless, so a plain local rather than a method
 local function now() return hs.timer.secondsSinceEpoch() end
 
--- Log a given message only once, so a broken system API cannot spam the console.
+-- Log a given message only once, so a broken system API cannot spam the console
 function obj:warnOnce(key, fmt, ...)
   if self.warned[key] then return end
   self.warned[key] = true
   self.logger.w(string.format(fmt, ...))
 end
 
--- Re-resolve the tracked window. hs.window handles go stale; the id is the identity.
+-- Restart a settle timer; the cancel is load-bearing, or a burst queues one refresh() each
+function obj:debounce(name, delay, fn)
+  local pending = self[name]
+  if pending then pending:stop() end
+  self[name] = hs.timer.doAfter(delay, function()
+    self[name] = nil
+    fn()
+  end)
+end
+
+-- Re-resolve the tracked window. hs.window handles go stale; the id is the identity
 function obj:resolveTracked()
   if not self.trackedId then return nil end
   if self.trackedWin then
@@ -150,9 +141,7 @@ function obj:resolveTracked()
   return w
 end
 
--- hs.spaces is built on private APIs and is documented as experimental. If it ever breaks
--- we fail OPEN: briefly outlining a window that is on another space is cosmetic, whereas
--- failing closed would silently disable the whole Spoon.
+-- hs.spaces is experimental, so this fails OPEN: a stray border beats disabling the Spoon
 function obj:isOnCurrentSpace(win)
   if not (hs.spaces and hs.spaces.windowSpaces) then return true end
   local ok, spaces = pcall(hs.spaces.windowSpaces, win)
@@ -165,19 +154,7 @@ function obj:isOnCurrentSpace(win)
   return hs.fnutils.contains(spaces, current)
 end
 
--- Native fullscreen only: a window merely maximised to fill the usable screen still gets a
--- border. That distinction is exactly the difference between screen:frame(), which excludes
--- the menu bar and Dock, and screen:fullFrame(), which is the whole display -- so comparing
--- against fullFrame separates the two cleanly.
---
--- The frame comparison is not just a fallback for a failed AX query. During the zoom
--- animation win:isFullScreen() still reports false while the window has already grown to
--- cover the display, and following that would smear the border across the screen. The frame
--- test flips early enough to catch the transition the AX query misses.
---
--- `frame` is an optional frame the caller has already queried. Every accessibility call
--- here is a synchronous round-trip into another process, and this runs on the drag path,
--- so a caller that already holds the frame passes it in rather than paying for it twice.
+-- Native fullscreen only, hence fullFrame(); the frame test catches the zoom animation, where isFullScreen() still says false
 function obj:isFullScreen(win, frame)
   local okFS, fs = pcall(win.isFullScreen, win)
   if okFS and fs then return true end
@@ -188,10 +165,7 @@ function obj:isFullScreen(win, frame)
     okF, f = pcall(win.frame, win)
     if not okF or not f then return false end
   end
-  -- hs.screen.find(f), not win:screen(). window.lua defines screen() as
-  -- `screen.find(self:frame())`, so calling it would throw away the frame just resolved
-  -- above and issue another accessibility round-trip for the same rect. Passing f straight
-  -- to find() is what screen() would have done anyway, one query cheaper.
+  -- find(f), not win:screen(), which is screen.find(self:frame()) -- one AX call cheaper
   local okS, screen = pcall(hs.screen.find, f)
   if not okS or not screen then return false end
   local okB, full = pcall(screen.fullFrame, screen)
@@ -201,28 +175,21 @@ function obj:isFullScreen(win, frame)
   return math.abs(f.x - full.x) <= t and math.abs(f.y - full.y) <= t and math.abs(f.w - full.w) <= t and math.abs(f.h - full.h) <= t
 end
 
--- Every reason the border should be absent, in one place. `frame` and `fs` are both
--- optional: a caller that has already resolved the frame, or already asked whether the
--- window is fullscreen, passes them rather than paying for the query twice. `fs` is a
--- boolean, so the "was it supplied" test has to be `== nil` and not `not fs`.
+-- Every reason the border should be absent. `fs` is a boolean, so "supplied" tests `== nil`
 function obj:shouldShowBorder(win, frame, fs)
   if not self.enabled or not win then return false end
+  -- isVisible() is `not isHidden and not isMinimized`, so no isMinimized() call follows it
   local okV, visible = pcall(win.isVisible, win)
   if not okV or not visible then return false end
-  local okM, minimized = pcall(win.isMinimized, win)
-  if okM and minimized then return false end
   if fs == nil then fs = self:isFullScreen(win, frame) end
   if fs then return false end
   if not self:isOnCurrentSpace(win) then return false end
   return true
 end
 
---------------------------------------------------------------------------------
 -- Drawing
---------------------------------------------------------------------------------
 
--- The canvas is built once and thereafter only moved, shown and hidden. Recreating it on
--- every focus change would flicker and churn window-server objects for no benefit.
+-- Built once, then only moved: recreating it per focus change would flicker
 function obj:ensureCanvas()
   if self.borderCanvas then return self.borderCanvas end
 
@@ -232,59 +199,33 @@ function obj:ensureCanvas()
     return nil
   end
 
-  -- The stroked path runs borderWidth/2 outside the window edge, so its corners have to be
-  -- that much rounder than the window's own to stay concentric with them.
+  -- The path runs borderWidth/2 outside the window, so its corners are that much rounder
   local pathRadius = self.cornerRadius + self.borderWidth / 2
 
   canvas:appendElements({
     type = 'rectangle',
-    -- "stroke", never "strokeAndFill": a fill would paint over the window it is framing.
+    -- "stroke", never "strokeAndFill": a fill would paint over the window it is framing
     action = 'stroke',
     strokeColor = self.borderColor,
     strokeWidth = self.borderWidth,
+    -- Radii depend only on config, so they are set here rather than on redraw()'s hot path
     roundedRectRadii = { xRadius = pathRadius, yRadius = pathRadius },
-    -- Placeholder; redraw() sets the real geometry on every reposition. The radii above do
-    -- not belong there: they depend only on config, so they are set once, off the hot path.
-    frame = { x = 0, y = 0, w = 1, h = 1 },
+    frame = { x = 0, y = 0, w = 1, h = 1 }, -- placeholder; redraw() sets the real geometry
   })
 
-  -- Setting the level is mandatory, not a nicety: a canvas is born at the screen-saver
-  -- level, i.e. above absolutely everything, so leaving the default would paint a red
-  -- rectangle across the menu bar. "floating" is where Cocoa puts "always keep on top"
-  -- panels -- above every ordinary window, below modal panels, the Dock and the menu bar.
-  --
-  -- Note that no level can solve the fullscreen case. A native-fullscreen app's window
-  -- sits at the *normal* level and wins only by owning its own Space, so nothing above
-  -- normal stays out of its way. That is why hiding the border is implemented below
-  -- rather than configured here.
+  -- Mandatory: a canvas is born at screen-saver level and would paint across the menu bar. No level solves fullscreen, which wins by owning its Space
   canvas:level(hs.canvas.windowLevels.floating)
 
-  -- canJoinAllSpaces: the canvas must never own a space or get stranded on the one it
-  -- happened to be created on -- when the border is visible is decided here, not by macOS.
-  -- transient: hidden by Exposé, so Mission Control does not shrink a stray red rectangle
-  -- into the Spaces strip. ("stationary" is the trap here: it means the opposite, "stays
-  -- visible", which is right for a desktop widget and wrong for a focus indicator.)
+  -- Never own a Space, and hide under Exposé. ("stationary" means the opposite: the trap.)
   canvas:behaviorAsLabels({ 'canJoinAllSpaces', 'transient' })
 
-  -- Click-through deliberately requires no code. hs.canvas windows are created with
-  -- ignoresMouseEvents set, and only opting an element into mouse tracking clears it, so
-  -- every click already lands on whatever is underneath. Do not "harden" that by calling
-  -- canvasMouseEvents() or mouseCallback(), even temporarily while debugging -- those are
-  -- what make the border start eating clicks.
-  --
-  -- Do NOT call clickActivating(false) either, however harmless it reads: it is documented
-  -- to change the canvas's AXSubrole, and the nonstandard subrole hs.canvas normally
-  -- reports is exactly the thing that stops hs.window.filter from mistaking a canvas for a
-  -- Hammerspoon window. Turning it off re-arms the self-focus loop guarded against below.
-  -- It only has any effect for a canvas with a click callback, and this one has none.
+  -- Click-through needs no code; canvasMouseEvents(), mouseCallback() or clickActivating(false) all break it, the last by changing the AXSubrole that hides this canvas from hs.window.filter
 
   self.borderCanvas = canvas
   return canvas
 end
 
--- show() and hide() are real NSWindow operations, and a drag delivers a notification every
--- frame, so both are gated on our own record of the current state rather than being called
--- unconditionally on every redraw.
+-- Real NSWindow calls, and a drag notifies every frame, so both are gated on `shown`
 function obj:hideBorder()
   if self.borderCanvas and self.shown then
     pcall(self.borderCanvas.hide, self.borderCanvas)
@@ -299,10 +240,7 @@ function obj:showBorder()
   end
 end
 
--- `frame` and `fs` are optional and simply forwarded. shouldShowBorder() is still
--- evaluated first, before the frame is needed, so redraw(nil) from the settle timer --
--- where resolveTracked() can hand back nil -- still short-circuits to hideBorder()
--- without touching the window.
+-- shouldShowBorder() runs first, so redraw(nil) hides without ever touching a window
 function obj:redraw(win, frame, fs)
   if now() < self.suppressUntil then return end
   if not self:shouldShowBorder(win, frame, fs) then return self:hideBorder() end
@@ -318,23 +256,16 @@ function obj:redraw(win, frame, fs)
   if not canvas then return end
 
   local w = self.borderWidth
-  -- The canvas covers the window plus a w-wide band on every side.
+  -- The canvas covers the window plus a w-wide band on every side
   local rect = { x = f.x - w, y = f.y - w, w = f.w + 2 * w, h = f.h + 2 * w }
 
   local last = self.lastRect
   if last and math.abs(last.w - rect.w) <= 0.5 and math.abs(last.h - rect.h) <= 0.5 then
-    -- Move without resize, which is what nearly every notification during a drag is.
-    -- topLeft() only repositions the window, where frame() re-renders and would make us
-    -- recompute an element frame for a size that has not changed.
+    -- Move without resize, nearly every drag notification; frame() would re-render
     canvas:topLeft({ x = rect.x, y = rect.y })
   else
     canvas:frame(rect)
-    -- A stroke straddles its path, half either side. Insetting the path by w/2 from the
-    -- canvas edge therefore lands the stroke's outer edge exactly on the canvas edge and its
-    -- inner edge exactly on the window edge, so the whole stroke sits in the band and not one
-    -- pixel of it covers the window. It also means nothing is clipped: a canvas discards
-    -- anything drawn past its own bounds, which is what would happen to the outer half of
-    -- the stroke if the canvas were sized to the window instead.
+    -- A stroke straddles its path, so a w/2 inset puts all of it in the band, unclipped
     canvas:elementAttribute(1, 'frame', { x = w / 2, y = w / 2, w = f.w + w, h = f.h + w })
   end
 
@@ -342,22 +273,9 @@ function obj:redraw(win, frame, fs)
   self:showBorder()
 end
 
---------------------------------------------------------------------------------
 -- Tracking the focused window
---------------------------------------------------------------------------------
 
--- Geometry deliberately does NOT come from hs.window.filter's windowMoved event: that event
--- is debounced by 500ms (WINDOWMOVED_DELAY in window_filter.lua) and coalesced with
--- setNextTrigger, so it fires only half a second after the user STOPS dragging. The border
--- would trail the window like a rubber band. These raw AX notifications are undebounced.
---
--- The same debounce is why windowFullscreened / windowUnfullscreened are unused: window_filter
--- emits both from doMoved(), behind that very same timer, long after the zoom animation has
--- finished. The fullscreen state is therefore checked inline here instead.
---
--- Nor is anything coalesced on our side. PinnedWindows collapses event bursts because
--- raising windows is expensive; a redraw here is a single reposition, and any delay added to
--- it is directly visible as lag while dragging.
+-- NOT window.filter's windowMoved, debounced 500ms (WINDOWMOVED_DELAY), which would trail the window like a rubber band; nothing is coalesced here either, since delay reads as drag lag
 function obj:onAXEvent(_, event, watcher, id)
   if id ~= self.trackedId then
     pcall(watcher.stop, watcher) -- stale watcher, self-heal
@@ -365,46 +283,30 @@ function obj:onAXEvent(_, event, watcher, id)
   end
 
   if event == AX.elementDestroyed then
-    -- Hide before anything else: a border still drawn around a window that no longer exists
-    -- is the most obviously broken thing this Spoon could produce, so it does not survive
-    -- even one frame. Then drop the watcher rather than leaving it bound to a dead element;
-    -- whichever window gains focus next will bring a fresh one.
+    -- Hide first, so a border around a window that no longer exists never survives a frame
     self:hideBorder()
-    -- detach() rather than stopping `watcher` inline: the id guard above means we only get
-    -- here for the watcher bound to the live trackedId, and attachTo() stores exactly that
-    -- one as self.axWatcher -- so this is the same object, and the three tracking fields
-    -- get cleared in the one place that knows they belong together.
+    -- detach(), since the id guard proves this is self.axWatcher; it clears all three fields
     self:detach()
     return
   end
 
-  -- A minimized window keeps its watcher, so unminimizing restores the border by itself.
+  -- A minimized window keeps its watcher, so unminimizing restores the border by itself
   if event == AX.windowMinimized then return self:hideBorder() end
 
   local win = self:resolveTracked()
   if not win then return self:hideBorder() end
 
-  -- One frame() query and one fullscreen verdict per notification, threaded through
-  -- everything below. During a drag this handler runs on every frame, and each
-  -- accessibility call is a synchronous IPC round-trip; left to re-query, isFullScreen(),
-  -- shouldShowBorder() and redraw() would ask for the same frame five times over (three
-  -- explicitly, twice more hidden inside win:screen(), which is itself defined as
-  -- screen.find(self:frame())). nil on failure is fine -- each callee falls back to
-  -- querying for itself, which is exactly the old behaviour.
+  -- One frame() and one fullscreen verdict per notification: on a drag this runs every frame, and the callees would otherwise re-query five times over
   local okF, f = pcall(win.frame, win)
   if not okF then f = nil end
 
   local fs = self:isFullScreen(win, f)
   if fs ~= self.wasFullScreen then
-    -- A fullscreen transition arrives as a burst of resizes. Sit the animation out rather
-    -- than smearing the border across the screen following it, then re-evaluate once the
-    -- window has settled at whichever size it ended up.
+    -- A transition is a burst of resizes; sit it out rather than smearing the border
     self.wasFullScreen = fs
     self.suppressUntil = now() + self.fullscreenSettle
     self:hideBorder()
-    if self.settleTimer then self.settleTimer:stop() end
-    self.settleTimer = hs.timer.doAfter(self.fullscreenSettle, function()
-      self.settleTimer = nil
+    self:debounce('settleTimer', self.fullscreenSettle, function()
       self.suppressUntil = 0
       self:redraw(self:resolveTracked())
     end)
@@ -422,9 +324,7 @@ function obj:detach()
   self.trackedId, self.trackedWin = nil, nil
 end
 
--- Exactly one AX watcher exists at a time and it migrates with focus. A border only ever
--- follows one window, so there is no reason to pay for the per-window fleet that
--- PinnedWindows has to maintain.
+-- One watcher, migrating with focus: no need for the per-window fleet PinnedWindows keeps
 function obj:attachTo(win, id)
   self:detach()
   self.trackedId, self.trackedWin = id, win
@@ -434,9 +334,7 @@ function obj:attachTo(win, id)
     self:warnOnce('newWatcher', 'hs.window has no newWatcher; the border will not follow drags')
     return
   end
-  -- The AX callback signature is fixed -- fn(element, event, watcher, userData) -- with no
-  -- slot for self, so the method is reached through a closure. userData still carries the
-  -- window id, which is what the stale-watcher check above compares against.
+  -- fn(element, event, watcher, userData) has no slot for self, hence the closure
   local ok, watcher = pcall(win.newWatcher, win, function(el, ev, w, wid) self:onAXEvent(el, ev, w, wid) end, id)
   if not ok or not watcher then
     self:warnOnce('axcreate', 'could not create an AX watcher: %s', tostring(watcher))
@@ -450,8 +348,7 @@ function obj:attachTo(win, id)
     AX.elementDestroyed,
   })
   if not started then
-    -- uielement.watcher:start() registers itself before arming the AX observer, so a
-    -- half-started watcher must be stopped rather than simply dropped.
+    -- start() registers before arming, so a half-started watcher is stopped, not dropped
     pcall(watcher.stop, watcher)
     self:warnOnce('axstart', 'could not start the AX watcher; the border will not follow drags')
     return
@@ -459,29 +356,9 @@ function obj:attachTo(win, id)
   self.axWatcher = watcher
 end
 
---------------------------------------------------------------------------------
 -- Tracking the focused APPLICATION
---------------------------------------------------------------------------------
 
--- macOS has no "some window got focused" notification. Moving focus between two windows of
--- the SAME app produces exactly one signal, AXFocusedWindowChanged, and it is delivered on
--- the *application* element -- hs.uielement documents it as an application-level event that
--- "send[s] the relevant child element to the handler". No app activation happens, so
--- hs.application.watcher stays silent, and the window watcher above is bound to the window
--- being switched AWAY from, so it says nothing either.
---
--- That left hs.window.filter as the only path for a same-app switch, and it is precisely the
--- path that breaks after a reload. window_filter only re-emits the notification as its
--- windowFocused event if the app is both registered in its own table and is its current
--- global.active; registration happens in one synchronous burst over every running app the
--- moment the first filter subscribes -- i.e. during config load, when the accessibility
--- bridge is coldest -- and an app whose AX probe fails there is dropped with no retry. It is
--- re-registered on the next application-activated event, which is why the border came back
--- to life only after switching apps or leaving and re-entering the Space, and why a Space
--- holding a single app with several windows was the case that stayed broken.
---
--- Observing the notification ourselves removes that dependency: two AX observers instead of
--- window_filter's per-app fleet, and no shared state that a cold start can corrupt.
+-- A focus switch inside one app emits only AXFocusedWindowChanged, on the *application* element, which no other source reports: window.filter registers apps during config load, when the AX bridge is coldest, and never retries
 function obj:detachApp()
   if self.appAxWatcher then
     pcall(self.appAxWatcher.stop, self.appAxWatcher)
@@ -497,18 +374,11 @@ function obj:onAppAXEvent(_, event, watcher, pid)
   end
   if event ~= AX.focusedWindowChanged then return end
 
-  -- refresh() rather than the element the notification carries. The event also fires for
-  -- apps that are NOT frontmost (the docs call this out), and following the element there
-  -- would move the border onto a background window; refresh() re-derives from
-  -- hs.window.focusedWindow(), so such an event correctly changes nothing. It also reuses
-  -- the isOwnWindow / detach / hide branch instead of duplicating it. One AX query, and
-  -- nothing debounces it, so the border still moves on the same frame as the switch.
+  -- refresh(), not the element: this also fires for apps that are NOT frontmost, and following the element would move the border onto a background window
   self:refresh()
 end
 
--- Migrates with focus like attachTo() does, keyed on pid rather than window id. The
--- early-out matters: a focus change inside one app must not tear down and rebuild the
--- observer that reported it.
+-- Keyed on pid, and early-out: a switch inside one app must not rebuild its own observer
 function obj:attachToApp(win)
   local okA, app = pcall(win.application, win)
   if not okA or not app then return end
@@ -517,10 +387,7 @@ function obj:attachToApp(win)
   if self.appAxWatcher and pid == self.appAxPid then return end
 
   self:detachApp()
-  -- No type(app.newWatcher)=="function" pre-check as attachTo() does for windows. newWatcher
-  -- is inherited from hs.uielement rather than declared on hs.application, so probing for it
-  -- reasons about a metatable chain the docs do not describe; pcall covers a missing method
-  -- ("attempt to call a nil value") and a failing one alike, and says which in the log.
+  -- No newWatcher pre-check here: it is inherited from hs.uielement, and pcall covers both
   local ok, watcher = pcall(app.newWatcher, app, function(el, ev, w, wpid) self:onAppAXEvent(el, ev, w, wpid) end, pid)
   if not ok or not watcher then
     self:warnOnce(
@@ -530,10 +397,7 @@ function obj:attachToApp(win)
     )
     return
   end
-  -- Only the one event. elementDestroyed is deliberately absent and is not auto-added for
-  -- application elements the way it is for ordinary ones; hs.uielement already stops every
-  -- watcher belonging to a pid when that process terminates, so an app quitting needs no
-  -- teardown here.
+  -- Only this event: hs.uielement already stops a pid's watchers when the process dies
   local started = pcall(watcher.start, watcher, { AX.focusedWindowChanged })
   if not started then
     pcall(watcher.stop, watcher)
@@ -544,10 +408,7 @@ function obj:attachToApp(win)
   self.appAxWatcher = watcher
 end
 
--- The canvas is itself a window. Were it ever taken for the focused window, the border would
--- draw around itself and each redraw would look like another focus change -- a loop painting
--- an ever-shrinking rectangle. Two independent guards, so one failing cannot revive it: the
--- filter rejects Hammerspoon outright in start(), and every candidate is checked here too.
+-- The canvas is a window, and mistaken for the focused one it would draw around itself forever, so start() rejects Hammerspoon on the filter and every candidate is checked here
 function obj:isOwnWindow(win)
   local okA, app = pcall(win.application, win)
   if not okA or not app then return false end
@@ -565,22 +426,14 @@ function obj:onWindowFocused(win)
   else
     self.trackedWin = win
   end
-  -- Every focus change, not just those that cross an app boundary: attachToApp() no-ops on
-  -- an unchanged pid, and routing it through here means the observer is armed by whichever
-  -- signal arrives first, including the initial refresh() at the end of start().
+  -- Every focus change: attachToApp() no-ops on an unchanged pid, so first signal wins
   self:attachToApp(win)
-  -- A deliberate focus change cancels any suppression left over from a transition.
+  -- A deliberate focus change cancels any suppression left over from a transition
   self.suppressUntil = 0
   self:redraw(win)
 end
 
--- Re-derive everything from scratch. Used after any event that can invalidate the whole
--- picture at once: a space switch, a display change, an app quitting.
---
--- detachApp() is pointedly NOT called on the empty branch. An app can be frontmost with no
--- focused window -- every window closed, or a sheet in the way -- and the application
--- observer is the only thing that will report the next window focused within it. Dropping it
--- here would recreate the very stall this Spoon exists to avoid.
+-- detachApp() is pointedly NOT called on the empty branch: an app can be frontmost with no focused window, and its observer is the only thing that reports the next one
 function obj:refresh()
   local win = hs.window.focusedWindow()
   if win and not self:isOwnWindow(win) then
@@ -591,37 +444,18 @@ function obj:refresh()
   end
 end
 
---------------------------------------------------------------------------------
 -- System watchers
---------------------------------------------------------------------------------
 
-function obj:onScreensChanged()
-  if self.screenTimer then self.screenTimer:stop() end
-  self.screenTimer = hs.timer.doAfter(self.screenSettle, function()
-    self.screenTimer = nil
-    self:refresh()
-  end)
-end
+function obj:onScreensChanged() self:debounce('screenTimer', self.screenSettle, function() self:refresh() end) end
 
 function obj:onAppEvent(_, event)
   if event == hs.application.watcher.activated or event == hs.application.watcher.terminated then
-    -- A short delay: right after an app activates or dies, focusedWindow() can still report
-    -- the outgoing window, which would anchor the border to something already gone.
-    if self.appTimer then self.appTimer:stop() end
-    self.appTimer = hs.timer.doAfter(self.appSettle, function()
-      self.appTimer = nil
-      self:refresh()
-    end)
+    -- Delayed: just after an app activates or dies, focusedWindow() reports the outgoing one
+    self:debounce('appTimer', self.appSettle, function() self:refresh() end)
   end
 end
 
--- delete(), not hide(): no NSWindow may be left behind, because a config reload builds a
--- fresh one and nothing would be left owning the old one.
---
--- Clearing lastRect matters as much as clearing the canvas: it is what forces the next
--- redraw down the full frame() path so the replacement canvas gets its element geometry.
--- Those two always travel together, which is why dropping the canvas is one call rather
--- than something each caller open-codes.
+-- delete(), not hide(), so no NSWindow outlives a reload; clearing lastRect forces the next redraw down the full frame() path
 function obj:discardCanvas()
   if self.borderCanvas then
     pcall(self.borderCanvas.delete, self.borderCanvas)
@@ -630,17 +464,13 @@ function obj:discardCanvas()
   self.shown, self.lastRect = false, nil
 end
 
--- Colour, width and corner radius are baked into the canvas element at build time, so
--- changing any of them means throwing the canvas away and letting the next redraw build a
--- new one.
+-- Colour, width and radius are baked in at build time, so changing them means a new canvas
 function obj:rebuild()
   self:discardCanvas()
   if self.running then self:refresh() end
 end
 
---------------------------------------------------------------------------------
 -- Spoon API
---------------------------------------------------------------------------------
 
 --- FocusBorder:init() -> self
 --- Method
@@ -652,9 +482,8 @@ end
 --- Returns:
 ---  * The FocusBorder object
 ---
---- Notes:
----  * Deliberately starts nothing. Every watcher and timer belongs to `FocusBorder:start()`, and the canvas is built lazily on the first redraw.
----  * It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so resetting anything here would clear state out from under watchers that are already running.
+--- Deliberately starts nothing. Every watcher and timer belongs to `FocusBorder:start()`, and the canvas is built lazily on the first redraw.
+--- Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.
 function obj:init() return self end
 
 --- FocusBorder:start() -> self
@@ -667,26 +496,18 @@ function obj:init() return self end
 --- Returns:
 ---  * The FocusBorder object
 ---
---- Notes:
----  * Calling this on an already-started Spoon restarts it cleanly.
----  * Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.
+--- Calling this on an already-started Spoon restarts it cleanly.
+--- Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.
 function obj:start()
   if self.running then self:stop() end
 
-  -- Focus tracking also goes through hs.window.filter, and that is a deliberate trade
-  -- rather than the only option. Creating a filter starts window_filter's global watcher,
-  -- which registers an accessibility observer for every running app and every window they
-  -- own. PinnedWindows only pays that on the first pin; this Spoon runs always, so it pays
-  -- it for the whole session. It is kept as a second, redundant path alongside the
-  -- application observer above: the filter is the boring, well-trodden route for ordinary
-  -- app switches, and the global watcher is refcounted, so the cost is shared with
-  -- PinnedWindows rather than doubled.
+  -- A second, redundant path beside the application observer: a filter costs an AX observer per running app, but the global watcher is refcounted and shared with PinnedWindows
   local ok, filter = pcall(hs.window.filter.new)
   if not ok or not filter then
     self:warnOnce('filter', 'could not create a window filter (%s); the border will not track focus', tostring(filter))
   else
     self.focusFilter = filter
-    -- Guard 1 against the self-focus loop described above.
+    -- Guard 1 against the self-focus loop described above
     pcall(self.focusFilter.rejectApp, self.focusFilter, 'Hammerspoon')
     self.onFocusEvent = function(win) self:onWindowFocused(win) end
     self.onUnfocusEvent = function() self:hideBorder() end
@@ -699,15 +520,8 @@ function obj:start()
 
   if hs.spaces and hs.spaces.watcher then
     self.spaceWatcher = hs.spaces.watcher.new(function()
-      -- Delay: immediately after a switch, focusedSpace() still reports the old space.
-      -- Kept in a handle and restarted rather than fired and forgotten: swiping through
-      -- several Spaces inside spaceSettle would otherwise queue one independent timer per
-      -- Space, every one of them running a full refresh(). Only the last switch matters.
-      if self.spaceTimer then self.spaceTimer:stop() end
-      self.spaceTimer = hs.timer.doAfter(self.spaceSettle, function()
-        self.spaceTimer = nil
-        self:refresh()
-      end)
+      -- Delayed, since focusedSpace() lags a switch; debounced, so a swipe costs one refresh
+      self:debounce('spaceTimer', self.spaceSettle, function() self:refresh() end)
     end)
     self.spaceWatcher:start()
   end
@@ -725,18 +539,8 @@ function obj:start()
 
   self:refresh()
 
-  -- start() runs while the config is still being loaded, which is exactly when the
-  -- accessibility bridge is least responsive. If that first refresh() came back empty --
-  -- focusedWindow() nil, or app:newWatcher() refused -- nothing else would arm the
-  -- application observer until the user happened to switch apps, which is the stall this
-  -- Spoon exists to avoid. One re-derive once the machine has settled closes that window.
-  -- refresh() is idempotent: an unchanged window id re-attaches nothing and attachToApp()
-  -- no-ops on an unchanged pid, so this costs nothing when the first attempt worked.
-  if self.startTimer then self.startTimer:stop() end
-  self.startTimer = hs.timer.doAfter(self.startRetry, function()
-    self.startTimer = nil
-    self:refresh()
-  end)
+  -- start() runs during config load, when the AX bridge is least responsive; if that first refresh() came back empty nothing would arm the observer until an app switch
+  self:debounce('startTimer', self.startRetry, function() self:refresh() end)
 
   self.logger.i('started')
   return self
@@ -752,15 +556,13 @@ end
 --- Returns:
 ---  * The FocusBorder object
 ---
---- Notes:
----  * Any hotkeys bound with `FocusBorder:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.
+--- Any hotkeys bound with `FocusBorder:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.
 function obj:stop()
   self:detach()
   self:detachApp()
 
   if self.focusFilter then
-    -- Unsubscribe by (event, fn): unsubscribing by event alone would also remove callbacks
-    -- any other module registered on a shared filter.
+    -- By (event, fn): by event alone would drop another module's callbacks on a shared filter
     if self.onFocusEvent then pcall(self.focusFilter.unsubscribe, self.focusFilter, hs.window.filter.windowFocused, self.onFocusEvent) end
     if self.onUnfocusEvent then
       pcall(self.focusFilter.unsubscribe, self.focusFilter, hs.window.filter.windowUnfocused, self.onUnfocusEvent)
@@ -768,42 +570,18 @@ function obj:stop()
   end
   self.focusFilter, self.onFocusEvent, self.onUnfocusEvent = nil, nil, nil
 
-  -- Stopped one by one rather than by iterating a table literal. ipairs() halts at the
-  -- first nil hole, so `ipairs({ appWatcher, spaceWatcher, screenWatcher })` would silently
-  -- skip the screen watcher on any machine where hs.spaces is missing -- and the timers
-  -- below are nil most of the time, which would make such a loop almost a no-op.
-  if self.appWatcher then
-    pcall(self.appWatcher.stop, self.appWatcher)
-    self.appWatcher = nil
-  end
-  if self.spaceWatcher then
-    pcall(self.spaceWatcher.stop, self.spaceWatcher)
-    self.spaceWatcher = nil
-  end
-  if self.screenWatcher then
-    pcall(self.screenWatcher.stop, self.screenWatcher)
-    self.screenWatcher = nil
+  -- Field NAMES, not handles: ipairs over handles halts at the first nil and skips the rest
+  for _, name in ipairs({ 'appWatcher', 'spaceWatcher', 'screenWatcher' }) do
+    local watcher = self[name]
+    -- pcall: stop() reaches into a framework that may already be tearing down
+    if watcher then pcall(watcher.stop, watcher) end
+    self[name] = nil
   end
 
-  if self.screenTimer then
-    self.screenTimer:stop()
-    self.screenTimer = nil
-  end
-  if self.spaceTimer then
-    self.spaceTimer:stop()
-    self.spaceTimer = nil
-  end
-  if self.settleTimer then
-    self.settleTimer:stop()
-    self.settleTimer = nil
-  end
-  if self.appTimer then
-    self.appTimer:stop()
-    self.appTimer = nil
-  end
-  if self.startTimer then
-    self.startTimer:stop()
-    self.startTimer = nil
+  for _, name in ipairs({ 'screenTimer', 'spaceTimer', 'settleTimer', 'appTimer', 'startTimer' }) do
+    local timer = self[name]
+    if timer then timer:stop() end
+    self[name] = nil
   end
 
   self:discardCanvas()
@@ -827,13 +605,14 @@ end
 --- Returns:
 ---  * The FocusBorder object
 ---
---- Notes:
----  * For example: `spoon.FocusBorder:bindHotkeys({ toggle = { { "cmd", "alt", "shift" }, "B" } })`
+--- For example: `spoon.FocusBorder:bindHotkeys({ toggle = { { "cmd", "alt", "shift" }, "B" } })`
 function obj:bindHotkeys(mapping)
   local spec = {
     toggle = hs.fnutils.partial(self.toggle, self),
   }
   hs.spoons.bindHotkeysToSpec(spec, mapping)
+  -- HSKeybindings.spoon walks loaded Spoons looking for a `mapping` field to display
+  self.mapping = mapping
   return self
 end
 
@@ -904,8 +683,7 @@ end
 --- Returns:
 ---  * The FocusBorder object
 ---
---- Notes:
----  * This is the one setting meant to be eyeballed against your macOS version, so it exists mainly to let you try values from the Console without reloading.
+--- This is the one setting meant to be eyeballed against your macOS version, so it exists mainly to let you try values from the Console without reloading.
 function obj:setCornerRadius(radius)
   radius = tonumber(radius)
   if not radius or radius <= 0 then return self end
@@ -924,8 +702,7 @@ end
 --- Returns:
 ---  * A table with `running`, `enabled`, `trackedId`, `tracking`, `trackingApp`, `appPid`, `fullScreen` and `borderWidth` keys
 ---
---- Notes:
----  * `trackingApp` being false while `running` is true is the signature of the same-app focus stall: the application observer is what makes a window switch inside one app visible.
+--- `trackingApp` being false while `running` is true is the signature of the same-app focus stall: the application observer is what makes a window switch inside one app visible.
 function obj:status()
   return {
     running = self.running,
