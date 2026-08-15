@@ -1,3 +1,11 @@
+# [2.6.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.5.0...v2.6.0) (2026-08-15)
+
+
+### Features
+
+* **spoons:** add BatteryMonitor, drop ext/battery ([1c387b7](https://github.com/vladdoster/hammerspoon-configuration/commit/1c387b75ba42c8d7696fb486ace5af016151cd9b))
+* **spoons:** add VolumeControl, drop ext/volume ([249c0a6](https://github.com/vladdoster/hammerspoon-configuration/commit/249c0a626de50ffb4c12d7e90413615fca6b3668))
+
 # [2.5.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.4.0...v2.5.0) (2026-08-15)
 
 
