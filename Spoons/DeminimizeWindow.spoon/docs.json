@@ -15,7 +15,7 @@
         "stripped_doc" : [
           "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
         ],
-        "name" : "logger",
+        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
         "parameters" : [
 
         ],
@@ -27,50 +27,52 @@
         "returns" : [
 
         ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name" : "logger",
         "def" : "DeminimizeWindow.logger"
       },
       {
-        "doc" : "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.\n\nNotes:\n * With this off -- or with yabai absent -- the Spoon still restores windows, but only through Accessibility, which cannot choose a Space. A window minimized on another Space will reappear there, and the Spoon will say so rather than pretending it succeeded.\n * `hs.spaces.moveWindowToSpace()` is not an alternative. It has been a silent no-op since macOS 15 and returns `true` regardless of what the window server did.",
+        "doc" : "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.\n\nWith this off, or yabai absent, restores go through Accessibility alone, which cannot choose a Space: a window minimized elsewhere reappears there, and the Spoon says so rather than pretending it succeeded.\n`hs.spaces.moveWindowToSpace()` is not an alternative; it has been a silent no-op since macOS 15.",
         "stripped_doc" : [
           "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.",
-          ""
+          "",
+          "With this off, or yabai absent, restores go through Accessibility alone, which cannot choose a Space: a window minimized elsewhere reappears there, and the Spoon says so rather than pretending it succeeded.",
+          "`hs.spaces.moveWindowToSpace()` is not an alternative; it has been a silent no-op since macOS 15."
         ],
-        "name" : "useYabai",
+        "desc" : "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * With this off -- or with yabai absent -- the Spoon still restores windows, but only through Accessibility, which cannot choose a Space. A window minimized on another Space will reappear there, and the Spoon will say so rather than pretending it succeeded.",
-          " * `hs.spaces.moveWindowToSpace()` is not an alternative. It has been a silent no-op since macOS 15 and returns `true` regardless of what the window server did."
+
         ],
         "signature" : "DeminimizeWindow.useYabai",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.",
+        "name" : "useYabai",
         "def" : "DeminimizeWindow.useYabai"
       },
       {
-        "doc" : "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.\n\nNotes:\n * Only needed for an installation somewhere unusual. Homebrew on both architectures, nix-darwin and `~\/.local\/bin` are probed already.",
+        "doc" : "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.\n\nOnly needed for an installation somewhere unusual. Homebrew on both architectures, nix-darwin and `~\/.local\/bin` are probed already.",
         "stripped_doc" : [
           "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.",
-          ""
+          "",
+          "Only needed for an installation somewhere unusual. Homebrew on both architectures, nix-darwin and `~\/.local\/bin` are probed already."
         ],
-        "name" : "yabaiPath",
+        "desc" : "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Only needed for an installation somewhere unusual. Homebrew on both architectures, nix-darwin and `~\/.local\/bin` are probed already."
+
         ],
         "signature" : "DeminimizeWindow.yabaiPath",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.",
+        "name" : "yabaiPath",
         "def" : "DeminimizeWindow.yabaiPath"
       },
       {
@@ -78,7 +80,7 @@
         "stripped_doc" : [
           "Seconds any single yabai command may take before it is abandoned. Defaults to `1.5`."
         ],
-        "name" : "yabaiTimeout",
+        "desc" : "Seconds any single yabai command may take before it is abandoned. Defaults to `1.5`.",
         "parameters" : [
 
         ],
@@ -90,91 +92,95 @@
         "returns" : [
 
         ],
-        "desc" : "Seconds any single yabai command may take before it is abandoned. Defaults to `1.5`.",
+        "name" : "yabaiTimeout",
         "def" : "DeminimizeWindow.yabaiTimeout"
       },
       {
-        "doc" : "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.\n\nNotes:\n * This is a confirmation window, not a delay. A move that worked is usually visible on the first poll.",
+        "doc" : "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.\n\nThis is a confirmation window, not a delay. A move that worked is usually visible on the first poll.",
         "stripped_doc" : [
           "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.",
-          ""
+          "",
+          "This is a confirmation window, not a delay. A move that worked is usually visible on the first poll."
         ],
-        "name" : "placeTimeout",
+        "desc" : "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * This is a confirmation window, not a delay. A move that worked is usually visible on the first poll."
+
         ],
         "signature" : "DeminimizeWindow.placeTimeout",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.",
+        "name" : "placeTimeout",
         "def" : "DeminimizeWindow.placeTimeout"
       },
       {
-        "doc" : "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.\n\nNotes:\n * Longer than `DeminimizeWindow.placeTimeout` because the un-minimize animation alone runs about half a second, and a busy application can be slow to honour the Accessibility write behind it.",
+        "doc" : "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.\n\nLonger than `DeminimizeWindow.placeTimeout`: the un-minimize animation alone runs about half a second.",
         "stripped_doc" : [
           "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.",
-          ""
+          "",
+          "Longer than `DeminimizeWindow.placeTimeout`: the un-minimize animation alone runs about half a second."
         ],
-        "name" : "revealTimeout",
+        "desc" : "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Longer than `DeminimizeWindow.placeTimeout` because the un-minimize animation alone runs about half a second, and a busy application can be slow to honour the Accessibility write behind it."
+
         ],
         "signature" : "DeminimizeWindow.revealTimeout",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.",
+        "name" : "revealTimeout",
         "def" : "DeminimizeWindow.revealTimeout"
       },
       {
-        "doc" : "Seconds between checks while confirming a step. Defaults to `0.12`.\n\nNotes:\n * Each yabai poll is a subprocess, which is what sets this floor. Checks that can be answered from an `hs.window` run at a quarter of this interval, since they cost nothing but a function call.",
+        "doc" : "Seconds between checks while confirming a step. Defaults to `0.12`.\n\nEach yabai poll is a subprocess, which is what sets this floor. Checks that can be answered from an `hs.window` run at a quarter of this interval, since they cost nothing but a function call.",
         "stripped_doc" : [
           "Seconds between checks while confirming a step. Defaults to `0.12`.",
-          ""
+          "",
+          "Each yabai poll is a subprocess, which is what sets this floor. Checks that can be answered from an `hs.window` run at a quarter of this interval, since they cost nothing but a function call."
         ],
-        "name" : "pollInterval",
+        "desc" : "Seconds between checks while confirming a step. Defaults to `0.12`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Each yabai poll is a subprocess, which is what sets this floor. Checks that can be answered from an `hs.window` run at a quarter of this interval, since they cost nothing but a function call."
+
         ],
         "signature" : "DeminimizeWindow.pollInterval",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Seconds between checks while confirming a step. Defaults to `0.12`.",
+        "name" : "pollInterval",
         "def" : "DeminimizeWindow.pollInterval"
       },
       {
-        "doc" : "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.\n\nNotes:\n * A backstop for the busy flag rather than a timeout anybody should reach. Without it, a restore stranded by an application that never answers would leave the hotkey permanently deaf -- the worst possible failure in a Spoon whose entire interface is one key.",
+        "doc" : "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.\n\nA backstop for the busy flag rather than a timeout anybody should reach: without it, a restore stranded by an application that never answers would leave the hotkey permanently deaf.",
         "stripped_doc" : [
           "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.",
-          ""
+          "",
+          "A backstop for the busy flag rather than a timeout anybody should reach: without it, a restore stranded by an application that never answers would leave the hotkey permanently deaf."
         ],
-        "name" : "ladderDeadline",
+        "desc" : "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * A backstop for the busy flag rather than a timeout anybody should reach. Without it, a restore stranded by an application that never answers would leave the hotkey permanently deaf -- the worst possible failure in a Spoon whose entire interface is one key."
+
         ],
         "signature" : "DeminimizeWindow.ladderDeadline",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.",
+        "name" : "ladderDeadline",
         "def" : "DeminimizeWindow.ladderDeadline"
       },
       {
@@ -182,7 +188,7 @@
         "stripped_doc" : [
           "Whether a lone minimized window is restored without showing the chooser. Defaults to `true`."
         ],
-        "name" : "skipChooserForSingle",
+        "desc" : "Whether a lone minimized window is restored without showing the chooser. Defaults to `true`.",
         "parameters" : [
 
         ],
@@ -194,179 +200,187 @@
         "returns" : [
 
         ],
-        "desc" : "Whether a lone minimized window is restored without showing the chooser. Defaults to `true`.",
+        "name" : "skipChooserForSingle",
         "def" : "DeminimizeWindow.skipChooserForSingle"
       },
       {
-        "doc" : "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.\n\nNotes:\n * Reached only from success. Focusing a window that never moved is precisely what drags the user to its Space, so no failure path in this Spoon can arrive here.\n * `yabai --deminimize` deliberately does not focus, so this is always an explicit extra step rather than something that happens by itself.",
+        "doc" : "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.\n\nReached only from success: focusing a window that never moved is what drags the user to its Space, so no failure path arrives here.\n`yabai --deminimize` does not focus, so this is always an explicit extra step.",
         "stripped_doc" : [
           "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.",
-          ""
+          "",
+          "Reached only from success: focusing a window that never moved is what drags the user to its Space, so no failure path arrives here.",
+          "`yabai --deminimize` does not focus, so this is always an explicit extra step."
         ],
-        "name" : "focusAfterRestore",
+        "desc" : "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Reached only from success. Focusing a window that never moved is precisely what drags the user to its Space, so no failure path in this Spoon can arrive here.",
-          " * `yabai --deminimize` deliberately does not focus, so this is always an explicit extra step rather than something that happens by itself."
+
         ],
         "signature" : "DeminimizeWindow.focusAfterRestore",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.",
+        "name" : "focusAfterRestore",
         "def" : "DeminimizeWindow.focusAfterRestore"
       },
       {
-        "doc" : "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.\n\nNotes:\n * These are the only rungs that can pull you to another Space, and they run only once placing has already failed -- at which point the choice is between that risk and not restoring the window at all.\n * Set to `false` for a Spoon that is structurally incapable of moving you, and that occasionally does nothing instead.",
+        "doc" : "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.\n\nThe only rungs that can pull you to another Space, and they run only once placing has failed, when the choice is between that risk and not restoring the window at all.\nSet to `false` for a Spoon that is structurally incapable of moving you, and that occasionally does nothing instead.",
         "stripped_doc" : [
           "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.",
-          ""
+          "",
+          "The only rungs that can pull you to another Space, and they run only once placing has failed, when the choice is between that risk and not restoring the window at all.",
+          "Set to `false` for a Spoon that is structurally incapable of moving you, and that occasionally does nothing instead."
         ],
-        "name" : "allowRevealFirst",
+        "desc" : "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * These are the only rungs that can pull you to another Space, and they run only once placing has already failed -- at which point the choice is between that risk and not restoring the window at all.",
-          " * Set to `false` for a Spoon that is structurally incapable of moving you, and that occasionally does nothing instead."
+
         ],
         "signature" : "DeminimizeWindow.allowRevealFirst",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.",
+        "name" : "allowRevealFirst",
         "def" : "DeminimizeWindow.allowRevealFirst"
       },
       {
-        "doc" : "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.\n\nNotes:\n * Applies only after a fully successful restore, where the window is here and being moved was therefore gratuitous. A partial success is left alone: you may well be looking at your window.",
+        "doc" : "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.\n\nApplies only after a fully successful restore, where the window is here and being moved was therefore gratuitous. A partial success is left alone: you may well be looking at your window.",
         "stripped_doc" : [
           "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.",
-          ""
+          "",
+          "Applies only after a fully successful restore, where the window is here and being moved was therefore gratuitous. A partial success is left alone: you may well be looking at your window."
         ],
-        "name" : "returnAfterSpaceChange",
+        "desc" : "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Applies only after a fully successful restore, where the window is here and being moved was therefore gratuitous. A partial success is left alone: you may well be looking at your window."
+
         ],
         "signature" : "DeminimizeWindow.returnAfterSpaceChange",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.",
+        "name" : "returnAfterSpaceChange",
         "def" : "DeminimizeWindow.returnAfterSpaceChange"
       },
       {
-        "doc" : "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.\n\nNotes:\n * The window server will not accept a window into a native fullscreen Space, so every row of the chooser would fail on click. Refusing up front is the honest version of that.",
+        "doc" : "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.\n\nThe window server will not accept a window into a native fullscreen Space, so every row of the chooser would fail on click. Refusing up front is the honest version of that.",
         "stripped_doc" : [
           "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.",
-          ""
+          "",
+          "The window server will not accept a window into a native fullscreen Space, so every row of the chooser would fail on click. Refusing up front is the honest version of that."
         ],
-        "name" : "refuseFullscreenSpace",
+        "desc" : "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * The window server will not accept a window into a native fullscreen Space, so every row of the chooser would fail on click. Refusing up front is the honest version of that."
+
         ],
         "signature" : "DeminimizeWindow.refuseFullscreenSpace",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.",
+        "name" : "refuseFullscreenSpace",
         "def" : "DeminimizeWindow.refuseFullscreenSpace"
       },
       {
-        "doc" : "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.\n\nNotes:\n * Hiding an application and minimizing a window are different states: a hidden application's windows report `is-hidden` and *not* `is-minimized`, and never appear in `hs.window.minimizedWindows()`. Unminimizing does nothing for them; they need `hs.application:unhide()`.\n * Off by default because they are not minimized and listing them would surprise. This is the answer to \"why is the window I pressed cmd-H on not in the list\".",
+        "doc" : "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.\n\nHiding an application and minimizing a window are different states: a hidden application's windows report `is-hidden` and not `is-minimized`, never appear in `hs.window.minimizedWindows()`, and need `hs.application:unhide()` rather than unminimizing.\nOff by default, which is the answer to \"why is the window I pressed cmd-H on not in the list\".",
         "stripped_doc" : [
           "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.",
-          ""
+          "",
+          "Hiding an application and minimizing a window are different states: a hidden application's windows report `is-hidden` and not `is-minimized`, never appear in `hs.window.minimizedWindows()`, and need `hs.application:unhide()` rather than unminimizing.",
+          "Off by default, which is the answer to \"why is the window I pressed cmd-H on not in the list\"."
         ],
-        "name" : "includeHidden",
+        "desc" : "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Hiding an application and minimizing a window are different states: a hidden application's windows report `is-hidden` and *not* `is-minimized`, and never appear in `hs.window.minimizedWindows()`. Unminimizing does nothing for them; they need `hs.application:unhide()`.",
-          " * Off by default because they are not minimized and listing them would surprise. This is the answer to \"why is the window I pressed cmd-H on not in the list\"."
+
         ],
         "signature" : "DeminimizeWindow.includeHidden",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.",
+        "name" : "includeHidden",
         "def" : "DeminimizeWindow.includeHidden"
       },
       {
-        "doc" : "Whether yabai scratchpad windows are offered. Defaults to `false`.\n\nNotes:\n * yabai keeps a scratchpad window minimized as its hidden state, so every scratchpad on the machine would otherwise appear in this list. Restoring one behind yabai's back also desynchronises its own bookkeeping -- use `yabai -m window --toggle <label>` for those.",
+        "doc" : "Whether yabai scratchpad windows are offered. Defaults to `false`.\n\nyabai keeps a scratchpad window minimized as its hidden state, so every scratchpad would otherwise appear here, and restoring one behind yabai's back desynchronises its bookkeeping. Use `yabai -m window --toggle <label>` for those.",
         "stripped_doc" : [
           "Whether yabai scratchpad windows are offered. Defaults to `false`.",
-          ""
+          "",
+          "yabai keeps a scratchpad window minimized as its hidden state, so every scratchpad would otherwise appear here, and restoring one behind yabai's back desynchronises its bookkeeping. Use `yabai -m window --toggle <label>` for those."
         ],
-        "name" : "includeScratchpad",
+        "desc" : "Whether yabai scratchpad windows are offered. Defaults to `false`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * yabai keeps a scratchpad window minimized as its hidden state, so every scratchpad on the machine would otherwise appear in this list. Restoring one behind yabai's back also desynchronises its own bookkeeping -- use `yabai -m window --toggle <label>` for those."
+
         ],
         "signature" : "DeminimizeWindow.includeScratchpad",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether yabai scratchpad windows are offered. Defaults to `false`.",
+        "name" : "includeScratchpad",
         "def" : "DeminimizeWindow.includeScratchpad"
       },
       {
-        "doc" : "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.\n\nNotes:\n * The two sources answer different questions about the same window. yabai is authoritative about Spaces and window state; Accessibility is the only one that hands back a real `hs.window`, which is what the Spoon needs in order to unminimize without yabai at all.\n * Turning this off is a diagnostic aid: it makes `DeminimizeWindow:diagnose()` show what yabai alone can do.",
+        "doc" : "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.\n\nThe two sources answer different questions: yabai is authoritative about Spaces and window state, while Accessibility is the only one that hands back a real `hs.window`, which is what unminimizing without yabai needs.\nTurning this off makes `DeminimizeWindow:diagnose()` show what yabai alone can do.",
         "stripped_doc" : [
           "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.",
-          ""
+          "",
+          "The two sources answer different questions: yabai is authoritative about Spaces and window state, while Accessibility is the only one that hands back a real `hs.window`, which is what unminimizing without yabai needs.",
+          "Turning this off makes `DeminimizeWindow:diagnose()` show what yabai alone can do."
         ],
-        "name" : "useAccessibilitySweep",
+        "desc" : "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * The two sources answer different questions about the same window. yabai is authoritative about Spaces and window state; Accessibility is the only one that hands back a real `hs.window`, which is what the Spoon needs in order to unminimize without yabai at all.",
-          " * Turning this off is a diagnostic aid: it makes `DeminimizeWindow:diagnose()` show what yabai alone can do."
+
         ],
         "signature" : "DeminimizeWindow.useAccessibilitySweep",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.",
+        "name" : "useAccessibilitySweep",
         "def" : "DeminimizeWindow.useAccessibilitySweep"
       },
       {
-        "doc" : "Whether a menubar item listing minimized windows is created. Defaults to `false`.\n\nNotes:\n * Off by default: the hotkey is the whole point, and two sibling Spoons already occupy the menu bar. Changing this takes effect on the next `DeminimizeWindow:start()`.",
+        "doc" : "Whether a menubar item listing minimized windows is created. Defaults to `false`.\n\nOff by default: the hotkey is the point, and two sibling Spoons already occupy the menu bar. Takes effect on the next `DeminimizeWindow:start()`.",
         "stripped_doc" : [
           "Whether a menubar item listing minimized windows is created. Defaults to `false`.",
-          ""
+          "",
+          "Off by default: the hotkey is the point, and two sibling Spoons already occupy the menu bar. Takes effect on the next `DeminimizeWindow:start()`."
         ],
-        "name" : "showInMenubar",
+        "desc" : "Whether a menubar item listing minimized windows is created. Defaults to `false`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Off by default: the hotkey is the whole point, and two sibling Spoons already occupy the menu bar. Changing this takes effect on the next `DeminimizeWindow:start()`."
+
         ],
         "signature" : "DeminimizeWindow.showInMenubar",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether a menubar item listing minimized windows is created. Defaults to `false`.",
+        "name" : "showInMenubar",
         "def" : "DeminimizeWindow.showInMenubar"
       },
       {
@@ -374,7 +388,7 @@
         "stripped_doc" : [
           "Text shown in the menubar when `DeminimizeWindow.showInMenubar` is on. Defaults to `'▣'`."
         ],
-        "name" : "menubarTitle",
+        "desc" : "Text shown in the menubar when `DeminimizeWindow.showInMenubar` is on. Defaults to `'▣'`.",
         "parameters" : [
 
         ],
@@ -386,7 +400,7 @@
         "returns" : [
 
         ],
-        "desc" : "Text shown in the menubar when `DeminimizeWindow.showInMenubar` is on. Defaults to `'▣'`.",
+        "name" : "menubarTitle",
         "def" : "DeminimizeWindow.menubarTitle"
       },
       {
@@ -394,7 +408,7 @@
         "stripped_doc" : [
           "Number of rows visible in the chooser at once. Defaults to `10`."
         ],
-        "name" : "chooserRows",
+        "desc" : "Number of rows visible in the chooser at once. Defaults to `10`.",
         "parameters" : [
 
         ],
@@ -406,7 +420,7 @@
         "returns" : [
 
         ],
-        "desc" : "Number of rows visible in the chooser at once. Defaults to `10`.",
+        "name" : "chooserRows",
         "def" : "DeminimizeWindow.chooserRows"
       },
       {
@@ -414,7 +428,7 @@
         "stripped_doc" : [
           "Chooser width as a percentage of screen width. Defaults to `35`."
         ],
-        "name" : "chooserWidth",
+        "desc" : "Chooser width as a percentage of screen width. Defaults to `35`.",
         "parameters" : [
 
         ],
@@ -426,7 +440,7 @@
         "returns" : [
 
         ],
-        "desc" : "Chooser width as a percentage of screen width. Defaults to `35`.",
+        "name" : "chooserWidth",
         "def" : "DeminimizeWindow.chooserWidth"
       },
       {
@@ -434,7 +448,7 @@
         "stripped_doc" : [
           "Seconds an informational alert stays on screen. Defaults to `1.2`."
         ],
-        "name" : "alertDuration",
+        "desc" : "Seconds an informational alert stays on screen. Defaults to `1.2`.",
         "parameters" : [
 
         ],
@@ -446,160 +460,166 @@
         "returns" : [
 
         ],
-        "desc" : "Seconds an informational alert stays on screen. Defaults to `1.2`.",
+        "name" : "alertDuration",
         "def" : "DeminimizeWindow.alertDuration"
       },
       {
-        "doc" : "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.\n\nNotes:\n * Chooser rows are not truncated. The chooser has a width of its own and elides for itself, and a truncated row would also be a row the search field cannot match against.",
+        "doc" : "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.\n\nChooser rows are not truncated: it elides for itself, and a truncated row is one the search field cannot match against.",
         "stripped_doc" : [
           "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.",
-          ""
+          "",
+          "Chooser rows are not truncated: it elides for itself, and a truncated row is one the search field cannot match against."
         ],
-        "name" : "titleMax",
+        "desc" : "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Chooser rows are not truncated. The chooser has a width of its own and elides for itself, and a truncated row would also be a row the search field cannot match against."
+
         ],
         "signature" : "DeminimizeWindow.titleMax",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.",
+        "name" : "titleMax",
         "def" : "DeminimizeWindow.titleMax"
       }
     ],
     "stripped_doc" : [
 
     ],
-    "desc" : "Brings a minimized window back, onto the Space you are on rather than the one it left.",
     "type" : "Module",
     "Deprecated" : [
 
     ],
+    "desc" : "Brings a minimized window back, onto the Space you are on rather than the one it left.",
     "Constructor" : [
 
     ],
-    "doc" : "Brings a minimized window back, onto the Space you are on rather than the one it left.\n\nMinimizing is a one-way door on macOS. The Dock collapses a window into an anonymous\nthumbnail, `cmd-tab` walks straight past it, and the one gesture that does bring it back\n-- clicking that thumbnail -- restores it to the Space it was minimized *from*, dragging\nyou to a different desktop to go and look at it. A window minimized on Space 3 is, in\npractice, gone until you go there yourself.\n\nThis Spoon binds one hotkey to the obvious behaviour instead. It finds every minimized\nwindow, and if there is exactly one it restores it outright; if there are several it opens\nan `hs.chooser` to pick from; if there are none it says so and gets out of the way. In\nevery case the window arrives on the Space you are already looking at.\n\nThe hard part is not the unminimizing, which is a single Accessibility write. It is the\n*placing*. `hs.spaces.moveWindowToSpace()` has done nothing at all since macOS 15 -- and\nreturns `true` regardless, so it cannot even be caught at it -- which leaves yabai as the\nonly thing on the machine that can move a window between Spaces. yabai in turn exits zero\nfor commands it merely accepted rather than performed, so nothing here is believed on the\nstrength of an exit code. Every step re-queries and checks.\n\nOne rule shapes the whole Spoon: **place first, reveal second, and never reveal a window\nyou could not place.** While a window is still minimized it has no presence on screen, so\nmoving it cannot pull the user anywhere; once it has been verifiably moved to the current\nSpace there is nowhere else for any later step to pull them *to*. Revealing first inverts\nthat -- `yabai --deminimize` focuses the window when its application already has focus,\nand focusing a window on another Space is exactly the yank this Spoon exists to avoid --\nand it fails worse, leaving the window visible somewhere the user cannot see. Placing\nfirst fails harmlessly: the window stays in the Dock and nothing has moved.\n\nA ladder of five strategies sits behind that rule, tried in turn and each verified before\nthe next is considered, so a machine without yabai still restores windows and merely\nstops promising to place them. `DeminimizeWindow:diagnose()` prints what every source can\nsee when the list is not what you expected.",
+    "doc" : "Brings a minimized window back, onto the Space you are on rather than the one it left.\n\nClicking a Dock thumbnail restores a window to the Space it was minimized *from*, dragging\nyou to another desktop to go and look at it. This Spoon binds one hotkey to the obvious\nbehaviour instead: with one minimized window it restores it outright, with several it\nopens an `hs.chooser`, with none it says so -- and the window arrives on the Space you are\nalready looking at.\n\nThe hard part is the *placing*, not the unminimizing. `hs.spaces.moveWindowToSpace()` has\ndone nothing since macOS 15 and returns `true` regardless, leaving yabai as the only thing\nthat can move a window between Spaces -- and yabai exits zero for commands it merely\naccepted, so nothing here is believed on the strength of an exit code.\n\nOne rule shapes the Spoon: **place first, reveal second, and never reveal a window you\ncould not place.** A minimized window has no presence on screen, so moving it cannot pull\nthe user anywhere, and once it is verifiably here there is nowhere else to pull them to.\nRevealing first inverts that and fails worse, leaving the window visible somewhere the\nuser cannot see. A ladder of five strategies sits behind the rule, each verified before\nthe next is tried; `DeminimizeWindow:diagnose()` prints what every source can see.",
     "Method" : [
       {
-        "doc" : "Kills any yabai commands in flight and abandons whatever they were part of.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Called from `DeminimizeWindow:stop()`. Each job is marked settled *before* its process is signalled, which is the whole point: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the ladder on into a `--focus`.",
+        "doc" : "Kills any yabai commands in flight and abandons whatever they were part of.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nCalled from `DeminimizeWindow:stop()`. Each job is marked settled *before* its process is signalled: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the ladder on into a `--focus`.",
         "stripped_doc" : [
           "Kills any yabai commands in flight and abandons whatever they were part of.",
           ""
         ],
-        "name" : "abortYabai",
+        "desc" : "Kills any yabai commands in flight and abandons whatever they were part of.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Called from `DeminimizeWindow:stop()`. Each job is marked settled *before* its process is signalled, which is the whole point: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the ladder on into a `--focus`."
+
         ],
         "signature" : "DeminimizeWindow:abortYabai() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Called from `DeminimizeWindow:stop()`. Each job is marked settled *before* its process is signalled: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the ladder on into a `--focus`."
         ],
-        "desc" : "Kills any yabai commands in flight and abandons whatever they were part of.",
+        "name" : "abortYabai",
         "def" : "DeminimizeWindow:abortYabai() -> self"
       },
       {
-        "doc" : "Builds the list of restorable windows and hands it to a callback.\n\nParameters:\n * done - A function called as `done(items, space, err)`. `items` is a sorted list of tables with `winId`, `appName`, `title` and `minimized` keys; `space` describes the Space they would be restored to; both are nil when `err` is set\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Unions two sources by window id, which is the same `CGWindowID` in both, so the join needs no guessing. yabai is authoritative about window state and Spaces; Accessibility contributes the `hs.window` that the yabai-free rungs of the ladder need.\n * Either source alone yields a usable entry. A window only yabai can see is restorable by yabai only; a window only Accessibility can see is restorable but cannot be placed with confidence.",
+        "doc" : "Builds the list of restorable windows and hands it to a callback.\n\nParameters:\n * done - A function called as `done(items, space, err)`. `items` is a sorted list of tables with `winId`, `appName`, `title` and `minimized` keys; `space` describes the Space they would be restored to; both are nil when `err` is set\n\nReturns:\n * The DeminimizeWindow object\n\nUnions two sources by window id, the same `CGWindowID` in both, so the join needs no guessing. yabai is authoritative about window state and Spaces; Accessibility contributes the `hs.window` the yabai-free rungs need.\nEither source alone yields a usable entry: a window only yabai can see is restorable by yabai only, and one only Accessibility can see cannot be placed with confidence.",
         "stripped_doc" : [
           "Builds the list of restorable windows and hands it to a callback.",
           ""
         ],
-        "name" : "collect",
+        "desc" : "Builds the list of restorable windows and hands it to a callback.",
         "parameters" : [
           " * done - A function called as `done(items, space, err)`. `items` is a sorted list of tables with `winId`, `appName`, `title` and `minimized` keys; `space` describes the Space they would be restored to; both are nil when `err` is set",
           ""
         ],
         "notes" : [
-          " * Unions two sources by window id, which is the same `CGWindowID` in both, so the join needs no guessing. yabai is authoritative about window state and Spaces; Accessibility contributes the `hs.window` that the yabai-free rungs of the ladder need.",
-          " * Either source alone yields a usable entry. A window only yabai can see is restorable by yabai only; a window only Accessibility can see is restorable but cannot be placed with confidence."
+
         ],
         "signature" : "DeminimizeWindow:collect(done) -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Unions two sources by window id, the same `CGWindowID` in both, so the join needs no guessing. yabai is authoritative about window state and Spaces; Accessibility contributes the `hs.window` the yabai-free rungs need.",
+          "Either source alone yields a usable entry: a window only yabai can see is restorable by yabai only, and one only Accessibility can see cannot be placed with confidence."
         ],
-        "desc" : "Builds the list of restorable windows and hands it to a callback.",
+        "name" : "collect",
         "def" : "DeminimizeWindow:collect(done) -> self"
       },
       {
-        "doc" : "Restores one minimized window by its window id, onto the current Space.\n\nParameters:\n * winId - The window id, as returned in the `winId` field of `DeminimizeWindow:collect()`\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * The id must have come from a `DeminimizeWindow:collect()` pass, since everything else known about the window is looked up in the map that call builds.\n * The target Space and the window's state are both re-read here rather than taken from when the list was built, because a chooser can sit open across a Space change for as long as the user likes.",
+        "doc" : "Restores one minimized window by its window id, onto the current Space.\n\nParameters:\n * winId - The window id, as returned in the `winId` field of `DeminimizeWindow:collect()`\n\nReturns:\n * The DeminimizeWindow object\n\nThe id must have come from a `DeminimizeWindow:collect()` pass, since everything else known about the window is looked up in the map that call builds.\nThe target Space and the window's state are re-read here rather than taken from the list, because a chooser can sit open across a Space change.",
         "stripped_doc" : [
           "Restores one minimized window by its window id, onto the current Space.",
           ""
         ],
-        "name" : "restoreById",
+        "desc" : "Restores one minimized window by its window id, onto the current Space.",
         "parameters" : [
           " * winId - The window id, as returned in the `winId` field of `DeminimizeWindow:collect()`",
           ""
         ],
         "notes" : [
-          " * The id must have come from a `DeminimizeWindow:collect()` pass, since everything else known about the window is looked up in the map that call builds.",
-          " * The target Space and the window's state are both re-read here rather than taken from when the list was built, because a chooser can sit open across a Space change for as long as the user likes."
+
         ],
         "signature" : "DeminimizeWindow:restoreById(winId) -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "The id must have come from a `DeminimizeWindow:collect()` pass, since everything else known about the window is looked up in the map that call builds.",
+          "The target Space and the window's state are re-read here rather than taken from the list, because a chooser can sit open across a Space change."
         ],
-        "desc" : "Restores one minimized window by its window id, onto the current Space.",
+        "name" : "restoreById",
         "def" : "DeminimizeWindow:restoreById(winId) -> self"
       },
       {
-        "doc" : "Restores a minimized window, asking which one only when there is a choice.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * With no minimized windows this shows a brief alert; with exactly one it restores it outright; with more it opens the chooser. See `DeminimizeWindow.skipChooserForSingle`.\n * This is the method `DeminimizeWindow:bindHotkeys()` binds. Pressing the hotkey while the chooser is open closes it again.",
+        "doc" : "Restores a minimized window, asking which one only when there is a choice.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nWith no minimized windows this shows a brief alert, with exactly one it restores it outright, with more it opens the chooser. See `DeminimizeWindow.skipChooserForSingle`.\nThis is the method `DeminimizeWindow:bindHotkeys()` binds; pressing the hotkey while the chooser is open closes it again.",
         "stripped_doc" : [
           "Restores a minimized window, asking which one only when there is a choice.",
           ""
         ],
-        "name" : "restore",
+        "desc" : "Restores a minimized window, asking which one only when there is a choice.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * With no minimized windows this shows a brief alert; with exactly one it restores it outright; with more it opens the chooser. See `DeminimizeWindow.skipChooserForSingle`.",
-          " * This is the method `DeminimizeWindow:bindHotkeys()` binds. Pressing the hotkey while the chooser is open closes it again."
+
         ],
         "signature" : "DeminimizeWindow:restore() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "With no minimized windows this shows a brief alert, with exactly one it restores it outright, with more it opens the chooser. See `DeminimizeWindow.skipChooserForSingle`.",
+          "This is the method `DeminimizeWindow:bindHotkeys()` binds; pressing the hotkey while the chooser is open closes it again."
         ],
-        "desc" : "Restores a minimized window, asking which one only when there is a choice.",
+        "name" : "restore",
         "def" : "DeminimizeWindow:restore() -> self"
       },
       {
-        "doc" : "Opens the chooser, whatever the number of minimized windows.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Unlike `DeminimizeWindow:restore()` this never restores anything by itself, so it is the method to bind if you would always rather see the list first.",
+        "doc" : "Opens the chooser, whatever the number of minimized windows.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nUnlike `DeminimizeWindow:restore()` this never restores anything by itself, so it is the method to bind if you would always rather see the list first.",
         "stripped_doc" : [
           "Opens the chooser, whatever the number of minimized windows.",
           ""
         ],
-        "name" : "show",
+        "desc" : "Opens the chooser, whatever the number of minimized windows.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Unlike `DeminimizeWindow:restore()` this never restores anything by itself, so it is the method to bind if you would always rather see the list first."
+
         ],
         "signature" : "DeminimizeWindow:show() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Unlike `DeminimizeWindow:restore()` this never restores anything by itself, so it is the method to bind if you would always rather see the list first."
         ],
-        "desc" : "Opens the chooser, whatever the number of minimized windows.",
+        "name" : "show",
         "def" : "DeminimizeWindow:show() -> self"
       },
       {
@@ -608,7 +628,7 @@
           "Closes the chooser if it is open.",
           ""
         ],
-        "name" : "hide",
+        "desc" : "Closes the chooser if it is open.",
         "parameters" : [
           " * None",
           ""
@@ -621,88 +641,91 @@
         "returns" : [
           " * The DeminimizeWindow object"
         ],
-        "desc" : "Closes the chooser if it is open.",
+        "name" : "hide",
         "def" : "DeminimizeWindow:hide() -> self"
       },
       {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Deliberately starts nothing. The chooser and the menubar item both belong to `DeminimizeWindow:start()`.\n * It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser that is already live.",
+        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nDeliberately starts nothing. The chooser and the menubar item both belong to `DeminimizeWindow:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing state here would strand a live chooser.",
         "stripped_doc" : [
           "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
           ""
         ],
-        "name" : "init",
+        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Deliberately starts nothing. The chooser and the menubar item both belong to `DeminimizeWindow:start()`.",
-          " * It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser that is already live."
+
         ],
         "signature" : "DeminimizeWindow:init() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Deliberately starts nothing. The chooser and the menubar item both belong to `DeminimizeWindow:start()`.",
+          "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing state here would strand a live chooser."
         ],
-        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "name" : "init",
         "def" : "DeminimizeWindow:init() -> self"
       },
       {
-        "doc" : "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Calling this on an already-started Spoon restarts it cleanly.\n * Nothing polls and no timer runs while idle. The window list is built on demand, when the hotkey is pressed or the menu is pulled down.\n * Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
+        "doc" : "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nCalling this on an already-started Spoon restarts it cleanly.\nNothing polls and no timer runs while idle. The window list is built on demand, when the hotkey is pressed or the menu is pulled down.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
         "stripped_doc" : [
           "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.",
           ""
         ],
-        "name" : "start",
+        "desc" : "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Calling this on an already-started Spoon restarts it cleanly.",
-          " * Nothing polls and no timer runs while idle. The window list is built on demand, when the hotkey is pressed or the menu is pulled down.",
-          " * Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
+
         ],
         "signature" : "DeminimizeWindow:start() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Calling this on an already-started Spoon restarts it cleanly.",
+          "Nothing polls and no timer runs while idle. The window list is built on demand, when the hotkey is pressed or the menu is pulled down.",
+          "Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
         ],
-        "desc" : "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.",
+        "name" : "start",
         "def" : "DeminimizeWindow:start() -> self"
       },
       {
-        "doc" : "Abandons any restore in flight, destroys the chooser and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Any hotkeys bound with `DeminimizeWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "doc" : "Abandons any restore in flight, destroys the chooser and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nAny hotkeys bound with `DeminimizeWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
         "stripped_doc" : [
           "Abandons any restore in flight, destroys the chooser and removes the menubar item.",
           ""
         ],
-        "name" : "stop",
+        "desc" : "Abandons any restore in flight, destroys the chooser and removes the menubar item.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Any hotkeys bound with `DeminimizeWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
+
         ],
         "signature" : "DeminimizeWindow:stop() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Any hotkeys bound with `DeminimizeWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
-        "desc" : "Abandons any restore in flight, destroys the chooser and removes the menubar item.",
+        "name" : "stop",
         "def" : "DeminimizeWindow:stop() -> self"
       },
       {
-        "doc" : "Binds hotkeys for DeminimizeWindow.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * restore - Restore a minimized window, showing the chooser only when there is a choice\n   * show - Always show the chooser, whatever the number of minimized windows\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * For example: `spoon.DeminimizeWindow:bindHotkeys({ restore = { { \"cmd\", \"alt\", \"ctrl\" }, \"M\" } })`",
+        "doc" : "Binds hotkeys for DeminimizeWindow.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * restore - Restore a minimized window, showing the chooser only when there is a choice\n   * show - Always show the chooser, whatever the number of minimized windows\n\nReturns:\n * The DeminimizeWindow object\n\nFor example: `spoon.DeminimizeWindow:bindHotkeys({ restore = { { \"cmd\", \"alt\", \"ctrl\" }, \"M\" } })`",
         "stripped_doc" : [
           "Binds hotkeys for DeminimizeWindow.",
           ""
         ],
-        "name" : "bindHotkeys",
+        "desc" : "Binds hotkeys for DeminimizeWindow.",
         "parameters" : [
           " * mapping - A table containing hotkey modifier\/key details for the following items:",
           "   * restore - Restore a minimized window, showing the chooser only when there is a choice",
@@ -710,70 +733,70 @@
           ""
         ],
         "notes" : [
-          " * For example: `spoon.DeminimizeWindow:bindHotkeys({ restore = { { \"cmd\", \"alt\", \"ctrl\" }, \"M\" } })`"
+
         ],
         "signature" : "DeminimizeWindow:bindHotkeys(mapping) -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "For example: `spoon.DeminimizeWindow:bindHotkeys({ restore = { { \"cmd\", \"alt\", \"ctrl\" }, \"M\" } })`"
         ],
-        "desc" : "Binds hotkeys for DeminimizeWindow.",
+        "name" : "bindHotkeys",
         "def" : "DeminimizeWindow:bindHotkeys(mapping) -> self"
       },
       {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `chooserVisible`, `restoring`, `yabai`, `yabaiBusy`, `yabaiLastError`, `listed` and `timers` keys\n\nNotes:\n * `yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `DeminimizeWindow:diagnose()` answers that.\n * `listed` counts the windows in the most recent list, which may be stale; the list is never reused across a press.",
+        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `chooserVisible`, `restoring`, `yabai`, `yabaiBusy`, `yabaiLastError`, `listed` and `timers` keys\n\n`yabai` is the resolved binary path, or `false` when yabai is off or not installed. It says nothing about whether the yabai *service* is running; only `DeminimizeWindow:diagnose()` answers that.\n`listed` counts the windows in the most recent list, which may be stale; the list is never reused across a press.",
         "stripped_doc" : [
           "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
           ""
         ],
-        "name" : "status",
+        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * `yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `DeminimizeWindow:diagnose()` answers that.",
-          " * `listed` counts the windows in the most recent list, which may be stale; the list is never reused across a press."
+
         ],
         "signature" : "DeminimizeWindow:status() -> table",
         "type" : "Method",
         "returns" : [
           " * A table with `running`, `menubar`, `chooserVisible`, `restoring`, `yabai`, `yabaiBusy`, `yabaiLastError`, `listed` and `timers` keys",
-          ""
+          "",
+          "`yabai` is the resolved binary path, or `false` when yabai is off or not installed. It says nothing about whether the yabai *service* is running; only `DeminimizeWindow:diagnose()` answers that.",
+          "`listed` counts the windows in the most recent list, which may be stale; the list is never reused across a press."
         ],
-        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "name" : "status",
         "def" : "DeminimizeWindow:status() -> table"
       },
       {
-        "doc" : "Prints what each source can see, and why a window is or is not being offered.\n\nParameters:\n * done - An optional function called with the report text once it has been gathered\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Asynchronous, because it asks yabai. The report is printed to the Hammerspoon Console when it arrives, so calling this bare from the Console is the normal way to use it.\n * The decisive line is the per-window one. A row tagged only `yabai` has no `hs.window` behind it, so the Accessibility rungs of the ladder do not apply to it; a row tagged only `ax` cannot be placed on a Space with any confidence.",
+        "doc" : "Prints what each source can see, and why a window is or is not being offered.\n\nParameters:\n * done - An optional function called with the report text once it has been gathered\n\nReturns:\n * The DeminimizeWindow object\n\nAsynchronous, because it asks yabai. The report is printed to the Console when it arrives, so calling this bare from the Console is the normal way to use it.\nThe decisive line is the per-window one: a row tagged only `yabai` has no `hs.window`, so the Accessibility rungs do not apply to it, and a row tagged only `ax` cannot be placed with confidence.",
         "stripped_doc" : [
           "Prints what each source can see, and why a window is or is not being offered.",
           ""
         ],
-        "name" : "diagnose",
+        "desc" : "Prints what each source can see, and why a window is or is not being offered.",
         "parameters" : [
           " * done - An optional function called with the report text once it has been gathered",
           ""
         ],
         "notes" : [
-          " * Asynchronous, because it asks yabai. The report is printed to the Hammerspoon Console when it arrives, so calling this bare from the Console is the normal way to use it.",
-          " * The decisive line is the per-window one. A row tagged only `yabai` has no `hs.window` behind it, so the Accessibility rungs of the ladder do not apply to it; a row tagged only `ax` cannot be placed on a Space with any confidence."
+
         ],
         "signature" : "DeminimizeWindow:diagnose([done]) -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Asynchronous, because it asks yabai. The report is printed to the Console when it arrives, so calling this bare from the Console is the normal way to use it.",
+          "The decisive line is the per-window one: a row tagged only `yabai` has no `hs.window`, so the Accessibility rungs do not apply to it, and a row tagged only `ax` cannot be placed with confidence."
         ],
-        "desc" : "Prints what each source can see, and why a window is or is not being offered.",
+        "name" : "diagnose",
         "def" : "DeminimizeWindow:diagnose([done]) -> self"
       }
     ],
     "Command" : [
-
-    ],
-    "Field" : [
 
     ],
     "items" : [
@@ -782,7 +805,7 @@
         "stripped_doc" : [
           "Seconds an informational alert stays on screen. Defaults to `1.2`."
         ],
-        "name" : "alertDuration",
+        "desc" : "Seconds an informational alert stays on screen. Defaults to `1.2`.",
         "parameters" : [
 
         ],
@@ -794,29 +817,30 @@
         "returns" : [
 
         ],
-        "desc" : "Seconds an informational alert stays on screen. Defaults to `1.2`.",
+        "name" : "alertDuration",
         "def" : "DeminimizeWindow.alertDuration"
       },
       {
-        "doc" : "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.\n\nNotes:\n * These are the only rungs that can pull you to another Space, and they run only once placing has already failed -- at which point the choice is between that risk and not restoring the window at all.\n * Set to `false` for a Spoon that is structurally incapable of moving you, and that occasionally does nothing instead.",
+        "doc" : "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.\n\nThe only rungs that can pull you to another Space, and they run only once placing has failed, when the choice is between that risk and not restoring the window at all.\nSet to `false` for a Spoon that is structurally incapable of moving you, and that occasionally does nothing instead.",
         "stripped_doc" : [
           "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.",
-          ""
+          "",
+          "The only rungs that can pull you to another Space, and they run only once placing has failed, when the choice is between that risk and not restoring the window at all.",
+          "Set to `false` for a Spoon that is structurally incapable of moving you, and that occasionally does nothing instead."
         ],
-        "name" : "allowRevealFirst",
+        "desc" : "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * These are the only rungs that can pull you to another Space, and they run only once placing has already failed -- at which point the choice is between that risk and not restoring the window at all.",
-          " * Set to `false` for a Spoon that is structurally incapable of moving you, and that occasionally does nothing instead."
+
         ],
         "signature" : "DeminimizeWindow.allowRevealFirst",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether the reveal-first rungs of the ladder may run after placing has failed. Defaults to `true`.",
+        "name" : "allowRevealFirst",
         "def" : "DeminimizeWindow.allowRevealFirst"
       },
       {
@@ -824,7 +848,7 @@
         "stripped_doc" : [
           "Number of rows visible in the chooser at once. Defaults to `10`."
         ],
-        "name" : "chooserRows",
+        "desc" : "Number of rows visible in the chooser at once. Defaults to `10`.",
         "parameters" : [
 
         ],
@@ -836,7 +860,7 @@
         "returns" : [
 
         ],
-        "desc" : "Number of rows visible in the chooser at once. Defaults to `10`.",
+        "name" : "chooserRows",
         "def" : "DeminimizeWindow.chooserRows"
       },
       {
@@ -844,7 +868,7 @@
         "stripped_doc" : [
           "Chooser width as a percentage of screen width. Defaults to `35`."
         ],
-        "name" : "chooserWidth",
+        "desc" : "Chooser width as a percentage of screen width. Defaults to `35`.",
         "parameters" : [
 
         ],
@@ -856,93 +880,97 @@
         "returns" : [
 
         ],
-        "desc" : "Chooser width as a percentage of screen width. Defaults to `35`.",
+        "name" : "chooserWidth",
         "def" : "DeminimizeWindow.chooserWidth"
       },
       {
-        "doc" : "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.\n\nNotes:\n * Reached only from success. Focusing a window that never moved is precisely what drags the user to its Space, so no failure path in this Spoon can arrive here.\n * `yabai --deminimize` deliberately does not focus, so this is always an explicit extra step rather than something that happens by itself.",
+        "doc" : "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.\n\nReached only from success: focusing a window that never moved is what drags the user to its Space, so no failure path arrives here.\n`yabai --deminimize` does not focus, so this is always an explicit extra step.",
         "stripped_doc" : [
           "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.",
-          ""
+          "",
+          "Reached only from success: focusing a window that never moved is what drags the user to its Space, so no failure path arrives here.",
+          "`yabai --deminimize` does not focus, so this is always an explicit extra step."
         ],
-        "name" : "focusAfterRestore",
+        "desc" : "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Reached only from success. Focusing a window that never moved is precisely what drags the user to its Space, so no failure path in this Spoon can arrive here.",
-          " * `yabai --deminimize` deliberately does not focus, so this is always an explicit extra step rather than something that happens by itself."
+
         ],
         "signature" : "DeminimizeWindow.focusAfterRestore",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether the restored window is focused and raised once it has arrived. Defaults to `true`.",
+        "name" : "focusAfterRestore",
         "def" : "DeminimizeWindow.focusAfterRestore"
       },
       {
-        "doc" : "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.\n\nNotes:\n * Hiding an application and minimizing a window are different states: a hidden application's windows report `is-hidden` and *not* `is-minimized`, and never appear in `hs.window.minimizedWindows()`. Unminimizing does nothing for them; they need `hs.application:unhide()`.\n * Off by default because they are not minimized and listing them would surprise. This is the answer to \"why is the window I pressed cmd-H on not in the list\".",
+        "doc" : "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.\n\nHiding an application and minimizing a window are different states: a hidden application's windows report `is-hidden` and not `is-minimized`, never appear in `hs.window.minimizedWindows()`, and need `hs.application:unhide()` rather than unminimizing.\nOff by default, which is the answer to \"why is the window I pressed cmd-H on not in the list\".",
         "stripped_doc" : [
           "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.",
-          ""
+          "",
+          "Hiding an application and minimizing a window are different states: a hidden application's windows report `is-hidden` and not `is-minimized`, never appear in `hs.window.minimizedWindows()`, and need `hs.application:unhide()` rather than unminimizing.",
+          "Off by default, which is the answer to \"why is the window I pressed cmd-H on not in the list\"."
         ],
-        "name" : "includeHidden",
+        "desc" : "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Hiding an application and minimizing a window are different states: a hidden application's windows report `is-hidden` and *not* `is-minimized`, and never appear in `hs.window.minimizedWindows()`. Unminimizing does nothing for them; they need `hs.application:unhide()`.",
-          " * Off by default because they are not minimized and listing them would surprise. This is the answer to \"why is the window I pressed cmd-H on not in the list\"."
+
         ],
         "signature" : "DeminimizeWindow.includeHidden",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether windows of hidden applications (`cmd-H`) are offered alongside minimized ones. Defaults to `false`.",
+        "name" : "includeHidden",
         "def" : "DeminimizeWindow.includeHidden"
       },
       {
-        "doc" : "Whether yabai scratchpad windows are offered. Defaults to `false`.\n\nNotes:\n * yabai keeps a scratchpad window minimized as its hidden state, so every scratchpad on the machine would otherwise appear in this list. Restoring one behind yabai's back also desynchronises its own bookkeeping -- use `yabai -m window --toggle <label>` for those.",
+        "doc" : "Whether yabai scratchpad windows are offered. Defaults to `false`.\n\nyabai keeps a scratchpad window minimized as its hidden state, so every scratchpad would otherwise appear here, and restoring one behind yabai's back desynchronises its bookkeeping. Use `yabai -m window --toggle <label>` for those.",
         "stripped_doc" : [
           "Whether yabai scratchpad windows are offered. Defaults to `false`.",
-          ""
+          "",
+          "yabai keeps a scratchpad window minimized as its hidden state, so every scratchpad would otherwise appear here, and restoring one behind yabai's back desynchronises its bookkeeping. Use `yabai -m window --toggle <label>` for those."
         ],
-        "name" : "includeScratchpad",
+        "desc" : "Whether yabai scratchpad windows are offered. Defaults to `false`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * yabai keeps a scratchpad window minimized as its hidden state, so every scratchpad on the machine would otherwise appear in this list. Restoring one behind yabai's back also desynchronises its own bookkeeping -- use `yabai -m window --toggle <label>` for those."
+
         ],
         "signature" : "DeminimizeWindow.includeScratchpad",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether yabai scratchpad windows are offered. Defaults to `false`.",
+        "name" : "includeScratchpad",
         "def" : "DeminimizeWindow.includeScratchpad"
       },
       {
-        "doc" : "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.\n\nNotes:\n * A backstop for the busy flag rather than a timeout anybody should reach. Without it, a restore stranded by an application that never answers would leave the hotkey permanently deaf -- the worst possible failure in a Spoon whose entire interface is one key.",
+        "doc" : "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.\n\nA backstop for the busy flag rather than a timeout anybody should reach: without it, a restore stranded by an application that never answers would leave the hotkey permanently deaf.",
         "stripped_doc" : [
           "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.",
-          ""
+          "",
+          "A backstop for the busy flag rather than a timeout anybody should reach: without it, a restore stranded by an application that never answers would leave the hotkey permanently deaf."
         ],
-        "name" : "ladderDeadline",
+        "desc" : "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * A backstop for the busy flag rather than a timeout anybody should reach. Without it, a restore stranded by an application that never answers would leave the hotkey permanently deaf -- the worst possible failure in a Spoon whose entire interface is one key."
+
         ],
         "signature" : "DeminimizeWindow.ladderDeadline",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Seconds after which a restore still in flight is abandoned outright. Defaults to `8`.",
+        "name" : "ladderDeadline",
         "def" : "DeminimizeWindow.ladderDeadline"
       },
       {
@@ -950,7 +978,7 @@
         "stripped_doc" : [
           "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
         ],
-        "name" : "logger",
+        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
         "parameters" : [
 
         ],
@@ -962,7 +990,7 @@
         "returns" : [
 
         ],
-        "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name" : "logger",
         "def" : "DeminimizeWindow.logger"
       },
       {
@@ -970,7 +998,7 @@
         "stripped_doc" : [
           "Text shown in the menubar when `DeminimizeWindow.showInMenubar` is on. Defaults to `'▣'`."
         ],
-        "name" : "menubarTitle",
+        "desc" : "Text shown in the menubar when `DeminimizeWindow.showInMenubar` is on. Defaults to `'▣'`.",
         "parameters" : [
 
         ],
@@ -982,133 +1010,139 @@
         "returns" : [
 
         ],
-        "desc" : "Text shown in the menubar when `DeminimizeWindow.showInMenubar` is on. Defaults to `'▣'`.",
+        "name" : "menubarTitle",
         "def" : "DeminimizeWindow.menubarTitle"
       },
       {
-        "doc" : "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.\n\nNotes:\n * This is a confirmation window, not a delay. A move that worked is usually visible on the first poll.",
+        "doc" : "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.\n\nThis is a confirmation window, not a delay. A move that worked is usually visible on the first poll.",
         "stripped_doc" : [
           "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.",
-          ""
+          "",
+          "This is a confirmation window, not a delay. A move that worked is usually visible on the first poll."
         ],
-        "name" : "placeTimeout",
+        "desc" : "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * This is a confirmation window, not a delay. A move that worked is usually visible on the first poll."
+
         ],
         "signature" : "DeminimizeWindow.placeTimeout",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Seconds spent confirming that a window really did land on the current Space. Defaults to `0.6`.",
+        "name" : "placeTimeout",
         "def" : "DeminimizeWindow.placeTimeout"
       },
       {
-        "doc" : "Seconds between checks while confirming a step. Defaults to `0.12`.\n\nNotes:\n * Each yabai poll is a subprocess, which is what sets this floor. Checks that can be answered from an `hs.window` run at a quarter of this interval, since they cost nothing but a function call.",
+        "doc" : "Seconds between checks while confirming a step. Defaults to `0.12`.\n\nEach yabai poll is a subprocess, which is what sets this floor. Checks that can be answered from an `hs.window` run at a quarter of this interval, since they cost nothing but a function call.",
         "stripped_doc" : [
           "Seconds between checks while confirming a step. Defaults to `0.12`.",
-          ""
+          "",
+          "Each yabai poll is a subprocess, which is what sets this floor. Checks that can be answered from an `hs.window` run at a quarter of this interval, since they cost nothing but a function call."
         ],
-        "name" : "pollInterval",
+        "desc" : "Seconds between checks while confirming a step. Defaults to `0.12`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Each yabai poll is a subprocess, which is what sets this floor. Checks that can be answered from an `hs.window` run at a quarter of this interval, since they cost nothing but a function call."
+
         ],
         "signature" : "DeminimizeWindow.pollInterval",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Seconds between checks while confirming a step. Defaults to `0.12`.",
+        "name" : "pollInterval",
         "def" : "DeminimizeWindow.pollInterval"
       },
       {
-        "doc" : "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.\n\nNotes:\n * The window server will not accept a window into a native fullscreen Space, so every row of the chooser would fail on click. Refusing up front is the honest version of that.",
+        "doc" : "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.\n\nThe window server will not accept a window into a native fullscreen Space, so every row of the chooser would fail on click. Refusing up front is the honest version of that.",
         "stripped_doc" : [
           "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.",
-          ""
+          "",
+          "The window server will not accept a window into a native fullscreen Space, so every row of the chooser would fail on click. Refusing up front is the honest version of that."
         ],
-        "name" : "refuseFullscreenSpace",
+        "desc" : "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * The window server will not accept a window into a native fullscreen Space, so every row of the chooser would fail on click. Refusing up front is the honest version of that."
+
         ],
         "signature" : "DeminimizeWindow.refuseFullscreenSpace",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether to refuse to restore anything while the current Space is fullscreen. Defaults to `true`.",
+        "name" : "refuseFullscreenSpace",
         "def" : "DeminimizeWindow.refuseFullscreenSpace"
       },
       {
-        "doc" : "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.\n\nNotes:\n * Applies only after a fully successful restore, where the window is here and being moved was therefore gratuitous. A partial success is left alone: you may well be looking at your window.",
+        "doc" : "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.\n\nApplies only after a fully successful restore, where the window is here and being moved was therefore gratuitous. A partial success is left alone: you may well be looking at your window.",
         "stripped_doc" : [
           "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.",
-          ""
+          "",
+          "Applies only after a fully successful restore, where the window is here and being moved was therefore gratuitous. A partial success is left alone: you may well be looking at your window."
         ],
-        "name" : "returnAfterSpaceChange",
+        "desc" : "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Applies only after a fully successful restore, where the window is here and being moved was therefore gratuitous. A partial success is left alone: you may well be looking at your window."
+
         ],
         "signature" : "DeminimizeWindow.returnAfterSpaceChange",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether to send you back if restoring a window changed the Space out from under you. Defaults to `true`.",
+        "name" : "returnAfterSpaceChange",
         "def" : "DeminimizeWindow.returnAfterSpaceChange"
       },
       {
-        "doc" : "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.\n\nNotes:\n * Longer than `DeminimizeWindow.placeTimeout` because the un-minimize animation alone runs about half a second, and a busy application can be slow to honour the Accessibility write behind it.",
+        "doc" : "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.\n\nLonger than `DeminimizeWindow.placeTimeout`: the un-minimize animation alone runs about half a second.",
         "stripped_doc" : [
           "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.",
-          ""
+          "",
+          "Longer than `DeminimizeWindow.placeTimeout`: the un-minimize animation alone runs about half a second."
         ],
-        "name" : "revealTimeout",
+        "desc" : "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Longer than `DeminimizeWindow.placeTimeout` because the un-minimize animation alone runs about half a second, and a busy application can be slow to honour the Accessibility write behind it."
+
         ],
         "signature" : "DeminimizeWindow.revealTimeout",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Seconds spent confirming that a window really did come out of the Dock. Defaults to `1.0`.",
+        "name" : "revealTimeout",
         "def" : "DeminimizeWindow.revealTimeout"
       },
       {
-        "doc" : "Whether a menubar item listing minimized windows is created. Defaults to `false`.\n\nNotes:\n * Off by default: the hotkey is the whole point, and two sibling Spoons already occupy the menu bar. Changing this takes effect on the next `DeminimizeWindow:start()`.",
+        "doc" : "Whether a menubar item listing minimized windows is created. Defaults to `false`.\n\nOff by default: the hotkey is the point, and two sibling Spoons already occupy the menu bar. Takes effect on the next `DeminimizeWindow:start()`.",
         "stripped_doc" : [
           "Whether a menubar item listing minimized windows is created. Defaults to `false`.",
-          ""
+          "",
+          "Off by default: the hotkey is the point, and two sibling Spoons already occupy the menu bar. Takes effect on the next `DeminimizeWindow:start()`."
         ],
-        "name" : "showInMenubar",
+        "desc" : "Whether a menubar item listing minimized windows is created. Defaults to `false`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Off by default: the hotkey is the whole point, and two sibling Spoons already occupy the menu bar. Changing this takes effect on the next `DeminimizeWindow:start()`."
+
         ],
         "signature" : "DeminimizeWindow.showInMenubar",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether a menubar item listing minimized windows is created. Defaults to `false`.",
+        "name" : "showInMenubar",
         "def" : "DeminimizeWindow.showInMenubar"
       },
       {
@@ -1116,7 +1150,7 @@
         "stripped_doc" : [
           "Whether a lone minimized window is restored without showing the chooser. Defaults to `true`."
         ],
-        "name" : "skipChooserForSingle",
+        "desc" : "Whether a lone minimized window is restored without showing the chooser. Defaults to `true`.",
         "parameters" : [
 
         ],
@@ -1128,93 +1162,97 @@
         "returns" : [
 
         ],
-        "desc" : "Whether a lone minimized window is restored without showing the chooser. Defaults to `true`.",
+        "name" : "skipChooserForSingle",
         "def" : "DeminimizeWindow.skipChooserForSingle"
       },
       {
-        "doc" : "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.\n\nNotes:\n * Chooser rows are not truncated. The chooser has a width of its own and elides for itself, and a truncated row would also be a row the search field cannot match against.",
+        "doc" : "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.\n\nChooser rows are not truncated: it elides for itself, and a truncated row is one the search field cannot match against.",
         "stripped_doc" : [
           "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.",
-          ""
+          "",
+          "Chooser rows are not truncated: it elides for itself, and a truncated row is one the search field cannot match against."
         ],
-        "name" : "titleMax",
+        "desc" : "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Chooser rows are not truncated. The chooser has a width of its own and elides for itself, and a truncated row would also be a row the search field cannot match against."
+
         ],
         "signature" : "DeminimizeWindow.titleMax",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Longest window title shown in alerts and diagnostics, in characters. Defaults to `60`.",
+        "name" : "titleMax",
         "def" : "DeminimizeWindow.titleMax"
       },
       {
-        "doc" : "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.\n\nNotes:\n * The two sources answer different questions about the same window. yabai is authoritative about Spaces and window state; Accessibility is the only one that hands back a real `hs.window`, which is what the Spoon needs in order to unminimize without yabai at all.\n * Turning this off is a diagnostic aid: it makes `DeminimizeWindow:diagnose()` show what yabai alone can do.",
+        "doc" : "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.\n\nThe two sources answer different questions: yabai is authoritative about Spaces and window state, while Accessibility is the only one that hands back a real `hs.window`, which is what unminimizing without yabai needs.\nTurning this off makes `DeminimizeWindow:diagnose()` show what yabai alone can do.",
         "stripped_doc" : [
           "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.",
-          ""
+          "",
+          "The two sources answer different questions: yabai is authoritative about Spaces and window state, while Accessibility is the only one that hands back a real `hs.window`, which is what unminimizing without yabai needs.",
+          "Turning this off makes `DeminimizeWindow:diagnose()` show what yabai alone can do."
         ],
-        "name" : "useAccessibilitySweep",
+        "desc" : "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * The two sources answer different questions about the same window. yabai is authoritative about Spaces and window state; Accessibility is the only one that hands back a real `hs.window`, which is what the Spoon needs in order to unminimize without yabai at all.",
-          " * Turning this off is a diagnostic aid: it makes `DeminimizeWindow:diagnose()` show what yabai alone can do."
+
         ],
         "signature" : "DeminimizeWindow.useAccessibilitySweep",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether `hs.window.minimizedWindows()` is consulted as well as yabai. Defaults to `true`.",
+        "name" : "useAccessibilitySweep",
         "def" : "DeminimizeWindow.useAccessibilitySweep"
       },
       {
-        "doc" : "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.\n\nNotes:\n * With this off -- or with yabai absent -- the Spoon still restores windows, but only through Accessibility, which cannot choose a Space. A window minimized on another Space will reappear there, and the Spoon will say so rather than pretending it succeeded.\n * `hs.spaces.moveWindowToSpace()` is not an alternative. It has been a silent no-op since macOS 15 and returns `true` regardless of what the window server did.",
+        "doc" : "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.\n\nWith this off, or yabai absent, restores go through Accessibility alone, which cannot choose a Space: a window minimized elsewhere reappears there, and the Spoon says so rather than pretending it succeeded.\n`hs.spaces.moveWindowToSpace()` is not an alternative; it has been a silent no-op since macOS 15.",
         "stripped_doc" : [
           "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.",
-          ""
+          "",
+          "With this off, or yabai absent, restores go through Accessibility alone, which cannot choose a Space: a window minimized elsewhere reappears there, and the Spoon says so rather than pretending it succeeded.",
+          "`hs.spaces.moveWindowToSpace()` is not an alternative; it has been a silent no-op since macOS 15."
         ],
-        "name" : "useYabai",
+        "desc" : "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * With this off -- or with yabai absent -- the Spoon still restores windows, but only through Accessibility, which cannot choose a Space. A window minimized on another Space will reappear there, and the Spoon will say so rather than pretending it succeeded.",
-          " * `hs.spaces.moveWindowToSpace()` is not an alternative. It has been a silent no-op since macOS 15 and returns `true` regardless of what the window server did."
+
         ],
         "signature" : "DeminimizeWindow.useYabai",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Whether yabai is used to move the restored window onto the current Space. Defaults to `true`.",
+        "name" : "useYabai",
         "def" : "DeminimizeWindow.useYabai"
       },
       {
-        "doc" : "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.\n\nNotes:\n * Only needed for an installation somewhere unusual. Homebrew on both architectures, nix-darwin and `~\/.local\/bin` are probed already.",
+        "doc" : "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.\n\nOnly needed for an installation somewhere unusual. Homebrew on both architectures, nix-darwin and `~\/.local\/bin` are probed already.",
         "stripped_doc" : [
           "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.",
-          ""
+          "",
+          "Only needed for an installation somewhere unusual. Homebrew on both architectures, nix-darwin and `~\/.local\/bin` are probed already."
         ],
-        "name" : "yabaiPath",
+        "desc" : "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.",
         "parameters" : [
 
         ],
         "notes" : [
-          " * Only needed for an installation somewhere unusual. Homebrew on both architectures, nix-darwin and `~\/.local\/bin` are probed already."
+
         ],
         "signature" : "DeminimizeWindow.yabaiPath",
         "type" : "Variable",
         "returns" : [
 
         ],
-        "desc" : "Absolute path to the yabai binary, or `nil` to probe the usual locations. Defaults to `nil`.",
+        "name" : "yabaiPath",
         "def" : "DeminimizeWindow.yabaiPath"
       },
       {
@@ -1222,7 +1260,7 @@
         "stripped_doc" : [
           "Seconds any single yabai command may take before it is abandoned. Defaults to `1.5`."
         ],
-        "name" : "yabaiTimeout",
+        "desc" : "Seconds any single yabai command may take before it is abandoned. Defaults to `1.5`.",
         "parameters" : [
 
         ],
@@ -1234,39 +1272,40 @@
         "returns" : [
 
         ],
-        "desc" : "Seconds any single yabai command may take before it is abandoned. Defaults to `1.5`.",
+        "name" : "yabaiTimeout",
         "def" : "DeminimizeWindow.yabaiTimeout"
       },
       {
-        "doc" : "Kills any yabai commands in flight and abandons whatever they were part of.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Called from `DeminimizeWindow:stop()`. Each job is marked settled *before* its process is signalled, which is the whole point: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the ladder on into a `--focus`.",
+        "doc" : "Kills any yabai commands in flight and abandons whatever they were part of.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nCalled from `DeminimizeWindow:stop()`. Each job is marked settled *before* its process is signalled: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the ladder on into a `--focus`.",
         "stripped_doc" : [
           "Kills any yabai commands in flight and abandons whatever they were part of.",
           ""
         ],
-        "name" : "abortYabai",
+        "desc" : "Kills any yabai commands in flight and abandons whatever they were part of.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Called from `DeminimizeWindow:stop()`. Each job is marked settled *before* its process is signalled, which is the whole point: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the ladder on into a `--focus`."
+
         ],
         "signature" : "DeminimizeWindow:abortYabai() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Called from `DeminimizeWindow:stop()`. Each job is marked settled *before* its process is signalled: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the ladder on into a `--focus`."
         ],
-        "desc" : "Kills any yabai commands in flight and abandons whatever they were part of.",
+        "name" : "abortYabai",
         "def" : "DeminimizeWindow:abortYabai() -> self"
       },
       {
-        "doc" : "Binds hotkeys for DeminimizeWindow.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * restore - Restore a minimized window, showing the chooser only when there is a choice\n   * show - Always show the chooser, whatever the number of minimized windows\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * For example: `spoon.DeminimizeWindow:bindHotkeys({ restore = { { \"cmd\", \"alt\", \"ctrl\" }, \"M\" } })`",
+        "doc" : "Binds hotkeys for DeminimizeWindow.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * restore - Restore a minimized window, showing the chooser only when there is a choice\n   * show - Always show the chooser, whatever the number of minimized windows\n\nReturns:\n * The DeminimizeWindow object\n\nFor example: `spoon.DeminimizeWindow:bindHotkeys({ restore = { { \"cmd\", \"alt\", \"ctrl\" }, \"M\" } })`",
         "stripped_doc" : [
           "Binds hotkeys for DeminimizeWindow.",
           ""
         ],
-        "name" : "bindHotkeys",
+        "desc" : "Binds hotkeys for DeminimizeWindow.",
         "parameters" : [
           " * mapping - A table containing hotkey modifier\/key details for the following items:",
           "   * restore - Restore a minimized window, showing the chooser only when there is a choice",
@@ -1274,63 +1313,66 @@
           ""
         ],
         "notes" : [
-          " * For example: `spoon.DeminimizeWindow:bindHotkeys({ restore = { { \"cmd\", \"alt\", \"ctrl\" }, \"M\" } })`"
+
         ],
         "signature" : "DeminimizeWindow:bindHotkeys(mapping) -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "For example: `spoon.DeminimizeWindow:bindHotkeys({ restore = { { \"cmd\", \"alt\", \"ctrl\" }, \"M\" } })`"
         ],
-        "desc" : "Binds hotkeys for DeminimizeWindow.",
+        "name" : "bindHotkeys",
         "def" : "DeminimizeWindow:bindHotkeys(mapping) -> self"
       },
       {
-        "doc" : "Builds the list of restorable windows and hands it to a callback.\n\nParameters:\n * done - A function called as `done(items, space, err)`. `items` is a sorted list of tables with `winId`, `appName`, `title` and `minimized` keys; `space` describes the Space they would be restored to; both are nil when `err` is set\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Unions two sources by window id, which is the same `CGWindowID` in both, so the join needs no guessing. yabai is authoritative about window state and Spaces; Accessibility contributes the `hs.window` that the yabai-free rungs of the ladder need.\n * Either source alone yields a usable entry. A window only yabai can see is restorable by yabai only; a window only Accessibility can see is restorable but cannot be placed with confidence.",
+        "doc" : "Builds the list of restorable windows and hands it to a callback.\n\nParameters:\n * done - A function called as `done(items, space, err)`. `items` is a sorted list of tables with `winId`, `appName`, `title` and `minimized` keys; `space` describes the Space they would be restored to; both are nil when `err` is set\n\nReturns:\n * The DeminimizeWindow object\n\nUnions two sources by window id, the same `CGWindowID` in both, so the join needs no guessing. yabai is authoritative about window state and Spaces; Accessibility contributes the `hs.window` the yabai-free rungs need.\nEither source alone yields a usable entry: a window only yabai can see is restorable by yabai only, and one only Accessibility can see cannot be placed with confidence.",
         "stripped_doc" : [
           "Builds the list of restorable windows and hands it to a callback.",
           ""
         ],
-        "name" : "collect",
+        "desc" : "Builds the list of restorable windows and hands it to a callback.",
         "parameters" : [
           " * done - A function called as `done(items, space, err)`. `items` is a sorted list of tables with `winId`, `appName`, `title` and `minimized` keys; `space` describes the Space they would be restored to; both are nil when `err` is set",
           ""
         ],
         "notes" : [
-          " * Unions two sources by window id, which is the same `CGWindowID` in both, so the join needs no guessing. yabai is authoritative about window state and Spaces; Accessibility contributes the `hs.window` that the yabai-free rungs of the ladder need.",
-          " * Either source alone yields a usable entry. A window only yabai can see is restorable by yabai only; a window only Accessibility can see is restorable but cannot be placed with confidence."
+
         ],
         "signature" : "DeminimizeWindow:collect(done) -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Unions two sources by window id, the same `CGWindowID` in both, so the join needs no guessing. yabai is authoritative about window state and Spaces; Accessibility contributes the `hs.window` the yabai-free rungs need.",
+          "Either source alone yields a usable entry: a window only yabai can see is restorable by yabai only, and one only Accessibility can see cannot be placed with confidence."
         ],
-        "desc" : "Builds the list of restorable windows and hands it to a callback.",
+        "name" : "collect",
         "def" : "DeminimizeWindow:collect(done) -> self"
       },
       {
-        "doc" : "Prints what each source can see, and why a window is or is not being offered.\n\nParameters:\n * done - An optional function called with the report text once it has been gathered\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Asynchronous, because it asks yabai. The report is printed to the Hammerspoon Console when it arrives, so calling this bare from the Console is the normal way to use it.\n * The decisive line is the per-window one. A row tagged only `yabai` has no `hs.window` behind it, so the Accessibility rungs of the ladder do not apply to it; a row tagged only `ax` cannot be placed on a Space with any confidence.",
+        "doc" : "Prints what each source can see, and why a window is or is not being offered.\n\nParameters:\n * done - An optional function called with the report text once it has been gathered\n\nReturns:\n * The DeminimizeWindow object\n\nAsynchronous, because it asks yabai. The report is printed to the Console when it arrives, so calling this bare from the Console is the normal way to use it.\nThe decisive line is the per-window one: a row tagged only `yabai` has no `hs.window`, so the Accessibility rungs do not apply to it, and a row tagged only `ax` cannot be placed with confidence.",
         "stripped_doc" : [
           "Prints what each source can see, and why a window is or is not being offered.",
           ""
         ],
-        "name" : "diagnose",
+        "desc" : "Prints what each source can see, and why a window is or is not being offered.",
         "parameters" : [
           " * done - An optional function called with the report text once it has been gathered",
           ""
         ],
         "notes" : [
-          " * Asynchronous, because it asks yabai. The report is printed to the Hammerspoon Console when it arrives, so calling this bare from the Console is the normal way to use it.",
-          " * The decisive line is the per-window one. A row tagged only `yabai` has no `hs.window` behind it, so the Accessibility rungs of the ladder do not apply to it; a row tagged only `ax` cannot be placed on a Space with any confidence."
+
         ],
         "signature" : "DeminimizeWindow:diagnose([done]) -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Asynchronous, because it asks yabai. The report is printed to the Console when it arrives, so calling this bare from the Console is the normal way to use it.",
+          "The decisive line is the per-window one: a row tagged only `yabai` has no `hs.window`, so the Accessibility rungs do not apply to it, and a row tagged only `ax` cannot be placed with confidence."
         ],
-        "desc" : "Prints what each source can see, and why a window is or is not being offered.",
+        "name" : "diagnose",
         "def" : "DeminimizeWindow:diagnose([done]) -> self"
       },
       {
@@ -1339,7 +1381,7 @@
           "Closes the chooser if it is open.",
           ""
         ],
-        "name" : "hide",
+        "desc" : "Closes the chooser if it is open.",
         "parameters" : [
           " * None",
           ""
@@ -1352,176 +1394,186 @@
         "returns" : [
           " * The DeminimizeWindow object"
         ],
-        "desc" : "Closes the chooser if it is open.",
+        "name" : "hide",
         "def" : "DeminimizeWindow:hide() -> self"
       },
       {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Deliberately starts nothing. The chooser and the menubar item both belong to `DeminimizeWindow:start()`.\n * It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser that is already live.",
+        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nDeliberately starts nothing. The chooser and the menubar item both belong to `DeminimizeWindow:start()`.\nDeliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing state here would strand a live chooser.",
         "stripped_doc" : [
           "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
           ""
         ],
-        "name" : "init",
+        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Deliberately starts nothing. The chooser and the menubar item both belong to `DeminimizeWindow:start()`.",
-          " * It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser that is already live."
+
         ],
         "signature" : "DeminimizeWindow:init() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Deliberately starts nothing. The chooser and the menubar item both belong to `DeminimizeWindow:start()`.",
+          "Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing state here would strand a live chooser."
         ],
-        "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "name" : "init",
         "def" : "DeminimizeWindow:init() -> self"
       },
       {
-        "doc" : "Restores a minimized window, asking which one only when there is a choice.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * With no minimized windows this shows a brief alert; with exactly one it restores it outright; with more it opens the chooser. See `DeminimizeWindow.skipChooserForSingle`.\n * This is the method `DeminimizeWindow:bindHotkeys()` binds. Pressing the hotkey while the chooser is open closes it again.",
+        "doc" : "Restores a minimized window, asking which one only when there is a choice.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nWith no minimized windows this shows a brief alert, with exactly one it restores it outright, with more it opens the chooser. See `DeminimizeWindow.skipChooserForSingle`.\nThis is the method `DeminimizeWindow:bindHotkeys()` binds; pressing the hotkey while the chooser is open closes it again.",
         "stripped_doc" : [
           "Restores a minimized window, asking which one only when there is a choice.",
           ""
         ],
-        "name" : "restore",
+        "desc" : "Restores a minimized window, asking which one only when there is a choice.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * With no minimized windows this shows a brief alert; with exactly one it restores it outright; with more it opens the chooser. See `DeminimizeWindow.skipChooserForSingle`.",
-          " * This is the method `DeminimizeWindow:bindHotkeys()` binds. Pressing the hotkey while the chooser is open closes it again."
+
         ],
         "signature" : "DeminimizeWindow:restore() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "With no minimized windows this shows a brief alert, with exactly one it restores it outright, with more it opens the chooser. See `DeminimizeWindow.skipChooserForSingle`.",
+          "This is the method `DeminimizeWindow:bindHotkeys()` binds; pressing the hotkey while the chooser is open closes it again."
         ],
-        "desc" : "Restores a minimized window, asking which one only when there is a choice.",
+        "name" : "restore",
         "def" : "DeminimizeWindow:restore() -> self"
       },
       {
-        "doc" : "Restores one minimized window by its window id, onto the current Space.\n\nParameters:\n * winId - The window id, as returned in the `winId` field of `DeminimizeWindow:collect()`\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * The id must have come from a `DeminimizeWindow:collect()` pass, since everything else known about the window is looked up in the map that call builds.\n * The target Space and the window's state are both re-read here rather than taken from when the list was built, because a chooser can sit open across a Space change for as long as the user likes.",
+        "doc" : "Restores one minimized window by its window id, onto the current Space.\n\nParameters:\n * winId - The window id, as returned in the `winId` field of `DeminimizeWindow:collect()`\n\nReturns:\n * The DeminimizeWindow object\n\nThe id must have come from a `DeminimizeWindow:collect()` pass, since everything else known about the window is looked up in the map that call builds.\nThe target Space and the window's state are re-read here rather than taken from the list, because a chooser can sit open across a Space change.",
         "stripped_doc" : [
           "Restores one minimized window by its window id, onto the current Space.",
           ""
         ],
-        "name" : "restoreById",
+        "desc" : "Restores one minimized window by its window id, onto the current Space.",
         "parameters" : [
           " * winId - The window id, as returned in the `winId` field of `DeminimizeWindow:collect()`",
           ""
         ],
         "notes" : [
-          " * The id must have come from a `DeminimizeWindow:collect()` pass, since everything else known about the window is looked up in the map that call builds.",
-          " * The target Space and the window's state are both re-read here rather than taken from when the list was built, because a chooser can sit open across a Space change for as long as the user likes."
+
         ],
         "signature" : "DeminimizeWindow:restoreById(winId) -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "The id must have come from a `DeminimizeWindow:collect()` pass, since everything else known about the window is looked up in the map that call builds.",
+          "The target Space and the window's state are re-read here rather than taken from the list, because a chooser can sit open across a Space change."
         ],
-        "desc" : "Restores one minimized window by its window id, onto the current Space.",
+        "name" : "restoreById",
         "def" : "DeminimizeWindow:restoreById(winId) -> self"
       },
       {
-        "doc" : "Opens the chooser, whatever the number of minimized windows.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Unlike `DeminimizeWindow:restore()` this never restores anything by itself, so it is the method to bind if you would always rather see the list first.",
+        "doc" : "Opens the chooser, whatever the number of minimized windows.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nUnlike `DeminimizeWindow:restore()` this never restores anything by itself, so it is the method to bind if you would always rather see the list first.",
         "stripped_doc" : [
           "Opens the chooser, whatever the number of minimized windows.",
           ""
         ],
-        "name" : "show",
+        "desc" : "Opens the chooser, whatever the number of minimized windows.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Unlike `DeminimizeWindow:restore()` this never restores anything by itself, so it is the method to bind if you would always rather see the list first."
+
         ],
         "signature" : "DeminimizeWindow:show() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Unlike `DeminimizeWindow:restore()` this never restores anything by itself, so it is the method to bind if you would always rather see the list first."
         ],
-        "desc" : "Opens the chooser, whatever the number of minimized windows.",
+        "name" : "show",
         "def" : "DeminimizeWindow:show() -> self"
       },
       {
-        "doc" : "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Calling this on an already-started Spoon restarts it cleanly.\n * Nothing polls and no timer runs while idle. The window list is built on demand, when the hotkey is pressed or the menu is pulled down.\n * Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
+        "doc" : "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nCalling this on an already-started Spoon restarts it cleanly.\nNothing polls and no timer runs while idle. The window list is built on demand, when the hotkey is pressed or the menu is pulled down.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
         "stripped_doc" : [
           "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.",
           ""
         ],
-        "name" : "start",
+        "desc" : "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Calling this on an already-started Spoon restarts it cleanly.",
-          " * Nothing polls and no timer runs while idle. The window list is built on demand, when the hotkey is pressed or the menu is pulled down.",
-          " * Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
+
         ],
         "signature" : "DeminimizeWindow:start() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Calling this on an already-started Spoon restarts it cleanly.",
+          "Nothing polls and no timer runs while idle. The window list is built on demand, when the hotkey is pressed or the menu is pulled down.",
+          "Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
         ],
-        "desc" : "Makes the Spoon ready to restore windows, and adds the menubar item if it is enabled.",
+        "name" : "start",
         "def" : "DeminimizeWindow:start() -> self"
       },
       {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `chooserVisible`, `restoring`, `yabai`, `yabaiBusy`, `yabaiLastError`, `listed` and `timers` keys\n\nNotes:\n * `yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `DeminimizeWindow:diagnose()` answers that.\n * `listed` counts the windows in the most recent list, which may be stale; the list is never reused across a press.",
+        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `chooserVisible`, `restoring`, `yabai`, `yabaiBusy`, `yabaiLastError`, `listed` and `timers` keys\n\n`yabai` is the resolved binary path, or `false` when yabai is off or not installed. It says nothing about whether the yabai *service* is running; only `DeminimizeWindow:diagnose()` answers that.\n`listed` counts the windows in the most recent list, which may be stale; the list is never reused across a press.",
         "stripped_doc" : [
           "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
           ""
         ],
-        "name" : "status",
+        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * `yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `DeminimizeWindow:diagnose()` answers that.",
-          " * `listed` counts the windows in the most recent list, which may be stale; the list is never reused across a press."
+
         ],
         "signature" : "DeminimizeWindow:status() -> table",
         "type" : "Method",
         "returns" : [
           " * A table with `running`, `menubar`, `chooserVisible`, `restoring`, `yabai`, `yabaiBusy`, `yabaiLastError`, `listed` and `timers` keys",
-          ""
+          "",
+          "`yabai` is the resolved binary path, or `false` when yabai is off or not installed. It says nothing about whether the yabai *service* is running; only `DeminimizeWindow:diagnose()` answers that.",
+          "`listed` counts the windows in the most recent list, which may be stale; the list is never reused across a press."
         ],
-        "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "name" : "status",
         "def" : "DeminimizeWindow:status() -> table"
       },
       {
-        "doc" : "Abandons any restore in flight, destroys the chooser and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nNotes:\n * Any hotkeys bound with `DeminimizeWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "doc" : "Abandons any restore in flight, destroys the chooser and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The DeminimizeWindow object\n\nAny hotkeys bound with `DeminimizeWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
         "stripped_doc" : [
           "Abandons any restore in flight, destroys the chooser and removes the menubar item.",
           ""
         ],
-        "name" : "stop",
+        "desc" : "Abandons any restore in flight, destroys the chooser and removes the menubar item.",
         "parameters" : [
           " * None",
           ""
         ],
         "notes" : [
-          " * Any hotkeys bound with `DeminimizeWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
+
         ],
         "signature" : "DeminimizeWindow:stop() -> self",
         "type" : "Method",
         "returns" : [
           " * The DeminimizeWindow object",
-          ""
+          "",
+          "Any hotkeys bound with `DeminimizeWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
-        "desc" : "Abandons any restore in flight, destroys the chooser and removes the menubar item.",
+        "name" : "stop",
         "def" : "DeminimizeWindow:stop() -> self"
       }
+    ],
+    "Field" : [
+
     ],
     "name" : "DeminimizeWindow"
   }

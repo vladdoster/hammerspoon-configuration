@@ -15,8 +15,10 @@
         "stripped_doc" : [
           "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
         ],
-        "def" : "SummonWindow.logger",
         "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -26,21 +28,22 @@
 
         ],
         "name" : "logger",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.logger"
       },
       {
-        "doc" : "Whether to add a live `hs.window.allWindows()` sweep to the window filter's cache when building the list. Defaults to `true`.\n\nNotes:\n * The window filter only knows about Spaces it has already witnessed, so on a fresh config reload it can be blind to windows you have not visited yet. The sweep asks every application directly instead, and the two sources are unioned.\n * Set to `false` if the sweep proves slow on a machine with very many windows; the list will then be limited to what the filter has learned.",
+        "doc" : "Whether to add a live `hs.window.allWindows()` sweep to the window filter's cache when building the list. Defaults to `true`.\n\nThe window filter only knows about Spaces it has witnessed, so after a config reload it can be blind to windows you have not visited. The sweep asks every application directly, and the two sources are unioned.\nSet to `false` if the sweep proves slow on a machine with very many windows; the list is then limited to what the filter has learned.",
         "stripped_doc" : [
           "Whether to add a live `hs.window.allWindows()` sweep to the window filter's cache when building the list. Defaults to `true`.",
-          ""
+          "",
+          "The window filter only knows about Spaces it has witnessed, so after a config reload it can be blind to windows you have not visited. The sweep asks every application directly, and the two sources are unioned.",
+          "Set to `false` if the sweep proves slow on a machine with very many windows; the list is then limited to what the filter has learned."
         ],
-        "def" : "SummonWindow.deepScan",
         "desc" : "Whether to add a live `hs.window.allWindows()` sweep to the window filter's cache when building the list. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * The window filter only knows about Spaces it has already witnessed, so on a fresh config reload it can be blind to windows you have not visited yet. The sweep asks every application directly instead, and the two sources are unioned.",
-          " * Set to `false` if the sweep proves slow on a machine with very many windows; the list will then be limited to what the filter has learned."
+
         ],
         "signature" : "SummonWindow.deepScan",
         "type" : "Variable",
@@ -48,21 +51,22 @@
 
         ],
         "name" : "deepScan",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.deepScan"
       },
       {
-        "doc" : "Whether minimized windows on other Spaces are offered. Defaults to `false`.\n\nNotes:\n * When enabled, summoning a minimized window also unminimizes it -- moving a window you cannot see would otherwise do nothing visible.\n * This depends on `SummonWindow.deepScan`. The default window filter is built with `visible=true`, so it discards minimized windows before this Spoon ever sees them; the direct sweep is the only source that reports them.",
+        "doc" : "Whether minimized windows on other Spaces are offered. Defaults to `false`.\n\nWhen enabled, summoning a minimized window also unminimizes it, since moving a window you cannot see would do nothing visible.\nDepends on `SummonWindow.deepScan`: the default window filter is built with `visible=true`, so the direct sweep is the only source that reports minimized windows.",
         "stripped_doc" : [
           "Whether minimized windows on other Spaces are offered. Defaults to `false`.",
-          ""
+          "",
+          "When enabled, summoning a minimized window also unminimizes it, since moving a window you cannot see would do nothing visible.",
+          "Depends on `SummonWindow.deepScan`: the default window filter is built with `visible=true`, so the direct sweep is the only source that reports minimized windows."
         ],
-        "def" : "SummonWindow.includeMinimized",
         "desc" : "Whether minimized windows on other Spaces are offered. Defaults to `false`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * When enabled, summoning a minimized window also unminimizes it -- moving a window you cannot see would otherwise do nothing visible.",
-          " * This depends on `SummonWindow.deepScan`. The default window filter is built with `visible=true`, so it discards minimized windows before this Spoon ever sees them; the direct sweep is the only source that reports them."
+
         ],
         "signature" : "SummonWindow.includeMinimized",
         "type" : "Variable",
@@ -70,20 +74,21 @@
 
         ],
         "name" : "includeMinimized",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.includeMinimized"
       },
       {
-        "doc" : "Whether to label Spaces with their real Mission Control names instead of ordinals. Defaults to `false`.\n\nNotes:\n * Reading those names requires `hs.spaces.missionControlSpaceNames()`, which physically opens and closes Mission Control every time it is called. That is far too intrusive to do each time the list is built, so the default derives `Space N` from the Space's position instead.",
+        "doc" : "Whether to label Spaces with their real Mission Control names instead of ordinals. Defaults to `false`.\n\nReading them requires `hs.spaces.missionControlSpaceNames()`, which physically opens and closes Mission Control on every call -- far too intrusive per list build, so the default derives `Space N` from position instead.",
         "stripped_doc" : [
           "Whether to label Spaces with their real Mission Control names instead of ordinals. Defaults to `false`.",
-          ""
+          "",
+          "Reading them requires `hs.spaces.missionControlSpaceNames()`, which physically opens and closes Mission Control on every call -- far too intrusive per list build, so the default derives `Space N` from position instead."
         ],
-        "def" : "SummonWindow.useMissionControlNames",
         "desc" : "Whether to label Spaces with their real Mission Control names instead of ordinals. Defaults to `false`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * Reading those names requires `hs.spaces.missionControlSpaceNames()`, which physically opens and closes Mission Control every time it is called. That is far too intrusive to do each time the list is built, so the default derives `Space N` from the Space's position instead."
+
         ],
         "signature" : "SummonWindow.useMissionControlNames",
         "type" : "Variable",
@@ -91,17 +96,17 @@
 
         ],
         "name" : "useMissionControlNames",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.useMissionControlNames"
       },
       {
         "doc" : "Whether a summoned window is focused and raised once it arrives. Defaults to `true`.",
         "stripped_doc" : [
           "Whether a summoned window is focused and raised once it arrives. Defaults to `true`."
         ],
-        "def" : "SummonWindow.focusAfterMove",
         "desc" : "Whether a summoned window is focused and raised once it arrives. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -111,17 +116,17 @@
 
         ],
         "name" : "focusAfterMove",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.focusAfterMove"
       },
       {
         "doc" : "Number of rows visible in the chooser at once. Defaults to `10`.",
         "stripped_doc" : [
           "Number of rows visible in the chooser at once. Defaults to `10`."
         ],
-        "def" : "SummonWindow.chooserRows",
         "desc" : "Number of rows visible in the chooser at once. Defaults to `10`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -131,17 +136,17 @@
 
         ],
         "name" : "chooserRows",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.chooserRows"
       },
       {
         "doc" : "Chooser width as a percentage of screen width. Defaults to `35`.",
         "stripped_doc" : [
           "Chooser width as a percentage of screen width. Defaults to `35`."
         ],
-        "def" : "SummonWindow.chooserWidth",
         "desc" : "Chooser width as a percentage of screen width. Defaults to `35`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -151,20 +156,21 @@
 
         ],
         "name" : "chooserWidth",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.chooserWidth"
       },
       {
-        "doc" : "Maximum length of a window title in the menubar menu before it is middle-ellipsised. Defaults to `55`.\n\nNotes:\n * The chooser is not truncated; it is searchable, and its rows wrap on their own.",
+        "doc" : "Maximum length of a window title in the menubar menu before it is middle-ellipsised. Defaults to `55`.\n\nThe chooser is not truncated; it is searchable, and its rows wrap on their own.",
         "stripped_doc" : [
           "Maximum length of a window title in the menubar menu before it is middle-ellipsised. Defaults to `55`.",
-          ""
+          "",
+          "The chooser is not truncated; it is searchable, and its rows wrap on their own."
         ],
-        "def" : "SummonWindow.titleMax",
         "desc" : "Maximum length of a window title in the menubar menu before it is middle-ellipsised. Defaults to `55`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * The chooser is not truncated; it is searchable, and its rows wrap on their own."
+
         ],
         "signature" : "SummonWindow.titleMax",
         "type" : "Variable",
@@ -172,17 +178,17 @@
 
         ],
         "name" : "titleMax",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.titleMax"
       },
       {
         "doc" : "Whether `SummonWindow:start()` adds a menubar item. Defaults to `true`.",
         "stripped_doc" : [
           "Whether `SummonWindow:start()` adds a menubar item. Defaults to `true`."
         ],
-        "def" : "SummonWindow.showInMenubar",
         "desc" : "Whether `SummonWindow:start()` adds a menubar item. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -192,17 +198,17 @@
 
         ],
         "name" : "showInMenubar",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.showInMenubar"
       },
       {
         "doc" : "Glyph shown in the menubar. Defaults to `'⧉'`.",
         "stripped_doc" : [
           "Glyph shown in the menubar. Defaults to `'⧉'`."
         ],
-        "def" : "SummonWindow.menubarTitle",
         "desc" : "Glyph shown in the menubar. Defaults to `'⧉'`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -212,23 +218,24 @@
 
         ],
         "name" : "menubarTitle",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.menubarTitle"
       },
       {
-        "doc" : "Whether to use yabai, when it is installed, to move windows and to find them. Defaults to `true`.\n\nNotes:\n * yabai does what `hs.spaces.moveWindowToSpace()` used to: it moves a window to another Space instantly, invisibly, and without touching the mouse. It manages that because its scripting addition is injected into Dock.app, so the window server sees the request arriving from one of the few processes still permitted to make it.\n * That injection requires System Integrity Protection to be partially disabled and the addition to be loaded (`sudo yabai --load-sa`), so this can never be the only strategy. On a machine without yabai this Spoon behaves exactly as it did before yabai was ever mentioned: an absent yabai is not an error, is never reported as one, and simply drops the ladder to its next rung.\n * yabai is also consulted as a third source of windows, alongside the window filter and `SummonWindow.deepScan`. Its server tracks every window on every Space continuously, so unlike the other two it does not depend on what Accessibility is willing to tell this process at the moment you ask.\n * A window that *only* yabai can see has no `hs.window` behind it, so it can only be moved by yabai -- the native call and the drag both need a real window object. Such a window is summoned or not; there is no fallback for it.",
+        "doc" : "Whether to use yabai, when it is installed, to move windows and to find them. Defaults to `true`.\n\nyabai does what `hs.spaces.moveWindowToSpace()` used to: it moves a window instantly, invisibly and without touching the mouse, because its scripting addition is injected into Dock.app, one of the few processes the window server still trusts with the request.\nThat injection needs System Integrity Protection partially disabled and the addition loaded (`sudo yabai --load-sa`), so it can never be the only strategy. An absent yabai is not an error, is never reported as one, and simply drops the ladder to its next rung.\nyabai is also a third source of windows: its server tracks every window on every Space continuously, so unlike the other two it does not depend on what Accessibility will tell this process.\nA window only yabai can see has no `hs.window` behind it, so only yabai can move it -- the native call and the drag both need a real window object, and there is no fallback for such a window.",
         "stripped_doc" : [
           "Whether to use yabai, when it is installed, to move windows and to find them. Defaults to `true`.",
-          ""
+          "",
+          "yabai does what `hs.spaces.moveWindowToSpace()` used to: it moves a window instantly, invisibly and without touching the mouse, because its scripting addition is injected into Dock.app, one of the few processes the window server still trusts with the request.",
+          "That injection needs System Integrity Protection partially disabled and the addition loaded (`sudo yabai --load-sa`), so it can never be the only strategy. An absent yabai is not an error, is never reported as one, and simply drops the ladder to its next rung.",
+          "yabai is also a third source of windows: its server tracks every window on every Space continuously, so unlike the other two it does not depend on what Accessibility will tell this process.",
+          "A window only yabai can see has no `hs.window` behind it, so only yabai can move it -- the native call and the drag both need a real window object, and there is no fallback for such a window."
         ],
-        "def" : "SummonWindow.useYabai",
         "desc" : "Whether to use yabai, when it is installed, to move windows and to find them. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * yabai does what `hs.spaces.moveWindowToSpace()` used to: it moves a window to another Space instantly, invisibly, and without touching the mouse. It manages that because its scripting addition is injected into Dock.app, so the window server sees the request arriving from one of the few processes still permitted to make it.",
-          " * That injection requires System Integrity Protection to be partially disabled and the addition to be loaded (`sudo yabai --load-sa`), so this can never be the only strategy. On a machine without yabai this Spoon behaves exactly as it did before yabai was ever mentioned: an absent yabai is not an error, is never reported as one, and simply drops the ladder to its next rung.",
-          " * yabai is also consulted as a third source of windows, alongside the window filter and `SummonWindow.deepScan`. Its server tracks every window on every Space continuously, so unlike the other two it does not depend on what Accessibility is willing to tell this process at the moment you ask.",
-          " * A window that *only* yabai can see has no `hs.window` behind it, so it can only be moved by yabai -- the native call and the drag both need a real window object. Such a window is summoned or not; there is no fallback for it."
+
         ],
         "signature" : "SummonWindow.useYabai",
         "type" : "Variable",
@@ -236,21 +243,22 @@
 
         ],
         "name" : "useYabai",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.useYabai"
       },
       {
-        "doc" : "Full path to the yabai binary, or `nil` to probe the usual install locations. Defaults to `nil`.\n\nNotes:\n * `hs.task` cannot search `PATH`, and handing the search to a shell instead would be worse than useless: Hammerspoon inherits launchd's environment rather than your login shell's, so `command -v yabai` run from here would miss on exactly the machines where a shell rc file put yabai on the path. A short list of known install prefixes is probed instead.\n * Set this if yabai lives somewhere unusual. Unlike a failed probe, a path set here that is not an executable file is a mistake in the config rather than a missing optional dependency, and is warned about once.",
+        "doc" : "Full path to the yabai binary, or `nil` to probe the usual install locations. Defaults to `nil`.\n\n`hs.task` cannot search `PATH`, and handing the search to a shell would be worse than useless: Hammerspoon inherits launchd's environment rather than your login shell's, so `command -v yabai` would miss on exactly the machines where a shell rc file put it on the path. A short list of install prefixes is probed instead.\nSet this if yabai lives somewhere unusual. Unlike a failed probe, a path set here that is not executable is a config mistake, and is warned about once.",
         "stripped_doc" : [
           "Full path to the yabai binary, or `nil` to probe the usual install locations. Defaults to `nil`.",
-          ""
+          "",
+          "`hs.task` cannot search `PATH`, and handing the search to a shell would be worse than useless: Hammerspoon inherits launchd's environment rather than your login shell's, so `command -v yabai` would miss on exactly the machines where a shell rc file put it on the path. A short list of install prefixes is probed instead.",
+          "Set this if yabai lives somewhere unusual. Unlike a failed probe, a path set here that is not executable is a config mistake, and is warned about once."
         ],
-        "def" : "SummonWindow.yabaiPath",
         "desc" : "Full path to the yabai binary, or `nil` to probe the usual install locations. Defaults to `nil`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * `hs.task` cannot search `PATH`, and handing the search to a shell instead would be worse than useless: Hammerspoon inherits launchd's environment rather than your login shell's, so `command -v yabai` run from here would miss on exactly the machines where a shell rc file put yabai on the path. A short list of known install prefixes is probed instead.",
-          " * Set this if yabai lives somewhere unusual. Unlike a failed probe, a path set here that is not an executable file is a mistake in the config rather than a missing optional dependency, and is warned about once."
+
         ],
         "signature" : "SummonWindow.yabaiPath",
         "type" : "Variable",
@@ -258,20 +266,21 @@
 
         ],
         "name" : "yabaiPath",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.yabaiPath"
       },
       {
-        "doc" : "How long a single yabai invocation may run before it is killed, in seconds. Defaults to `1.5`.\n\nNotes:\n * `yabai -m ...` is a thin client that talks to the running yabai server over a unix socket, and every command this Spoon issues takes single-digit milliseconds when that server is healthy. This limit exists only so a wedged server cannot hold a summon open forever; reaching it always means something is wrong elsewhere.",
+        "doc" : "How long a single yabai invocation may run before it is killed, in seconds. Defaults to `1.5`.\n\n`yabai -m ...` is a thin client over a unix socket, and every command here takes single-digit milliseconds when the server is healthy. This exists only so a wedged server cannot hold a summon open forever; reaching it means something is wrong elsewhere.",
         "stripped_doc" : [
           "How long a single yabai invocation may run before it is killed, in seconds. Defaults to `1.5`.",
-          ""
+          "",
+          "`yabai -m ...` is a thin client over a unix socket, and every command here takes single-digit milliseconds when the server is healthy. This exists only so a wedged server cannot hold a summon open forever; reaching it means something is wrong elsewhere."
         ],
-        "def" : "SummonWindow.yabaiTimeout",
         "desc" : "How long a single yabai invocation may run before it is killed, in seconds. Defaults to `1.5`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * `yabai -m ...` is a thin client that talks to the running yabai server over a unix socket, and every command this Spoon issues takes single-digit milliseconds when that server is healthy. This limit exists only so a wedged server cannot hold a summon open forever; reaching it always means something is wrong elsewhere."
+
         ],
         "signature" : "SummonWindow.yabaiTimeout",
         "type" : "Variable",
@@ -279,20 +288,21 @@
 
         ],
         "name" : "yabaiTimeout",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.yabaiTimeout"
       },
       {
-        "doc" : "How long to wait for a window to actually arrive after yabai reports the move succeeded, in seconds. Defaults to `0.6`.\n\nNotes:\n * yabai exiting zero means \"the command was accepted\", which is emphatically not the same as \"the window moved\". On recent macOS builds the scripting addition can be loaded, report success, and do nothing at all -- so the move is verified here exactly as it is for the other two rungs, and never believed.",
+        "doc" : "How long to wait for a window to actually arrive after yabai reports the move succeeded, in seconds. Defaults to `0.6`.\n\nyabai exiting zero means the command was accepted, not that the window moved: on recent macOS builds the scripting addition can be loaded, report success and do nothing. The move is verified exactly as the other two rungs are.",
         "stripped_doc" : [
           "How long to wait for a window to actually arrive after yabai reports the move succeeded, in seconds. Defaults to `0.6`.",
-          ""
+          "",
+          "yabai exiting zero means the command was accepted, not that the window moved: on recent macOS builds the scripting addition can be loaded, report success and do nothing. The move is verified exactly as the other two rungs are."
         ],
-        "def" : "SummonWindow.yabaiVerifyTimeout",
         "desc" : "How long to wait for a window to actually arrive after yabai reports the move succeeded, in seconds. Defaults to `0.6`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * yabai exiting zero means \"the command was accepted\", which is emphatically not the same as \"the window moved\". On recent macOS builds the scripting addition can be loaded, report success, and do nothing at all -- so the move is verified here exactly as it is for the other two rungs, and never believed."
+
         ],
         "signature" : "SummonWindow.yabaiVerifyTimeout",
         "type" : "Variable",
@@ -300,20 +310,21 @@
 
         ],
         "name" : "yabaiVerifyTimeout",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.yabaiVerifyTimeout"
       },
       {
-        "doc" : "How long a yabai query result is reused before it is fetched again, in seconds. Defaults to `3`.\n\nNotes:\n * Only the window list is served from this cache, and only for the menubar menu: `hs.menubar` demands a menu table synchronously, so it cannot wait for a subprocess. The chooser refreshes before it opens, and a move never uses a cached Space list at all -- Mission Control indices renumber whenever a Space is created or dragged, and a stale one would not fail, it would put the window on the wrong Space.",
+        "doc" : "How long a yabai query result is reused before it is fetched again, in seconds. Defaults to `3`.\n\nOnly the window list is served from this cache, and only for the menubar menu, since `hs.menubar` demands its table synchronously. The chooser refreshes before it opens, and a move never uses a cached Space list: Mission Control indices renumber whenever a Space is created or dragged, and a stale one would not fail, it would move the window to the wrong Space.",
         "stripped_doc" : [
           "How long a yabai query result is reused before it is fetched again, in seconds. Defaults to `3`.",
-          ""
+          "",
+          "Only the window list is served from this cache, and only for the menubar menu, since `hs.menubar` demands its table synchronously. The chooser refreshes before it opens, and a move never uses a cached Space list: Mission Control indices renumber whenever a Space is created or dragged, and a stale one would not fail, it would move the window to the wrong Space."
         ],
-        "def" : "SummonWindow.yabaiCacheSeconds",
         "desc" : "How long a yabai query result is reused before it is fetched again, in seconds. Defaults to `3`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * Only the window list is served from this cache, and only for the menubar menu: `hs.menubar` demands a menu table synchronously, so it cannot wait for a subprocess. The chooser refreshes before it opens, and a move never uses a cached Space list at all -- Mission Control indices renumber whenever a Space is created or dragged, and a stale one would not fail, it would put the window on the wrong Space."
+
         ],
         "signature" : "SummonWindow.yabaiCacheSeconds",
         "type" : "Variable",
@@ -321,22 +332,23 @@
 
         ],
         "name" : "yabaiCacheSeconds",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.yabaiCacheSeconds"
       },
       {
-        "doc" : "Whether to physically drag a window across when neither yabai nor the window server will move it. Defaults to `true`.\n\nNotes:\n * `hs.spaces.moveWindowToSpace()` does nothing on macOS 15 and later, so without yabai this is not a fallback at all -- it is the only thing that works. It is still tried last, because it is the only rung that borrows the pointer and slides the screen about.\n * A window can only be picked up while it is on the visible Space, so a drag is necessarily a round trip: walk to the window, take hold of its titlebar, walk back still holding it. Expect roughly a second, some Space animation, and the pointer to be borrowed and put back.\n * Single display only. Dragging between Spaces on different screens does not work, and is refused rather than attempted.",
+        "doc" : "Whether to physically drag a window across when neither yabai nor the window server will move it. Defaults to `true`.\n\n`hs.spaces.moveWindowToSpace()` does nothing on macOS 15 and later, so without yabai this is not a fallback but the only thing that works. It is still tried last, being the only rung that borrows the pointer and slides the screen about.\nA window can only be picked up while it is on the visible Space, so a drag is a round trip: walk to the window, take hold of its titlebar, walk back still holding it. Expect roughly a second and some Space animation.\nSingle display only. Dragging between Spaces on different screens does not work, and is refused rather than attempted.",
         "stripped_doc" : [
           "Whether to physically drag a window across when neither yabai nor the window server will move it. Defaults to `true`.",
-          ""
+          "",
+          "`hs.spaces.moveWindowToSpace()` does nothing on macOS 15 and later, so without yabai this is not a fallback but the only thing that works. It is still tried last, being the only rung that borrows the pointer and slides the screen about.",
+          "A window can only be picked up while it is on the visible Space, so a drag is a round trip: walk to the window, take hold of its titlebar, walk back still holding it. Expect roughly a second and some Space animation.",
+          "Single display only. Dragging between Spaces on different screens does not work, and is refused rather than attempted."
         ],
-        "def" : "SummonWindow.dragFallback",
         "desc" : "Whether to physically drag a window across when neither yabai nor the window server will move it. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * `hs.spaces.moveWindowToSpace()` does nothing on macOS 15 and later, so without yabai this is not a fallback at all -- it is the only thing that works. It is still tried last, because it is the only rung that borrows the pointer and slides the screen about.",
-          " * A window can only be picked up while it is on the visible Space, so a drag is necessarily a round trip: walk to the window, take hold of its titlebar, walk back still holding it. Expect roughly a second, some Space animation, and the pointer to be borrowed and put back.",
-          " * Single display only. Dragging between Spaces on different screens does not work, and is refused rather than attempted."
+
         ],
         "signature" : "SummonWindow.dragFallback",
         "type" : "Variable",
@@ -344,20 +356,21 @@
 
         ],
         "name" : "dragFallback",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.dragFallback"
       },
       {
-        "doc" : "How long the offer to jump to an unmovable window's Space stays open, in seconds. Defaults to `4`.\n\nNotes:\n * When a window cannot be moved, pressing the hotkey again within this window of time goes to that Space instead of reopening the chooser. Doing nothing lets the offer lapse, so the hotkey never does something surprising later.",
+        "doc" : "How long the offer to jump to an unmovable window's Space stays open, in seconds. Defaults to `4`.\n\nWhen a window cannot be moved, pressing the hotkey again within this window of time goes to that Space instead of reopening the chooser. Doing nothing lets the offer lapse, so the hotkey never does something surprising later.",
         "stripped_doc" : [
           "How long the offer to jump to an unmovable window's Space stays open, in seconds. Defaults to `4`.",
-          ""
+          "",
+          "When a window cannot be moved, pressing the hotkey again within this window of time goes to that Space instead of reopening the chooser. Doing nothing lets the offer lapse, so the hotkey never does something surprising later."
         ],
-        "def" : "SummonWindow.gotoGraceSeconds",
         "desc" : "How long the offer to jump to an unmovable window's Space stays open, in seconds. Defaults to `4`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * When a window cannot be moved, pressing the hotkey again within this window of time goes to that Space instead of reopening the chooser. Doing nothing lets the offer lapse, so the hotkey never does something surprising later."
+
         ],
         "signature" : "SummonWindow.gotoGraceSeconds",
         "type" : "Variable",
@@ -365,20 +378,21 @@
 
         ],
         "name" : "gotoGraceSeconds",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.gotoGraceSeconds"
       },
       {
-        "doc" : "Whether the synthetic Space-switch arrows carry the `fn` modifier. Defaults to `true`.\n\nNotes:\n * Real arrow keys on a real keyboard set `NSEventModifierFlagFunction`, and the macOS matcher for the \"Move left\/right a space\" shortcut checks the whole modifier mask. A synthetic ctrl+arrow without `fn` is silently ignored on some systems. Turn this off only if Space switches start firing twice.",
+        "doc" : "Whether the synthetic Space-switch arrows carry the `fn` modifier. Defaults to `true`.\n\nReal arrow keys set `NSEventModifierFlagFunction`, and the macOS matcher for \"Move left\/right a space\" checks the whole modifier mask, so a synthetic ctrl+arrow without `fn` is silently ignored on some systems. Turn this off only if Space switches start firing twice.",
         "stripped_doc" : [
           "Whether the synthetic Space-switch arrows carry the `fn` modifier. Defaults to `true`.",
-          ""
+          "",
+          "Real arrow keys set `NSEventModifierFlagFunction`, and the macOS matcher for \"Move left\/right a space\" checks the whole modifier mask, so a synthetic ctrl+arrow without `fn` is silently ignored on some systems. Turn this off only if Space switches start firing twice."
         ],
-        "def" : "SummonWindow.useFnModifier",
         "desc" : "Whether the synthetic Space-switch arrows carry the `fn` modifier. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * Real arrow keys on a real keyboard set `NSEventModifierFlagFunction`, and the macOS matcher for the \"Move left\/right a space\" shortcut checks the whole modifier mask. A synthetic ctrl+arrow without `fn` is silently ignored on some systems. Turn this off only if Space switches start firing twice."
+
         ],
         "signature" : "SummonWindow.useFnModifier",
         "type" : "Variable",
@@ -386,20 +400,21 @@
 
         ],
         "name" : "useFnModifier",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.useFnModifier"
       },
       {
-        "doc" : "Delays in seconds between the stages of a drag.\n\nNotes:\n * These are hand-tuned against a gesture that macOS never intended to be synthesised, and the defaults come from the three published implementations that are known to work. Raise `hopTimeout` first if Space traversal is unreliable on a slow machine, then `preRelease` if windows are dropped before they land.",
+        "doc" : "Delays in seconds between the stages of a drag.\n\nHand-tuned against a gesture macOS never intended to be synthesised. Raise `hopTimeout` first if Space traversal is unreliable on a slow machine, then `preRelease` if windows are dropped before they land.",
         "stripped_doc" : [
           "Delays in seconds between the stages of a drag.",
-          ""
+          "",
+          "Hand-tuned against a gesture macOS never intended to be synthesised. Raise `hopTimeout` first if Space traversal is unreliable on a slow machine, then `preRelease` if windows are dropped before they land."
         ],
-        "def" : "SummonWindow.dragTiming",
         "desc" : "Delays in seconds between the stages of a drag.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * These are hand-tuned against a gesture that macOS never intended to be synthesised, and the defaults come from the three published implementations that are known to work. Raise `hopTimeout` first if Space traversal is unreliable on a slow machine, then `preRelease` if windows are dropped before they land."
+
         ],
         "signature" : "SummonWindow.dragTiming",
         "type" : "Variable",
@@ -407,268 +422,271 @@
 
         ],
         "name" : "dragTiming",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.dragTiming"
       }
     ],
     "stripped_doc" : [
 
     ],
+    "type" : "Module",
     "Deprecated" : [
 
     ],
     "desc" : "Brings a window from another Mission Control Space to the one you are on.",
-    "type" : "Module",
     "Constructor" : [
 
     ],
-    "doc" : "Brings a window from another Mission Control Space to the one you are on.\n\nmacOS offers no way to pull a window towards you. If it is on Space 3 and you are on\nSpace 1, the only choices are to navigate away or to drag the window around inside\nMission Control. This Spoon inverts that: a hotkey or a menubar click lists every\nwindow living on some other Space, and picking one moves it here and focuses it,\nwithout ever leaving the Space you are on.\n\nTwo hard parts, and neither is the one you would expect.\n\nThe first is *enumerating* windows that macOS Accessibility deliberately hides from a\nprocess that is not looking at them; see `SummonWindow.deepScan`, `SummonWindow.useYabai`\nand `SummonWindow:diagnose()`.\n\nThe second is the move itself. `hs.spaces.moveWindowToSpace()` was the obvious answer\nand is a **silent no-op on macOS 15 and later** -- Apple gutted the private window\nserver calls it relies on, and the surviving ones check that the caller owns the\nwindow or is the Dock. Worse, it still returns `true`, because Hammerspoon never\nchecks a return value that no longer means anything (see Hammerspoon issue #3698,\nopen since 2024).\n\nSo a move is attempted three ways in turn, and *every* one of them is verified against\nwhere the window actually ended up rather than believed, because all three lie. yabai\ngoes first: it moves a window instantly and invisibly, through a scripting addition\ninjected into Dock.app that the window server still trusts. The native call goes\nsecond, kept for the day it works again. Physically dragging the window across goes\nlast. See `SummonWindow.useYabai` and `SummonWindow.dragFallback`.\n\nWindows that cannot be moved are never listed. A fullscreen or tiled window lives in\nits own managed Space, and the window server refuses to move windows out of one, so\nlisting them would only produce rows that fail when clicked.",
-    "Field" : [
-
-    ],
-    "Command" : [
-
-    ],
+    "doc" : "Brings a window from another Mission Control Space to the one you are on.\n\nmacOS offers no way to pull a window towards you: if it is on Space 3 and you are on\nSpace 1, the only choices are to navigate away or to drag it around inside Mission\nControl. A hotkey or menubar click here lists every window living on some other Space,\nand picking one moves it to you without ever leaving the Space you are on.\n\nTwo hard parts. The first is *enumerating* windows that macOS Accessibility hides from a\nprocess not looking at them; see `SummonWindow.deepScan`, `SummonWindow.useYabai` and\n`SummonWindow:diagnose()`.\n\nThe second is the move. `hs.spaces.moveWindowToSpace()` is a **silent no-op on macOS 15\nand later** -- Apple gutted the private window server calls behind it, and the survivors\ncheck that the caller owns the window or is the Dock -- and it still returns `true`\n(Hammerspoon issue #3698, open since 2024). So a move is attempted three ways in turn and\nevery one is verified against where the window actually ended up, because all three lie:\nyabai first, through a scripting addition injected into Dock.app that the window server\nstill trusts; the native call second, kept for the day it works again; and physically\ndragging the window across last.\n\nWindows that cannot be moved are never listed. A fullscreen or tiled window lives in its\nown managed Space and the window server refuses to move windows out of one, so listing\nthem would only produce rows that fail when clicked.",
     "Method" : [
       {
-        "doc" : "Reports whether a window is currently on a given Space.\n\nParameters:\n * win - an `hs.window` object\n * spaceId - the integer id of a Space\n\nReturns:\n * `true` if the window is on that Space, `false` if it is not or cannot be determined\n\nNotes:\n * This is the Spoon's only source of truth about whether a move worked. `hs.spaces.moveWindowToSpace()` returns `true` unconditionally -- it does not check, and cannot check, what the window server actually did with the request -- so its result is ignored entirely in favour of asking where the window ended up.\n * Only meaningful once a move has settled. During a drag the window server does not commit the move until the mouse button is released, so this reports the *old* Space right up until the drop.",
+        "doc" : "Reports whether a window is currently on a given Space.\n\nParameters:\n * win - an `hs.window` object\n * spaceId - the integer id of a Space\n\nReturns:\n * `true` if the window is on that Space, `false` if it is not or cannot be determined\n\nThe Spoon's only source of truth about whether a move worked. `hs.spaces.moveWindowToSpace()` returns `true` unconditionally and cannot check what the window server did, so its result is ignored in favour of asking where the window ended up.\nOnly meaningful once a move has settled: during a drag the window server does not commit until the mouse button is released, so this reports the *old* Space right up until the drop.",
         "stripped_doc" : [
           "Reports whether a window is currently on a given Space.",
           ""
         ],
-        "def" : "SummonWindow:windowIsOn(win, spaceId) -> boolean",
         "desc" : "Reports whether a window is currently on a given Space.",
+        "parameters" : [
+          " * win - an `hs.window` object",
+          " * spaceId - the integer id of a Space",
+          ""
+        ],
         "notes" : [
-          " * This is the Spoon's only source of truth about whether a move worked. `hs.spaces.moveWindowToSpace()` returns `true` unconditionally -- it does not check, and cannot check, what the window server actually did with the request -- so its result is ignored entirely in favour of asking where the window ended up.",
-          " * Only meaningful once a move has settled. During a drag the window server does not commit the move until the mouse button is released, so this reports the *old* Space right up until the drop."
+
         ],
         "signature" : "SummonWindow:windowIsOn(win, spaceId) -> boolean",
         "type" : "Method",
         "returns" : [
           " * `true` if the window is on that Space, `false` if it is not or cannot be determined",
-          ""
+          "",
+          "The Spoon's only source of truth about whether a move worked. `hs.spaces.moveWindowToSpace()` returns `true` unconditionally and cannot check what the window server did, so its result is ignored in favour of asking where the window ended up.",
+          "Only meaningful once a move has settled: during a drag the window server does not commit until the mouse button is released, so this reports the *old* Space right up until the drop."
         ],
         "name" : "windowIsOn",
-        "parameters" : [
-          " * win - an `hs.window` object",
-          " * spaceId - the integer id of a Space",
-          ""
-        ]
+        "def" : "SummonWindow:windowIsOn(win, spaceId) -> boolean"
       },
       {
-        "doc" : "Kills any yabai commands in flight and abandons whatever they were part of.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Called from `SummonWindow:stop()`. Each job is marked settled *before* its process is signalled, which is the whole point: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the move ladder on into a drag nobody asked for.",
+        "doc" : "Kills any yabai commands in flight and abandons whatever they were part of.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nCalled from `SummonWindow:stop()`. Each job is marked settled *before* its process is signalled: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the move ladder on into a drag nobody asked for.",
         "stripped_doc" : [
           "Kills any yabai commands in flight and abandons whatever they were part of.",
           ""
         ],
-        "def" : "SummonWindow:abortYabai() -> self",
         "desc" : "Kills any yabai commands in flight and abandons whatever they were part of.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Called from `SummonWindow:stop()`. Each job is marked settled *before* its process is signalled, which is the whole point: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the move ladder on into a drag nobody asked for."
+
         ],
         "signature" : "SummonWindow:abortYabai() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Called from `SummonWindow:stop()`. Each job is marked settled *before* its process is signalled: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the move ladder on into a drag nobody asked for."
         ],
         "name" : "abortYabai",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:abortYabai() -> self"
       },
       {
-        "doc" : "Re-reads yabai's space and window lists into the snapshot the window list is built from.\n\nParameters:\n * force - Optional boolean, `true` to ignore `SummonWindow.yabaiCacheSeconds`. Defaults to `false`\n * done - Optional function called with `true` when both lists were read, `false` otherwise\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * When yabai is switched off or not installed, `done` is called immediately and synchronously with `false`. That is what keeps every caller's behaviour identical to what it was before yabai existed.",
+        "doc" : "Re-reads yabai's space and window lists into the snapshot the window list is built from.\n\nParameters:\n * force - Optional boolean, `true` to ignore `SummonWindow.yabaiCacheSeconds`. Defaults to `false`\n * done - Optional function called with `true` when both lists were read, `false` otherwise\n\nReturns:\n * The SummonWindow object\n\nWhen yabai is off or not installed, `done` is called immediately and synchronously with `false`, which keeps every caller's behaviour identical to what it was before yabai existed.",
         "stripped_doc" : [
           "Re-reads yabai's space and window lists into the snapshot the window list is built from.",
           ""
         ],
-        "def" : "SummonWindow:refreshYabai([force], [done]) -> self",
         "desc" : "Re-reads yabai's space and window lists into the snapshot the window list is built from.",
+        "parameters" : [
+          " * force - Optional boolean, `true` to ignore `SummonWindow.yabaiCacheSeconds`. Defaults to `false`",
+          " * done - Optional function called with `true` when both lists were read, `false` otherwise",
+          ""
+        ],
         "notes" : [
-          " * When yabai is switched off or not installed, `done` is called immediately and synchronously with `false`. That is what keeps every caller's behaviour identical to what it was before yabai existed."
+
         ],
         "signature" : "SummonWindow:refreshYabai([force], [done]) -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "When yabai is off or not installed, `done` is called immediately and synchronously with `false`, which keeps every caller's behaviour identical to what it was before yabai existed."
         ],
         "name" : "refreshYabai",
-        "parameters" : [
-          " * force - Optional boolean, `true` to ignore `SummonWindow.yabaiCacheSeconds`. Defaults to `false`",
-          " * done - Optional function called with `true` when both lists were read, `false` otherwise",
-          ""
-        ]
+        "def" : "SummonWindow:refreshYabai([force], [done]) -> self"
       },
       {
-        "doc" : "Returns the windows currently living on other Spaces, in the order they are listed.\n\nParameters:\n * None\n\nReturns:\n * A list of plain tables with `winId`, `spaceId`, `appName`, `bundleID`, `title`, `minimized`, `label`, `order` and `yabaiOnly` keys\n\nNotes:\n * Rebuilds from scratch on every call, and as a side effect refreshes the internal id-to-window map that `SummonWindow:summonById()` reads.\n * The yabai source is served from the last snapshot rather than fetched here, because `hs.menubar` demands its menu synchronously and cannot wait for a subprocess. `SummonWindow:show()` refreshes before it builds, so the chooser is always current; the menubar menu can be up to `SummonWindow.yabaiCacheSeconds` behind.",
+        "doc" : "Returns the windows currently living on other Spaces, in the order they are listed.\n\nParameters:\n * opts - an optional table; `deep` overrides `SummonWindow.deepScan` for this call\n\nReturns:\n * A list of plain tables with `winId`, `spaceId`, `appName`, `bundleID`, `title`, `minimized`, `label`, `order` and `yabaiOnly` keys\n\nRebuilds from scratch on every call, and as a side effect refreshes the internal id-to-window map that `SummonWindow:summonById()` reads.\nThe yabai source is served from the last snapshot rather than fetched here, because `hs.menubar` demands its menu synchronously and cannot wait for a subprocess. `SummonWindow:show()` refreshes before it builds, so the chooser is always current; the menubar menu can be up to `SummonWindow.yabaiCacheSeconds` behind.\nThe menubar path passes `deep = false` for the same reason: the `hs.window.allWindows()` sweep can take seconds, and the menu callback cannot wait for it either. The chooser, `status()` and `diagnose()` all still run the full sweep.",
         "stripped_doc" : [
           "Returns the windows currently living on other Spaces, in the order they are listed.",
           ""
         ],
-        "def" : "SummonWindow:candidates() -> table",
         "desc" : "Returns the windows currently living on other Spaces, in the order they are listed.",
-        "notes" : [
-          " * Rebuilds from scratch on every call, and as a side effect refreshes the internal id-to-window map that `SummonWindow:summonById()` reads.",
-          " * The yabai source is served from the last snapshot rather than fetched here, because `hs.menubar` demands its menu synchronously and cannot wait for a subprocess. `SummonWindow:show()` refreshes before it builds, so the chooser is always current; the menubar menu can be up to `SummonWindow.yabaiCacheSeconds` behind."
+        "parameters" : [
+          " * opts - an optional table; `deep` overrides `SummonWindow.deepScan` for this call",
+          ""
         ],
-        "signature" : "SummonWindow:candidates() -> table",
+        "notes" : [
+
+        ],
+        "signature" : "SummonWindow:candidates([opts]) -> table",
         "type" : "Method",
         "returns" : [
           " * A list of plain tables with `winId`, `spaceId`, `appName`, `bundleID`, `title`, `minimized`, `label`, `order` and `yabaiOnly` keys",
-          ""
+          "",
+          "Rebuilds from scratch on every call, and as a side effect refreshes the internal id-to-window map that `SummonWindow:summonById()` reads.",
+          "The yabai source is served from the last snapshot rather than fetched here, because `hs.menubar` demands its menu synchronously and cannot wait for a subprocess. `SummonWindow:show()` refreshes before it builds, so the chooser is always current; the menubar menu can be up to `SummonWindow.yabaiCacheSeconds` behind.",
+          "The menubar path passes `deep = false` for the same reason: the `hs.window.allWindows()` sweep can take seconds, and the menu callback cannot wait for it either. The chooser, `status()` and `diagnose()` all still run the full sweep."
         ],
         "name" : "candidates",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:candidates([opts]) -> table"
       },
       {
-        "doc" : "Releases the mouse button and abandons any drag in progress.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Called from `SummonWindow:stop()`. A config reload part-way through a drag would otherwise collect the timers that hold the sequence together and leave the button down with nothing left to release it.",
+        "doc" : "Releases the mouse button and abandons any drag in progress.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nCalled from `SummonWindow:stop()`. A config reload part-way through a drag would otherwise collect the timers that hold the sequence together and leave the button down with nothing left to release it.",
         "stripped_doc" : [
           "Releases the mouse button and abandons any drag in progress.",
           ""
         ],
-        "def" : "SummonWindow:abortDrag() -> self",
         "desc" : "Releases the mouse button and abandons any drag in progress.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Called from `SummonWindow:stop()`. A config reload part-way through a drag would otherwise collect the timers that hold the sequence together and leave the button down with nothing left to release it."
+
         ],
         "signature" : "SummonWindow:abortDrag() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Called from `SummonWindow:stop()`. A config reload part-way through a drag would otherwise collect the timers that hold the sequence together and leave the button down with nothing left to release it."
         ],
         "name" : "abortDrag",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:abortDrag() -> self"
       },
       {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Deliberately starts nothing. The menubar item, the chooser and the window filter all belong to `SummonWindow:start()`.\n * It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser or menubar item that is already live.",
+        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nDeliberately starts nothing. The menubar item, the chooser and the window filter all belong to `SummonWindow:start()`.\nIt is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser or menubar item that is already live.",
         "stripped_doc" : [
           "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
           ""
         ],
-        "def" : "SummonWindow:init() -> self",
         "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Deliberately starts nothing. The menubar item, the chooser and the window filter all belong to `SummonWindow:start()`.",
-          " * It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser or menubar item that is already live."
+
         ],
         "signature" : "SummonWindow:init() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Deliberately starts nothing. The menubar item, the chooser and the window filter all belong to `SummonWindow:start()`.",
+          "It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser or menubar item that is already live."
         ],
         "name" : "init",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:init() -> self"
       },
       {
-        "doc" : "Adds the menubar item and begins tracking windows across Spaces.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Calling this on an already-started Spoon restarts it cleanly.\n * Nothing polls and no timer runs. The window list is built on demand, when the chooser opens or the menu is pulled down.\n * Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
+        "doc" : "Adds the menubar item and begins tracking windows across Spaces.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nCalling this on an already-started Spoon restarts it cleanly.\nNothing polls and no timer runs. The window list is built on demand, when the chooser opens or the menu is pulled down.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
         "stripped_doc" : [
           "Adds the menubar item and begins tracking windows across Spaces.",
           ""
         ],
-        "def" : "SummonWindow:start() -> self",
         "desc" : "Adds the menubar item and begins tracking windows across Spaces.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Calling this on an already-started Spoon restarts it cleanly.",
-          " * Nothing polls and no timer runs. The window list is built on demand, when the chooser opens or the menu is pulled down.",
-          " * Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
+
         ],
         "signature" : "SummonWindow:start() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Calling this on an already-started Spoon restarts it cleanly.",
+          "Nothing polls and no timer runs. The window list is built on demand, when the chooser opens or the menu is pulled down.",
+          "Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
         ],
         "name" : "start",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:start() -> self"
       },
       {
-        "doc" : "Removes the menubar item, destroys the chooser and drops the window filter.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Any hotkeys bound with `SummonWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "doc" : "Removes the menubar item, destroys the chooser and drops the window filter.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nAny hotkeys bound with `SummonWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
         "stripped_doc" : [
           "Removes the menubar item, destroys the chooser and drops the window filter.",
           ""
         ],
-        "def" : "SummonWindow:stop() -> self",
         "desc" : "Removes the menubar item, destroys the chooser and drops the window filter.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Any hotkeys bound with `SummonWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
+
         ],
         "signature" : "SummonWindow:stop() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Any hotkeys bound with `SummonWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
         "name" : "stop",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:stop() -> self"
       },
       {
-        "doc" : "Binds hotkeys for SummonWindow.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * summon - Show the window chooser, or hide it if it is already showing\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * For example: `spoon.SummonWindow:bindHotkeys({ summon = { { \"cmd\", \"alt\", \"shift\" }, \"S\" } })`",
+        "doc" : "Binds hotkeys for SummonWindow.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * summon - Show the window chooser, or hide it if it is already showing\n\nReturns:\n * The SummonWindow object\n\nFor example: `spoon.SummonWindow:bindHotkeys({ summon = { { \"cmd\", \"alt\", \"shift\" }, \"S\" } })`",
         "stripped_doc" : [
           "Binds hotkeys for SummonWindow.",
           ""
         ],
-        "def" : "SummonWindow:bindHotkeys(mapping) -> self",
         "desc" : "Binds hotkeys for SummonWindow.",
+        "parameters" : [
+          " * mapping - A table containing hotkey modifier\/key details for the following items:",
+          "   * summon - Show the window chooser, or hide it if it is already showing",
+          ""
+        ],
         "notes" : [
-          " * For example: `spoon.SummonWindow:bindHotkeys({ summon = { { \"cmd\", \"alt\", \"shift\" }, \"S\" } })`"
+
         ],
         "signature" : "SummonWindow:bindHotkeys(mapping) -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "For example: `spoon.SummonWindow:bindHotkeys({ summon = { { \"cmd\", \"alt\", \"shift\" }, \"S\" } })`"
         ],
         "name" : "bindHotkeys",
-        "parameters" : [
-          " * mapping - A table containing hotkey modifier\/key details for the following items:",
-          "   * summon - Show the window chooser, or hide it if it is already showing",
-          ""
-        ]
+        "def" : "SummonWindow:bindHotkeys(mapping) -> self"
       },
       {
-        "doc" : "Opens the chooser, listing every window on another Space.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Refuses to open while you are on a fullscreen Space, because the window server will not accept a window moved into one.\n * When yabai is in use the chooser opens a few milliseconds late, because it waits for a current window list rather than showing a cached one. Without yabai it opens synchronously, exactly as it always did.",
+        "doc" : "Opens the chooser, listing every window on another Space.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nRefuses to open while you are on a fullscreen Space, because the window server will not accept a window moved into one.\nWhen yabai is in use the chooser opens a few milliseconds late, because it waits for a current window list rather than showing a cached one. Without yabai it opens synchronously, exactly as it always did.",
         "stripped_doc" : [
           "Opens the chooser, listing every window on another Space.",
           ""
         ],
-        "def" : "SummonWindow:show() -> self",
         "desc" : "Opens the chooser, listing every window on another Space.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Refuses to open while you are on a fullscreen Space, because the window server will not accept a window moved into one.",
-          " * When yabai is in use the chooser opens a few milliseconds late, because it waits for a current window list rather than showing a cached one. Without yabai it opens synchronously, exactly as it always did."
+
         ],
         "signature" : "SummonWindow:show() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Refuses to open while you are on a fullscreen Space, because the window server will not accept a window moved into one.",
+          "When yabai is in use the chooser opens a few milliseconds late, because it waits for a current window list rather than showing a cached one. Without yabai it opens synchronously, exactly as it always did."
         ],
         "name" : "show",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:show() -> self"
       },
       {
         "doc" : "Closes the chooser if it is open.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object",
@@ -676,8 +694,11 @@
           "Closes the chooser if it is open.",
           ""
         ],
-        "def" : "SummonWindow:hide() -> self",
         "desc" : "Closes the chooser if it is open.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
 
         ],
@@ -687,105 +708,109 @@
           " * The SummonWindow object"
         ],
         "name" : "hide",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:hide() -> self"
       },
       {
-        "doc" : "Opens the chooser, or closes it if it is already open. This is what the hotkey is bound to.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * If the last summon failed and left an offer to jump to that window's Space, pressing the hotkey again within `SummonWindow.gotoGraceSeconds` takes the offer instead of reopening the chooser. The offer is consumed either way, so a third press behaves normally.",
+        "doc" : "Opens the chooser, or closes it if it is already open. This is what the hotkey is bound to.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nIf the last summon failed and left an offer to jump to that window's Space, pressing the hotkey again within `SummonWindow.gotoGraceSeconds` takes the offer instead of reopening the chooser. The offer is consumed either way, so a third press behaves normally.",
         "stripped_doc" : [
           "Opens the chooser, or closes it if it is already open. This is what the hotkey is bound to.",
           ""
         ],
-        "def" : "SummonWindow:toggle() -> self",
         "desc" : "Opens the chooser, or closes it if it is already open. This is what the hotkey is bound to.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * If the last summon failed and left an offer to jump to that window's Space, pressing the hotkey again within `SummonWindow.gotoGraceSeconds` takes the offer instead of reopening the chooser. The offer is consumed either way, so a third press behaves normally."
+
         ],
         "signature" : "SummonWindow:toggle() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "If the last summon failed and left an offer to jump to that window's Space, pressing the hotkey again within `SummonWindow.gotoGraceSeconds` takes the offer instead of reopening the chooser. The offer is consumed either way, so a third press behaves normally."
         ],
         "name" : "toggle",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:toggle() -> self"
       },
       {
-        "doc" : "Moves one window to the current Space by its window id.\n\nParameters:\n * winId - The window id, as returned in the `winId` field of `SummonWindow:candidates()`\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * The id must have come from a `SummonWindow:candidates()` pass, since everything known about the window is looked up in the maps that call builds. Windows on other Spaces cannot be recovered from an id alone.\n * Tries every rung of the move ladder in turn -- yabai, then the native window server call, then dragging -- stopping at the first one whose result can be *verified*. A window only yabai could see has no `hs.window` behind it, so for that window the ladder is one rung long.",
+        "doc" : "Moves one window to the current Space by its window id.\n\nParameters:\n * winId - The window id, as returned in the `winId` field of `SummonWindow:candidates()`\n\nReturns:\n * The SummonWindow object\n\nThe id must have come from a `SummonWindow:candidates()` pass, since everything known about the window is looked up in the maps that call builds. Windows on other Spaces cannot be recovered from an id alone.\nTries every rung of the move ladder in turn -- yabai, then the native window server call, then dragging -- stopping at the first one whose result can be *verified*. A window only yabai could see has no `hs.window` behind it, so for that window the ladder is one rung long.",
         "stripped_doc" : [
           "Moves one window to the current Space by its window id.",
           ""
         ],
-        "def" : "SummonWindow:summonById(winId) -> self",
         "desc" : "Moves one window to the current Space by its window id.",
+        "parameters" : [
+          " * winId - The window id, as returned in the `winId` field of `SummonWindow:candidates()`",
+          ""
+        ],
         "notes" : [
-          " * The id must have come from a `SummonWindow:candidates()` pass, since everything known about the window is looked up in the maps that call builds. Windows on other Spaces cannot be recovered from an id alone.",
-          " * Tries every rung of the move ladder in turn -- yabai, then the native window server call, then dragging -- stopping at the first one whose result can be *verified*. A window only yabai could see has no `hs.window` behind it, so for that window the ladder is one rung long."
+
         ],
         "signature" : "SummonWindow:summonById(winId) -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "The id must have come from a `SummonWindow:candidates()` pass, since everything known about the window is looked up in the maps that call builds. Windows on other Spaces cannot be recovered from an id alone.",
+          "Tries every rung of the move ladder in turn -- yabai, then the native window server call, then dragging -- stopping at the first one whose result can be *verified*. A window only yabai could see has no `hs.window` behind it, so for that window the ladder is one rung long."
         ],
         "name" : "summonById",
-        "parameters" : [
-          " * winId - The window id, as returned in the `winId` field of `SummonWindow:candidates()`",
-          ""
-        ]
+        "def" : "SummonWindow:summonById(winId) -> self"
       },
       {
-        "doc" : "Reports what each window source can actually see, and why any given window is or is not offered.\n\nParameters:\n * None\n\nReturns:\n * The report text, which is also printed to the Console\n\nNotes:\n * Run this first if the list comes up empty. The line that matters is the per-source count of windows found on *other* Spaces: if both sources report zero while windows plainly exist elsewhere, macOS is hiding them from Accessibility and no amount of filtering will help.\n * Each listed window is tagged with the source that found it -- `filter`, `ax`, or both -- which shows whether `SummonWindow.deepScan` is earning its keep on this machine.",
+        "doc" : "Reports what each window source can actually see, and why any given window is or is not offered.\n\nParameters:\n * None\n\nReturns:\n * The report text, which is also printed to the Console\n\nRun this first if the list comes up empty. The line that matters is the per-source count of windows found on *other* Spaces: if both sources report zero while windows plainly exist elsewhere, macOS is hiding them from Accessibility and no amount of filtering will help.\nEach listed window is tagged with the source that found it -- `filter`, `ax`, or both -- which shows whether `SummonWindow.deepScan` is earning its keep on this machine.",
         "stripped_doc" : [
           "Reports what each window source can actually see, and why any given window is or is not offered.",
           ""
         ],
-        "def" : "SummonWindow:diagnose() -> string",
         "desc" : "Reports what each window source can actually see, and why any given window is or is not offered.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Run this first if the list comes up empty. The line that matters is the per-source count of windows found on *other* Spaces: if both sources report zero while windows plainly exist elsewhere, macOS is hiding them from Accessibility and no amount of filtering will help.",
-          " * Each listed window is tagged with the source that found it -- `filter`, `ax`, or both -- which shows whether `SummonWindow.deepScan` is earning its keep on this machine."
+
         ],
         "signature" : "SummonWindow:diagnose() -> string",
         "type" : "Method",
         "returns" : [
           " * The report text, which is also printed to the Console",
-          ""
+          "",
+          "Run this first if the list comes up empty. The line that matters is the per-source count of windows found on *other* Spaces: if both sources report zero while windows plainly exist elsewhere, macOS is hiding them from Accessibility and no amount of filtering will help.",
+          "Each listed window is tagged with the source that found it -- `filter`, `ax`, or both -- which shows whether `SummonWindow.deepScan` is earning its keep on this machine."
         ],
         "name" : "diagnose",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:diagnose() -> string"
       },
       {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `chooserVisible`, `currentSpace`, `summonable`, `dragging`, `yabai`, `yabaiBusy` and `pendingGoto` keys\n\nNotes:\n * `yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `SummonWindow:diagnose()` answers that.",
+        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `chooserVisible`, `currentSpace`, `summonable`, `dragging`, `yabai`, `yabaiBusy` and `pendingGoto` keys\n\n`yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `SummonWindow:diagnose()` answers that.",
         "stripped_doc" : [
           "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
           ""
         ],
-        "def" : "SummonWindow:status() -> table",
         "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * `yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `SummonWindow:diagnose()` answers that."
+
         ],
         "signature" : "SummonWindow:status() -> table",
         "type" : "Method",
         "returns" : [
           " * A table with `running`, `menubar`, `chooserVisible`, `currentSpace`, `summonable`, `dragging`, `yabai`, `yabaiBusy` and `pendingGoto` keys",
-          ""
+          "",
+          "`yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `SummonWindow:diagnose()` answers that."
         ],
         "name" : "status",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:status() -> table"
       }
+    ],
+    "Command" : [
+
     ],
     "items" : [
       {
@@ -793,8 +818,10 @@
         "stripped_doc" : [
           "Number of rows visible in the chooser at once. Defaults to `10`."
         ],
-        "def" : "SummonWindow.chooserRows",
         "desc" : "Number of rows visible in the chooser at once. Defaults to `10`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -804,17 +831,17 @@
 
         ],
         "name" : "chooserRows",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.chooserRows"
       },
       {
         "doc" : "Chooser width as a percentage of screen width. Defaults to `35`.",
         "stripped_doc" : [
           "Chooser width as a percentage of screen width. Defaults to `35`."
         ],
-        "def" : "SummonWindow.chooserWidth",
         "desc" : "Chooser width as a percentage of screen width. Defaults to `35`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -824,21 +851,22 @@
 
         ],
         "name" : "chooserWidth",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.chooserWidth"
       },
       {
-        "doc" : "Whether to add a live `hs.window.allWindows()` sweep to the window filter's cache when building the list. Defaults to `true`.\n\nNotes:\n * The window filter only knows about Spaces it has already witnessed, so on a fresh config reload it can be blind to windows you have not visited yet. The sweep asks every application directly instead, and the two sources are unioned.\n * Set to `false` if the sweep proves slow on a machine with very many windows; the list will then be limited to what the filter has learned.",
+        "doc" : "Whether to add a live `hs.window.allWindows()` sweep to the window filter's cache when building the list. Defaults to `true`.\n\nThe window filter only knows about Spaces it has witnessed, so after a config reload it can be blind to windows you have not visited. The sweep asks every application directly, and the two sources are unioned.\nSet to `false` if the sweep proves slow on a machine with very many windows; the list is then limited to what the filter has learned.",
         "stripped_doc" : [
           "Whether to add a live `hs.window.allWindows()` sweep to the window filter's cache when building the list. Defaults to `true`.",
-          ""
+          "",
+          "The window filter only knows about Spaces it has witnessed, so after a config reload it can be blind to windows you have not visited. The sweep asks every application directly, and the two sources are unioned.",
+          "Set to `false` if the sweep proves slow on a machine with very many windows; the list is then limited to what the filter has learned."
         ],
-        "def" : "SummonWindow.deepScan",
         "desc" : "Whether to add a live `hs.window.allWindows()` sweep to the window filter's cache when building the list. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * The window filter only knows about Spaces it has already witnessed, so on a fresh config reload it can be blind to windows you have not visited yet. The sweep asks every application directly instead, and the two sources are unioned.",
-          " * Set to `false` if the sweep proves slow on a machine with very many windows; the list will then be limited to what the filter has learned."
+
         ],
         "signature" : "SummonWindow.deepScan",
         "type" : "Variable",
@@ -846,22 +874,23 @@
 
         ],
         "name" : "deepScan",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.deepScan"
       },
       {
-        "doc" : "Whether to physically drag a window across when neither yabai nor the window server will move it. Defaults to `true`.\n\nNotes:\n * `hs.spaces.moveWindowToSpace()` does nothing on macOS 15 and later, so without yabai this is not a fallback at all -- it is the only thing that works. It is still tried last, because it is the only rung that borrows the pointer and slides the screen about.\n * A window can only be picked up while it is on the visible Space, so a drag is necessarily a round trip: walk to the window, take hold of its titlebar, walk back still holding it. Expect roughly a second, some Space animation, and the pointer to be borrowed and put back.\n * Single display only. Dragging between Spaces on different screens does not work, and is refused rather than attempted.",
+        "doc" : "Whether to physically drag a window across when neither yabai nor the window server will move it. Defaults to `true`.\n\n`hs.spaces.moveWindowToSpace()` does nothing on macOS 15 and later, so without yabai this is not a fallback but the only thing that works. It is still tried last, being the only rung that borrows the pointer and slides the screen about.\nA window can only be picked up while it is on the visible Space, so a drag is a round trip: walk to the window, take hold of its titlebar, walk back still holding it. Expect roughly a second and some Space animation.\nSingle display only. Dragging between Spaces on different screens does not work, and is refused rather than attempted.",
         "stripped_doc" : [
           "Whether to physically drag a window across when neither yabai nor the window server will move it. Defaults to `true`.",
-          ""
+          "",
+          "`hs.spaces.moveWindowToSpace()` does nothing on macOS 15 and later, so without yabai this is not a fallback but the only thing that works. It is still tried last, being the only rung that borrows the pointer and slides the screen about.",
+          "A window can only be picked up while it is on the visible Space, so a drag is a round trip: walk to the window, take hold of its titlebar, walk back still holding it. Expect roughly a second and some Space animation.",
+          "Single display only. Dragging between Spaces on different screens does not work, and is refused rather than attempted."
         ],
-        "def" : "SummonWindow.dragFallback",
         "desc" : "Whether to physically drag a window across when neither yabai nor the window server will move it. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * `hs.spaces.moveWindowToSpace()` does nothing on macOS 15 and later, so without yabai this is not a fallback at all -- it is the only thing that works. It is still tried last, because it is the only rung that borrows the pointer and slides the screen about.",
-          " * A window can only be picked up while it is on the visible Space, so a drag is necessarily a round trip: walk to the window, take hold of its titlebar, walk back still holding it. Expect roughly a second, some Space animation, and the pointer to be borrowed and put back.",
-          " * Single display only. Dragging between Spaces on different screens does not work, and is refused rather than attempted."
+
         ],
         "signature" : "SummonWindow.dragFallback",
         "type" : "Variable",
@@ -869,20 +898,21 @@
 
         ],
         "name" : "dragFallback",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.dragFallback"
       },
       {
-        "doc" : "Delays in seconds between the stages of a drag.\n\nNotes:\n * These are hand-tuned against a gesture that macOS never intended to be synthesised, and the defaults come from the three published implementations that are known to work. Raise `hopTimeout` first if Space traversal is unreliable on a slow machine, then `preRelease` if windows are dropped before they land.",
+        "doc" : "Delays in seconds between the stages of a drag.\n\nHand-tuned against a gesture macOS never intended to be synthesised. Raise `hopTimeout` first if Space traversal is unreliable on a slow machine, then `preRelease` if windows are dropped before they land.",
         "stripped_doc" : [
           "Delays in seconds between the stages of a drag.",
-          ""
+          "",
+          "Hand-tuned against a gesture macOS never intended to be synthesised. Raise `hopTimeout` first if Space traversal is unreliable on a slow machine, then `preRelease` if windows are dropped before they land."
         ],
-        "def" : "SummonWindow.dragTiming",
         "desc" : "Delays in seconds between the stages of a drag.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * These are hand-tuned against a gesture that macOS never intended to be synthesised, and the defaults come from the three published implementations that are known to work. Raise `hopTimeout` first if Space traversal is unreliable on a slow machine, then `preRelease` if windows are dropped before they land."
+
         ],
         "signature" : "SummonWindow.dragTiming",
         "type" : "Variable",
@@ -890,17 +920,17 @@
 
         ],
         "name" : "dragTiming",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.dragTiming"
       },
       {
         "doc" : "Whether a summoned window is focused and raised once it arrives. Defaults to `true`.",
         "stripped_doc" : [
           "Whether a summoned window is focused and raised once it arrives. Defaults to `true`."
         ],
-        "def" : "SummonWindow.focusAfterMove",
         "desc" : "Whether a summoned window is focused and raised once it arrives. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -910,20 +940,21 @@
 
         ],
         "name" : "focusAfterMove",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.focusAfterMove"
       },
       {
-        "doc" : "How long the offer to jump to an unmovable window's Space stays open, in seconds. Defaults to `4`.\n\nNotes:\n * When a window cannot be moved, pressing the hotkey again within this window of time goes to that Space instead of reopening the chooser. Doing nothing lets the offer lapse, so the hotkey never does something surprising later.",
+        "doc" : "How long the offer to jump to an unmovable window's Space stays open, in seconds. Defaults to `4`.\n\nWhen a window cannot be moved, pressing the hotkey again within this window of time goes to that Space instead of reopening the chooser. Doing nothing lets the offer lapse, so the hotkey never does something surprising later.",
         "stripped_doc" : [
           "How long the offer to jump to an unmovable window's Space stays open, in seconds. Defaults to `4`.",
-          ""
+          "",
+          "When a window cannot be moved, pressing the hotkey again within this window of time goes to that Space instead of reopening the chooser. Doing nothing lets the offer lapse, so the hotkey never does something surprising later."
         ],
-        "def" : "SummonWindow.gotoGraceSeconds",
         "desc" : "How long the offer to jump to an unmovable window's Space stays open, in seconds. Defaults to `4`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * When a window cannot be moved, pressing the hotkey again within this window of time goes to that Space instead of reopening the chooser. Doing nothing lets the offer lapse, so the hotkey never does something surprising later."
+
         ],
         "signature" : "SummonWindow.gotoGraceSeconds",
         "type" : "Variable",
@@ -931,21 +962,22 @@
 
         ],
         "name" : "gotoGraceSeconds",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.gotoGraceSeconds"
       },
       {
-        "doc" : "Whether minimized windows on other Spaces are offered. Defaults to `false`.\n\nNotes:\n * When enabled, summoning a minimized window also unminimizes it -- moving a window you cannot see would otherwise do nothing visible.\n * This depends on `SummonWindow.deepScan`. The default window filter is built with `visible=true`, so it discards minimized windows before this Spoon ever sees them; the direct sweep is the only source that reports them.",
+        "doc" : "Whether minimized windows on other Spaces are offered. Defaults to `false`.\n\nWhen enabled, summoning a minimized window also unminimizes it, since moving a window you cannot see would do nothing visible.\nDepends on `SummonWindow.deepScan`: the default window filter is built with `visible=true`, so the direct sweep is the only source that reports minimized windows.",
         "stripped_doc" : [
           "Whether minimized windows on other Spaces are offered. Defaults to `false`.",
-          ""
+          "",
+          "When enabled, summoning a minimized window also unminimizes it, since moving a window you cannot see would do nothing visible.",
+          "Depends on `SummonWindow.deepScan`: the default window filter is built with `visible=true`, so the direct sweep is the only source that reports minimized windows."
         ],
-        "def" : "SummonWindow.includeMinimized",
         "desc" : "Whether minimized windows on other Spaces are offered. Defaults to `false`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * When enabled, summoning a minimized window also unminimizes it -- moving a window you cannot see would otherwise do nothing visible.",
-          " * This depends on `SummonWindow.deepScan`. The default window filter is built with `visible=true`, so it discards minimized windows before this Spoon ever sees them; the direct sweep is the only source that reports them."
+
         ],
         "signature" : "SummonWindow.includeMinimized",
         "type" : "Variable",
@@ -953,17 +985,17 @@
 
         ],
         "name" : "includeMinimized",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.includeMinimized"
       },
       {
         "doc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
         "stripped_doc" : [
           "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
         ],
-        "def" : "SummonWindow.logger",
         "desc" : "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -973,17 +1005,17 @@
 
         ],
         "name" : "logger",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.logger"
       },
       {
         "doc" : "Glyph shown in the menubar. Defaults to `'⧉'`.",
         "stripped_doc" : [
           "Glyph shown in the menubar. Defaults to `'⧉'`."
         ],
-        "def" : "SummonWindow.menubarTitle",
         "desc" : "Glyph shown in the menubar. Defaults to `'⧉'`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -993,17 +1025,17 @@
 
         ],
         "name" : "menubarTitle",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.menubarTitle"
       },
       {
         "doc" : "Whether `SummonWindow:start()` adds a menubar item. Defaults to `true`.",
         "stripped_doc" : [
           "Whether `SummonWindow:start()` adds a menubar item. Defaults to `true`."
         ],
-        "def" : "SummonWindow.showInMenubar",
         "desc" : "Whether `SummonWindow:start()` adds a menubar item. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
 
         ],
@@ -1013,20 +1045,21 @@
 
         ],
         "name" : "showInMenubar",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.showInMenubar"
       },
       {
-        "doc" : "Maximum length of a window title in the menubar menu before it is middle-ellipsised. Defaults to `55`.\n\nNotes:\n * The chooser is not truncated; it is searchable, and its rows wrap on their own.",
+        "doc" : "Maximum length of a window title in the menubar menu before it is middle-ellipsised. Defaults to `55`.\n\nThe chooser is not truncated; it is searchable, and its rows wrap on their own.",
         "stripped_doc" : [
           "Maximum length of a window title in the menubar menu before it is middle-ellipsised. Defaults to `55`.",
-          ""
+          "",
+          "The chooser is not truncated; it is searchable, and its rows wrap on their own."
         ],
-        "def" : "SummonWindow.titleMax",
         "desc" : "Maximum length of a window title in the menubar menu before it is middle-ellipsised. Defaults to `55`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * The chooser is not truncated; it is searchable, and its rows wrap on their own."
+
         ],
         "signature" : "SummonWindow.titleMax",
         "type" : "Variable",
@@ -1034,20 +1067,21 @@
 
         ],
         "name" : "titleMax",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.titleMax"
       },
       {
-        "doc" : "Whether the synthetic Space-switch arrows carry the `fn` modifier. Defaults to `true`.\n\nNotes:\n * Real arrow keys on a real keyboard set `NSEventModifierFlagFunction`, and the macOS matcher for the \"Move left\/right a space\" shortcut checks the whole modifier mask. A synthetic ctrl+arrow without `fn` is silently ignored on some systems. Turn this off only if Space switches start firing twice.",
+        "doc" : "Whether the synthetic Space-switch arrows carry the `fn` modifier. Defaults to `true`.\n\nReal arrow keys set `NSEventModifierFlagFunction`, and the macOS matcher for \"Move left\/right a space\" checks the whole modifier mask, so a synthetic ctrl+arrow without `fn` is silently ignored on some systems. Turn this off only if Space switches start firing twice.",
         "stripped_doc" : [
           "Whether the synthetic Space-switch arrows carry the `fn` modifier. Defaults to `true`.",
-          ""
+          "",
+          "Real arrow keys set `NSEventModifierFlagFunction`, and the macOS matcher for \"Move left\/right a space\" checks the whole modifier mask, so a synthetic ctrl+arrow without `fn` is silently ignored on some systems. Turn this off only if Space switches start firing twice."
         ],
-        "def" : "SummonWindow.useFnModifier",
         "desc" : "Whether the synthetic Space-switch arrows carry the `fn` modifier. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * Real arrow keys on a real keyboard set `NSEventModifierFlagFunction`, and the macOS matcher for the \"Move left\/right a space\" shortcut checks the whole modifier mask. A synthetic ctrl+arrow without `fn` is silently ignored on some systems. Turn this off only if Space switches start firing twice."
+
         ],
         "signature" : "SummonWindow.useFnModifier",
         "type" : "Variable",
@@ -1055,20 +1089,21 @@
 
         ],
         "name" : "useFnModifier",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.useFnModifier"
       },
       {
-        "doc" : "Whether to label Spaces with their real Mission Control names instead of ordinals. Defaults to `false`.\n\nNotes:\n * Reading those names requires `hs.spaces.missionControlSpaceNames()`, which physically opens and closes Mission Control every time it is called. That is far too intrusive to do each time the list is built, so the default derives `Space N` from the Space's position instead.",
+        "doc" : "Whether to label Spaces with their real Mission Control names instead of ordinals. Defaults to `false`.\n\nReading them requires `hs.spaces.missionControlSpaceNames()`, which physically opens and closes Mission Control on every call -- far too intrusive per list build, so the default derives `Space N` from position instead.",
         "stripped_doc" : [
           "Whether to label Spaces with their real Mission Control names instead of ordinals. Defaults to `false`.",
-          ""
+          "",
+          "Reading them requires `hs.spaces.missionControlSpaceNames()`, which physically opens and closes Mission Control on every call -- far too intrusive per list build, so the default derives `Space N` from position instead."
         ],
-        "def" : "SummonWindow.useMissionControlNames",
         "desc" : "Whether to label Spaces with their real Mission Control names instead of ordinals. Defaults to `false`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * Reading those names requires `hs.spaces.missionControlSpaceNames()`, which physically opens and closes Mission Control every time it is called. That is far too intrusive to do each time the list is built, so the default derives `Space N` from the Space's position instead."
+
         ],
         "signature" : "SummonWindow.useMissionControlNames",
         "type" : "Variable",
@@ -1076,23 +1111,24 @@
 
         ],
         "name" : "useMissionControlNames",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.useMissionControlNames"
       },
       {
-        "doc" : "Whether to use yabai, when it is installed, to move windows and to find them. Defaults to `true`.\n\nNotes:\n * yabai does what `hs.spaces.moveWindowToSpace()` used to: it moves a window to another Space instantly, invisibly, and without touching the mouse. It manages that because its scripting addition is injected into Dock.app, so the window server sees the request arriving from one of the few processes still permitted to make it.\n * That injection requires System Integrity Protection to be partially disabled and the addition to be loaded (`sudo yabai --load-sa`), so this can never be the only strategy. On a machine without yabai this Spoon behaves exactly as it did before yabai was ever mentioned: an absent yabai is not an error, is never reported as one, and simply drops the ladder to its next rung.\n * yabai is also consulted as a third source of windows, alongside the window filter and `SummonWindow.deepScan`. Its server tracks every window on every Space continuously, so unlike the other two it does not depend on what Accessibility is willing to tell this process at the moment you ask.\n * A window that *only* yabai can see has no `hs.window` behind it, so it can only be moved by yabai -- the native call and the drag both need a real window object. Such a window is summoned or not; there is no fallback for it.",
+        "doc" : "Whether to use yabai, when it is installed, to move windows and to find them. Defaults to `true`.\n\nyabai does what `hs.spaces.moveWindowToSpace()` used to: it moves a window instantly, invisibly and without touching the mouse, because its scripting addition is injected into Dock.app, one of the few processes the window server still trusts with the request.\nThat injection needs System Integrity Protection partially disabled and the addition loaded (`sudo yabai --load-sa`), so it can never be the only strategy. An absent yabai is not an error, is never reported as one, and simply drops the ladder to its next rung.\nyabai is also a third source of windows: its server tracks every window on every Space continuously, so unlike the other two it does not depend on what Accessibility will tell this process.\nA window only yabai can see has no `hs.window` behind it, so only yabai can move it -- the native call and the drag both need a real window object, and there is no fallback for such a window.",
         "stripped_doc" : [
           "Whether to use yabai, when it is installed, to move windows and to find them. Defaults to `true`.",
-          ""
+          "",
+          "yabai does what `hs.spaces.moveWindowToSpace()` used to: it moves a window instantly, invisibly and without touching the mouse, because its scripting addition is injected into Dock.app, one of the few processes the window server still trusts with the request.",
+          "That injection needs System Integrity Protection partially disabled and the addition loaded (`sudo yabai --load-sa`), so it can never be the only strategy. An absent yabai is not an error, is never reported as one, and simply drops the ladder to its next rung.",
+          "yabai is also a third source of windows: its server tracks every window on every Space continuously, so unlike the other two it does not depend on what Accessibility will tell this process.",
+          "A window only yabai can see has no `hs.window` behind it, so only yabai can move it -- the native call and the drag both need a real window object, and there is no fallback for such a window."
         ],
-        "def" : "SummonWindow.useYabai",
         "desc" : "Whether to use yabai, when it is installed, to move windows and to find them. Defaults to `true`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * yabai does what `hs.spaces.moveWindowToSpace()` used to: it moves a window to another Space instantly, invisibly, and without touching the mouse. It manages that because its scripting addition is injected into Dock.app, so the window server sees the request arriving from one of the few processes still permitted to make it.",
-          " * That injection requires System Integrity Protection to be partially disabled and the addition to be loaded (`sudo yabai --load-sa`), so this can never be the only strategy. On a machine without yabai this Spoon behaves exactly as it did before yabai was ever mentioned: an absent yabai is not an error, is never reported as one, and simply drops the ladder to its next rung.",
-          " * yabai is also consulted as a third source of windows, alongside the window filter and `SummonWindow.deepScan`. Its server tracks every window on every Space continuously, so unlike the other two it does not depend on what Accessibility is willing to tell this process at the moment you ask.",
-          " * A window that *only* yabai can see has no `hs.window` behind it, so it can only be moved by yabai -- the native call and the drag both need a real window object. Such a window is summoned or not; there is no fallback for it."
+
         ],
         "signature" : "SummonWindow.useYabai",
         "type" : "Variable",
@@ -1100,20 +1136,21 @@
 
         ],
         "name" : "useYabai",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.useYabai"
       },
       {
-        "doc" : "How long a yabai query result is reused before it is fetched again, in seconds. Defaults to `3`.\n\nNotes:\n * Only the window list is served from this cache, and only for the menubar menu: `hs.menubar` demands a menu table synchronously, so it cannot wait for a subprocess. The chooser refreshes before it opens, and a move never uses a cached Space list at all -- Mission Control indices renumber whenever a Space is created or dragged, and a stale one would not fail, it would put the window on the wrong Space.",
+        "doc" : "How long a yabai query result is reused before it is fetched again, in seconds. Defaults to `3`.\n\nOnly the window list is served from this cache, and only for the menubar menu, since `hs.menubar` demands its table synchronously. The chooser refreshes before it opens, and a move never uses a cached Space list: Mission Control indices renumber whenever a Space is created or dragged, and a stale one would not fail, it would move the window to the wrong Space.",
         "stripped_doc" : [
           "How long a yabai query result is reused before it is fetched again, in seconds. Defaults to `3`.",
-          ""
+          "",
+          "Only the window list is served from this cache, and only for the menubar menu, since `hs.menubar` demands its table synchronously. The chooser refreshes before it opens, and a move never uses a cached Space list: Mission Control indices renumber whenever a Space is created or dragged, and a stale one would not fail, it would move the window to the wrong Space."
         ],
-        "def" : "SummonWindow.yabaiCacheSeconds",
         "desc" : "How long a yabai query result is reused before it is fetched again, in seconds. Defaults to `3`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * Only the window list is served from this cache, and only for the menubar menu: `hs.menubar` demands a menu table synchronously, so it cannot wait for a subprocess. The chooser refreshes before it opens, and a move never uses a cached Space list at all -- Mission Control indices renumber whenever a Space is created or dragged, and a stale one would not fail, it would put the window on the wrong Space."
+
         ],
         "signature" : "SummonWindow.yabaiCacheSeconds",
         "type" : "Variable",
@@ -1121,21 +1158,22 @@
 
         ],
         "name" : "yabaiCacheSeconds",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.yabaiCacheSeconds"
       },
       {
-        "doc" : "Full path to the yabai binary, or `nil` to probe the usual install locations. Defaults to `nil`.\n\nNotes:\n * `hs.task` cannot search `PATH`, and handing the search to a shell instead would be worse than useless: Hammerspoon inherits launchd's environment rather than your login shell's, so `command -v yabai` run from here would miss on exactly the machines where a shell rc file put yabai on the path. A short list of known install prefixes is probed instead.\n * Set this if yabai lives somewhere unusual. Unlike a failed probe, a path set here that is not an executable file is a mistake in the config rather than a missing optional dependency, and is warned about once.",
+        "doc" : "Full path to the yabai binary, or `nil` to probe the usual install locations. Defaults to `nil`.\n\n`hs.task` cannot search `PATH`, and handing the search to a shell would be worse than useless: Hammerspoon inherits launchd's environment rather than your login shell's, so `command -v yabai` would miss on exactly the machines where a shell rc file put it on the path. A short list of install prefixes is probed instead.\nSet this if yabai lives somewhere unusual. Unlike a failed probe, a path set here that is not executable is a config mistake, and is warned about once.",
         "stripped_doc" : [
           "Full path to the yabai binary, or `nil` to probe the usual install locations. Defaults to `nil`.",
-          ""
+          "",
+          "`hs.task` cannot search `PATH`, and handing the search to a shell would be worse than useless: Hammerspoon inherits launchd's environment rather than your login shell's, so `command -v yabai` would miss on exactly the machines where a shell rc file put it on the path. A short list of install prefixes is probed instead.",
+          "Set this if yabai lives somewhere unusual. Unlike a failed probe, a path set here that is not executable is a config mistake, and is warned about once."
         ],
-        "def" : "SummonWindow.yabaiPath",
         "desc" : "Full path to the yabai binary, or `nil` to probe the usual install locations. Defaults to `nil`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * `hs.task` cannot search `PATH`, and handing the search to a shell instead would be worse than useless: Hammerspoon inherits launchd's environment rather than your login shell's, so `command -v yabai` run from here would miss on exactly the machines where a shell rc file put yabai on the path. A short list of known install prefixes is probed instead.",
-          " * Set this if yabai lives somewhere unusual. Unlike a failed probe, a path set here that is not an executable file is a mistake in the config rather than a missing optional dependency, and is warned about once."
+
         ],
         "signature" : "SummonWindow.yabaiPath",
         "type" : "Variable",
@@ -1143,20 +1181,21 @@
 
         ],
         "name" : "yabaiPath",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.yabaiPath"
       },
       {
-        "doc" : "How long a single yabai invocation may run before it is killed, in seconds. Defaults to `1.5`.\n\nNotes:\n * `yabai -m ...` is a thin client that talks to the running yabai server over a unix socket, and every command this Spoon issues takes single-digit milliseconds when that server is healthy. This limit exists only so a wedged server cannot hold a summon open forever; reaching it always means something is wrong elsewhere.",
+        "doc" : "How long a single yabai invocation may run before it is killed, in seconds. Defaults to `1.5`.\n\n`yabai -m ...` is a thin client over a unix socket, and every command here takes single-digit milliseconds when the server is healthy. This exists only so a wedged server cannot hold a summon open forever; reaching it means something is wrong elsewhere.",
         "stripped_doc" : [
           "How long a single yabai invocation may run before it is killed, in seconds. Defaults to `1.5`.",
-          ""
+          "",
+          "`yabai -m ...` is a thin client over a unix socket, and every command here takes single-digit milliseconds when the server is healthy. This exists only so a wedged server cannot hold a summon open forever; reaching it means something is wrong elsewhere."
         ],
-        "def" : "SummonWindow.yabaiTimeout",
         "desc" : "How long a single yabai invocation may run before it is killed, in seconds. Defaults to `1.5`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * `yabai -m ...` is a thin client that talks to the running yabai server over a unix socket, and every command this Spoon issues takes single-digit milliseconds when that server is healthy. This limit exists only so a wedged server cannot hold a summon open forever; reaching it always means something is wrong elsewhere."
+
         ],
         "signature" : "SummonWindow.yabaiTimeout",
         "type" : "Variable",
@@ -1164,20 +1203,21 @@
 
         ],
         "name" : "yabaiTimeout",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.yabaiTimeout"
       },
       {
-        "doc" : "How long to wait for a window to actually arrive after yabai reports the move succeeded, in seconds. Defaults to `0.6`.\n\nNotes:\n * yabai exiting zero means \"the command was accepted\", which is emphatically not the same as \"the window moved\". On recent macOS builds the scripting addition can be loaded, report success, and do nothing at all -- so the move is verified here exactly as it is for the other two rungs, and never believed.",
+        "doc" : "How long to wait for a window to actually arrive after yabai reports the move succeeded, in seconds. Defaults to `0.6`.\n\nyabai exiting zero means the command was accepted, not that the window moved: on recent macOS builds the scripting addition can be loaded, report success and do nothing. The move is verified exactly as the other two rungs are.",
         "stripped_doc" : [
           "How long to wait for a window to actually arrive after yabai reports the move succeeded, in seconds. Defaults to `0.6`.",
-          ""
+          "",
+          "yabai exiting zero means the command was accepted, not that the window moved: on recent macOS builds the scripting addition can be loaded, report success and do nothing. The move is verified exactly as the other two rungs are."
         ],
-        "def" : "SummonWindow.yabaiVerifyTimeout",
         "desc" : "How long to wait for a window to actually arrive after yabai reports the move succeeded, in seconds. Defaults to `0.6`.",
+        "parameters" : [
+
+        ],
         "notes" : [
-          " * yabai exiting zero means \"the command was accepted\", which is emphatically not the same as \"the window moved\". On recent macOS builds the scripting addition can be loaded, report success, and do nothing at all -- so the move is verified here exactly as it is for the other two rungs, and never believed."
+
         ],
         "signature" : "SummonWindow.yabaiVerifyTimeout",
         "type" : "Variable",
@@ -1185,127 +1225,131 @@
 
         ],
         "name" : "yabaiVerifyTimeout",
-        "parameters" : [
-
-        ]
+        "def" : "SummonWindow.yabaiVerifyTimeout"
       },
       {
-        "doc" : "Releases the mouse button and abandons any drag in progress.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Called from `SummonWindow:stop()`. A config reload part-way through a drag would otherwise collect the timers that hold the sequence together and leave the button down with nothing left to release it.",
+        "doc" : "Releases the mouse button and abandons any drag in progress.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nCalled from `SummonWindow:stop()`. A config reload part-way through a drag would otherwise collect the timers that hold the sequence together and leave the button down with nothing left to release it.",
         "stripped_doc" : [
           "Releases the mouse button and abandons any drag in progress.",
           ""
         ],
-        "def" : "SummonWindow:abortDrag() -> self",
         "desc" : "Releases the mouse button and abandons any drag in progress.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Called from `SummonWindow:stop()`. A config reload part-way through a drag would otherwise collect the timers that hold the sequence together and leave the button down with nothing left to release it."
+
         ],
         "signature" : "SummonWindow:abortDrag() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Called from `SummonWindow:stop()`. A config reload part-way through a drag would otherwise collect the timers that hold the sequence together and leave the button down with nothing left to release it."
         ],
         "name" : "abortDrag",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:abortDrag() -> self"
       },
       {
-        "doc" : "Kills any yabai commands in flight and abandons whatever they were part of.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Called from `SummonWindow:stop()`. Each job is marked settled *before* its process is signalled, which is the whole point: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the move ladder on into a drag nobody asked for.",
+        "doc" : "Kills any yabai commands in flight and abandons whatever they were part of.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nCalled from `SummonWindow:stop()`. Each job is marked settled *before* its process is signalled: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the move ladder on into a drag nobody asked for.",
         "stripped_doc" : [
           "Kills any yabai commands in flight and abandons whatever they were part of.",
           ""
         ],
-        "def" : "SummonWindow:abortYabai() -> self",
         "desc" : "Kills any yabai commands in flight and abandons whatever they were part of.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Called from `SummonWindow:stop()`. Each job is marked settled *before* its process is signalled, which is the whole point: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the move ladder on into a drag nobody asked for."
+
         ],
         "signature" : "SummonWindow:abortYabai() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Called from `SummonWindow:stop()`. Each job is marked settled *before* its process is signalled: terminating a task causes a completion callback rather than cancelling one, so without the flag a config reload would answer into a half-torn-down Spoon and walk the move ladder on into a drag nobody asked for."
         ],
         "name" : "abortYabai",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:abortYabai() -> self"
       },
       {
-        "doc" : "Binds hotkeys for SummonWindow.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * summon - Show the window chooser, or hide it if it is already showing\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * For example: `spoon.SummonWindow:bindHotkeys({ summon = { { \"cmd\", \"alt\", \"shift\" }, \"S\" } })`",
+        "doc" : "Binds hotkeys for SummonWindow.\n\nParameters:\n * mapping - A table containing hotkey modifier\/key details for the following items:\n   * summon - Show the window chooser, or hide it if it is already showing\n\nReturns:\n * The SummonWindow object\n\nFor example: `spoon.SummonWindow:bindHotkeys({ summon = { { \"cmd\", \"alt\", \"shift\" }, \"S\" } })`",
         "stripped_doc" : [
           "Binds hotkeys for SummonWindow.",
           ""
         ],
-        "def" : "SummonWindow:bindHotkeys(mapping) -> self",
         "desc" : "Binds hotkeys for SummonWindow.",
+        "parameters" : [
+          " * mapping - A table containing hotkey modifier\/key details for the following items:",
+          "   * summon - Show the window chooser, or hide it if it is already showing",
+          ""
+        ],
         "notes" : [
-          " * For example: `spoon.SummonWindow:bindHotkeys({ summon = { { \"cmd\", \"alt\", \"shift\" }, \"S\" } })`"
+
         ],
         "signature" : "SummonWindow:bindHotkeys(mapping) -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "For example: `spoon.SummonWindow:bindHotkeys({ summon = { { \"cmd\", \"alt\", \"shift\" }, \"S\" } })`"
         ],
         "name" : "bindHotkeys",
-        "parameters" : [
-          " * mapping - A table containing hotkey modifier\/key details for the following items:",
-          "   * summon - Show the window chooser, or hide it if it is already showing",
-          ""
-        ]
+        "def" : "SummonWindow:bindHotkeys(mapping) -> self"
       },
       {
-        "doc" : "Returns the windows currently living on other Spaces, in the order they are listed.\n\nParameters:\n * None\n\nReturns:\n * A list of plain tables with `winId`, `spaceId`, `appName`, `bundleID`, `title`, `minimized`, `label`, `order` and `yabaiOnly` keys\n\nNotes:\n * Rebuilds from scratch on every call, and as a side effect refreshes the internal id-to-window map that `SummonWindow:summonById()` reads.\n * The yabai source is served from the last snapshot rather than fetched here, because `hs.menubar` demands its menu synchronously and cannot wait for a subprocess. `SummonWindow:show()` refreshes before it builds, so the chooser is always current; the menubar menu can be up to `SummonWindow.yabaiCacheSeconds` behind.",
+        "doc" : "Returns the windows currently living on other Spaces, in the order they are listed.\n\nParameters:\n * opts - an optional table; `deep` overrides `SummonWindow.deepScan` for this call\n\nReturns:\n * A list of plain tables with `winId`, `spaceId`, `appName`, `bundleID`, `title`, `minimized`, `label`, `order` and `yabaiOnly` keys\n\nRebuilds from scratch on every call, and as a side effect refreshes the internal id-to-window map that `SummonWindow:summonById()` reads.\nThe yabai source is served from the last snapshot rather than fetched here, because `hs.menubar` demands its menu synchronously and cannot wait for a subprocess. `SummonWindow:show()` refreshes before it builds, so the chooser is always current; the menubar menu can be up to `SummonWindow.yabaiCacheSeconds` behind.\nThe menubar path passes `deep = false` for the same reason: the `hs.window.allWindows()` sweep can take seconds, and the menu callback cannot wait for it either. The chooser, `status()` and `diagnose()` all still run the full sweep.",
         "stripped_doc" : [
           "Returns the windows currently living on other Spaces, in the order they are listed.",
           ""
         ],
-        "def" : "SummonWindow:candidates() -> table",
         "desc" : "Returns the windows currently living on other Spaces, in the order they are listed.",
-        "notes" : [
-          " * Rebuilds from scratch on every call, and as a side effect refreshes the internal id-to-window map that `SummonWindow:summonById()` reads.",
-          " * The yabai source is served from the last snapshot rather than fetched here, because `hs.menubar` demands its menu synchronously and cannot wait for a subprocess. `SummonWindow:show()` refreshes before it builds, so the chooser is always current; the menubar menu can be up to `SummonWindow.yabaiCacheSeconds` behind."
+        "parameters" : [
+          " * opts - an optional table; `deep` overrides `SummonWindow.deepScan` for this call",
+          ""
         ],
-        "signature" : "SummonWindow:candidates() -> table",
+        "notes" : [
+
+        ],
+        "signature" : "SummonWindow:candidates([opts]) -> table",
         "type" : "Method",
         "returns" : [
           " * A list of plain tables with `winId`, `spaceId`, `appName`, `bundleID`, `title`, `minimized`, `label`, `order` and `yabaiOnly` keys",
-          ""
+          "",
+          "Rebuilds from scratch on every call, and as a side effect refreshes the internal id-to-window map that `SummonWindow:summonById()` reads.",
+          "The yabai source is served from the last snapshot rather than fetched here, because `hs.menubar` demands its menu synchronously and cannot wait for a subprocess. `SummonWindow:show()` refreshes before it builds, so the chooser is always current; the menubar menu can be up to `SummonWindow.yabaiCacheSeconds` behind.",
+          "The menubar path passes `deep = false` for the same reason: the `hs.window.allWindows()` sweep can take seconds, and the menu callback cannot wait for it either. The chooser, `status()` and `diagnose()` all still run the full sweep."
         ],
         "name" : "candidates",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:candidates([opts]) -> table"
       },
       {
-        "doc" : "Reports what each window source can actually see, and why any given window is or is not offered.\n\nParameters:\n * None\n\nReturns:\n * The report text, which is also printed to the Console\n\nNotes:\n * Run this first if the list comes up empty. The line that matters is the per-source count of windows found on *other* Spaces: if both sources report zero while windows plainly exist elsewhere, macOS is hiding them from Accessibility and no amount of filtering will help.\n * Each listed window is tagged with the source that found it -- `filter`, `ax`, or both -- which shows whether `SummonWindow.deepScan` is earning its keep on this machine.",
+        "doc" : "Reports what each window source can actually see, and why any given window is or is not offered.\n\nParameters:\n * None\n\nReturns:\n * The report text, which is also printed to the Console\n\nRun this first if the list comes up empty. The line that matters is the per-source count of windows found on *other* Spaces: if both sources report zero while windows plainly exist elsewhere, macOS is hiding them from Accessibility and no amount of filtering will help.\nEach listed window is tagged with the source that found it -- `filter`, `ax`, or both -- which shows whether `SummonWindow.deepScan` is earning its keep on this machine.",
         "stripped_doc" : [
           "Reports what each window source can actually see, and why any given window is or is not offered.",
           ""
         ],
-        "def" : "SummonWindow:diagnose() -> string",
         "desc" : "Reports what each window source can actually see, and why any given window is or is not offered.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Run this first if the list comes up empty. The line that matters is the per-source count of windows found on *other* Spaces: if both sources report zero while windows plainly exist elsewhere, macOS is hiding them from Accessibility and no amount of filtering will help.",
-          " * Each listed window is tagged with the source that found it -- `filter`, `ax`, or both -- which shows whether `SummonWindow.deepScan` is earning its keep on this machine."
+
         ],
         "signature" : "SummonWindow:diagnose() -> string",
         "type" : "Method",
         "returns" : [
           " * The report text, which is also printed to the Console",
-          ""
+          "",
+          "Run this first if the list comes up empty. The line that matters is the per-source count of windows found on *other* Spaces: if both sources report zero while windows plainly exist elsewhere, macOS is hiding them from Accessibility and no amount of filtering will help.",
+          "Each listed window is tagged with the source that found it -- `filter`, `ax`, or both -- which shows whether `SummonWindow.deepScan` is earning its keep on this machine."
         ],
         "name" : "diagnose",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:diagnose() -> string"
       },
       {
         "doc" : "Closes the chooser if it is open.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object",
@@ -1313,8 +1357,11 @@
           "Closes the chooser if it is open.",
           ""
         ],
-        "def" : "SummonWindow:hide() -> self",
         "desc" : "Closes the chooser if it is open.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
 
         ],
@@ -1324,226 +1371,235 @@
           " * The SummonWindow object"
         ],
         "name" : "hide",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:hide() -> self"
       },
       {
-        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Deliberately starts nothing. The menubar item, the chooser and the window filter all belong to `SummonWindow:start()`.\n * It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser or menubar item that is already live.",
+        "doc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nDeliberately starts nothing. The menubar item, the chooser and the window filter all belong to `SummonWindow:start()`.\nIt is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser or menubar item that is already live.",
         "stripped_doc" : [
           "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
           ""
         ],
-        "def" : "SummonWindow:init() -> self",
         "desc" : "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Deliberately starts nothing. The menubar item, the chooser and the window filter all belong to `SummonWindow:start()`.",
-          " * It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser or menubar item that is already live."
+
         ],
         "signature" : "SummonWindow:init() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Deliberately starts nothing. The menubar item, the chooser and the window filter all belong to `SummonWindow:start()`.",
+          "It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser or menubar item that is already live."
         ],
         "name" : "init",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:init() -> self"
       },
       {
-        "doc" : "Re-reads yabai's space and window lists into the snapshot the window list is built from.\n\nParameters:\n * force - Optional boolean, `true` to ignore `SummonWindow.yabaiCacheSeconds`. Defaults to `false`\n * done - Optional function called with `true` when both lists were read, `false` otherwise\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * When yabai is switched off or not installed, `done` is called immediately and synchronously with `false`. That is what keeps every caller's behaviour identical to what it was before yabai existed.",
+        "doc" : "Re-reads yabai's space and window lists into the snapshot the window list is built from.\n\nParameters:\n * force - Optional boolean, `true` to ignore `SummonWindow.yabaiCacheSeconds`. Defaults to `false`\n * done - Optional function called with `true` when both lists were read, `false` otherwise\n\nReturns:\n * The SummonWindow object\n\nWhen yabai is off or not installed, `done` is called immediately and synchronously with `false`, which keeps every caller's behaviour identical to what it was before yabai existed.",
         "stripped_doc" : [
           "Re-reads yabai's space and window lists into the snapshot the window list is built from.",
           ""
         ],
-        "def" : "SummonWindow:refreshYabai([force], [done]) -> self",
         "desc" : "Re-reads yabai's space and window lists into the snapshot the window list is built from.",
+        "parameters" : [
+          " * force - Optional boolean, `true` to ignore `SummonWindow.yabaiCacheSeconds`. Defaults to `false`",
+          " * done - Optional function called with `true` when both lists were read, `false` otherwise",
+          ""
+        ],
         "notes" : [
-          " * When yabai is switched off or not installed, `done` is called immediately and synchronously with `false`. That is what keeps every caller's behaviour identical to what it was before yabai existed."
+
         ],
         "signature" : "SummonWindow:refreshYabai([force], [done]) -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "When yabai is off or not installed, `done` is called immediately and synchronously with `false`, which keeps every caller's behaviour identical to what it was before yabai existed."
         ],
         "name" : "refreshYabai",
-        "parameters" : [
-          " * force - Optional boolean, `true` to ignore `SummonWindow.yabaiCacheSeconds`. Defaults to `false`",
-          " * done - Optional function called with `true` when both lists were read, `false` otherwise",
-          ""
-        ]
+        "def" : "SummonWindow:refreshYabai([force], [done]) -> self"
       },
       {
-        "doc" : "Opens the chooser, listing every window on another Space.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Refuses to open while you are on a fullscreen Space, because the window server will not accept a window moved into one.\n * When yabai is in use the chooser opens a few milliseconds late, because it waits for a current window list rather than showing a cached one. Without yabai it opens synchronously, exactly as it always did.",
+        "doc" : "Opens the chooser, listing every window on another Space.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nRefuses to open while you are on a fullscreen Space, because the window server will not accept a window moved into one.\nWhen yabai is in use the chooser opens a few milliseconds late, because it waits for a current window list rather than showing a cached one. Without yabai it opens synchronously, exactly as it always did.",
         "stripped_doc" : [
           "Opens the chooser, listing every window on another Space.",
           ""
         ],
-        "def" : "SummonWindow:show() -> self",
         "desc" : "Opens the chooser, listing every window on another Space.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Refuses to open while you are on a fullscreen Space, because the window server will not accept a window moved into one.",
-          " * When yabai is in use the chooser opens a few milliseconds late, because it waits for a current window list rather than showing a cached one. Without yabai it opens synchronously, exactly as it always did."
+
         ],
         "signature" : "SummonWindow:show() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Refuses to open while you are on a fullscreen Space, because the window server will not accept a window moved into one.",
+          "When yabai is in use the chooser opens a few milliseconds late, because it waits for a current window list rather than showing a cached one. Without yabai it opens synchronously, exactly as it always did."
         ],
         "name" : "show",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:show() -> self"
       },
       {
-        "doc" : "Adds the menubar item and begins tracking windows across Spaces.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Calling this on an already-started Spoon restarts it cleanly.\n * Nothing polls and no timer runs. The window list is built on demand, when the chooser opens or the menu is pulled down.\n * Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
+        "doc" : "Adds the menubar item and begins tracking windows across Spaces.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nCalling this on an already-started Spoon restarts it cleanly.\nNothing polls and no timer runs. The window list is built on demand, when the chooser opens or the menu is pulled down.\nWarns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it.",
         "stripped_doc" : [
           "Adds the menubar item and begins tracking windows across Spaces.",
           ""
         ],
-        "def" : "SummonWindow:start() -> self",
         "desc" : "Adds the menubar item and begins tracking windows across Spaces.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Calling this on an already-started Spoon restarts it cleanly.",
-          " * Nothing polls and no timer runs. The window list is built on demand, when the chooser opens or the menu is pulled down.",
-          " * Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
+
         ],
         "signature" : "SummonWindow:start() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Calling this on an already-started Spoon restarts it cleanly.",
+          "Nothing polls and no timer runs. The window list is built on demand, when the chooser opens or the menu is pulled down.",
+          "Warns via `hs.alert` if Accessibility permission has not been granted, since nothing works without it."
         ],
         "name" : "start",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:start() -> self"
       },
       {
-        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `chooserVisible`, `currentSpace`, `summonable`, `dragging`, `yabai`, `yabaiBusy` and `pendingGoto` keys\n\nNotes:\n * `yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `SummonWindow:diagnose()` answers that.",
+        "doc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `chooserVisible`, `currentSpace`, `summonable`, `dragging`, `yabai`, `yabaiBusy` and `pendingGoto` keys\n\n`yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `SummonWindow:diagnose()` answers that.",
         "stripped_doc" : [
           "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
           ""
         ],
-        "def" : "SummonWindow:status() -> table",
         "desc" : "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * `yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `SummonWindow:diagnose()` answers that."
+
         ],
         "signature" : "SummonWindow:status() -> table",
         "type" : "Method",
         "returns" : [
           " * A table with `running`, `menubar`, `chooserVisible`, `currentSpace`, `summonable`, `dragging`, `yabai`, `yabaiBusy` and `pendingGoto` keys",
-          ""
+          "",
+          "`yabai` is the resolved binary path, or `false` when yabai is switched off or not installed. It says nothing about whether the yabai *service* is running -- only `SummonWindow:diagnose()` answers that."
         ],
         "name" : "status",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:status() -> table"
       },
       {
-        "doc" : "Removes the menubar item, destroys the chooser and drops the window filter.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * Any hotkeys bound with `SummonWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "doc" : "Removes the menubar item, destroys the chooser and drops the window filter.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nAny hotkeys bound with `SummonWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
         "stripped_doc" : [
           "Removes the menubar item, destroys the chooser and drops the window filter.",
           ""
         ],
-        "def" : "SummonWindow:stop() -> self",
         "desc" : "Removes the menubar item, destroys the chooser and drops the window filter.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * Any hotkeys bound with `SummonWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
+
         ],
         "signature" : "SummonWindow:stop() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "Any hotkeys bound with `SummonWindow:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
         ],
         "name" : "stop",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:stop() -> self"
       },
       {
-        "doc" : "Moves one window to the current Space by its window id.\n\nParameters:\n * winId - The window id, as returned in the `winId` field of `SummonWindow:candidates()`\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * The id must have come from a `SummonWindow:candidates()` pass, since everything known about the window is looked up in the maps that call builds. Windows on other Spaces cannot be recovered from an id alone.\n * Tries every rung of the move ladder in turn -- yabai, then the native window server call, then dragging -- stopping at the first one whose result can be *verified*. A window only yabai could see has no `hs.window` behind it, so for that window the ladder is one rung long.",
+        "doc" : "Moves one window to the current Space by its window id.\n\nParameters:\n * winId - The window id, as returned in the `winId` field of `SummonWindow:candidates()`\n\nReturns:\n * The SummonWindow object\n\nThe id must have come from a `SummonWindow:candidates()` pass, since everything known about the window is looked up in the maps that call builds. Windows on other Spaces cannot be recovered from an id alone.\nTries every rung of the move ladder in turn -- yabai, then the native window server call, then dragging -- stopping at the first one whose result can be *verified*. A window only yabai could see has no `hs.window` behind it, so for that window the ladder is one rung long.",
         "stripped_doc" : [
           "Moves one window to the current Space by its window id.",
           ""
         ],
-        "def" : "SummonWindow:summonById(winId) -> self",
         "desc" : "Moves one window to the current Space by its window id.",
+        "parameters" : [
+          " * winId - The window id, as returned in the `winId` field of `SummonWindow:candidates()`",
+          ""
+        ],
         "notes" : [
-          " * The id must have come from a `SummonWindow:candidates()` pass, since everything known about the window is looked up in the maps that call builds. Windows on other Spaces cannot be recovered from an id alone.",
-          " * Tries every rung of the move ladder in turn -- yabai, then the native window server call, then dragging -- stopping at the first one whose result can be *verified*. A window only yabai could see has no `hs.window` behind it, so for that window the ladder is one rung long."
+
         ],
         "signature" : "SummonWindow:summonById(winId) -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "The id must have come from a `SummonWindow:candidates()` pass, since everything known about the window is looked up in the maps that call builds. Windows on other Spaces cannot be recovered from an id alone.",
+          "Tries every rung of the move ladder in turn -- yabai, then the native window server call, then dragging -- stopping at the first one whose result can be *verified*. A window only yabai could see has no `hs.window` behind it, so for that window the ladder is one rung long."
         ],
         "name" : "summonById",
-        "parameters" : [
-          " * winId - The window id, as returned in the `winId` field of `SummonWindow:candidates()`",
-          ""
-        ]
+        "def" : "SummonWindow:summonById(winId) -> self"
       },
       {
-        "doc" : "Opens the chooser, or closes it if it is already open. This is what the hotkey is bound to.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nNotes:\n * If the last summon failed and left an offer to jump to that window's Space, pressing the hotkey again within `SummonWindow.gotoGraceSeconds` takes the offer instead of reopening the chooser. The offer is consumed either way, so a third press behaves normally.",
+        "doc" : "Opens the chooser, or closes it if it is already open. This is what the hotkey is bound to.\n\nParameters:\n * None\n\nReturns:\n * The SummonWindow object\n\nIf the last summon failed and left an offer to jump to that window's Space, pressing the hotkey again within `SummonWindow.gotoGraceSeconds` takes the offer instead of reopening the chooser. The offer is consumed either way, so a third press behaves normally.",
         "stripped_doc" : [
           "Opens the chooser, or closes it if it is already open. This is what the hotkey is bound to.",
           ""
         ],
-        "def" : "SummonWindow:toggle() -> self",
         "desc" : "Opens the chooser, or closes it if it is already open. This is what the hotkey is bound to.",
+        "parameters" : [
+          " * None",
+          ""
+        ],
         "notes" : [
-          " * If the last summon failed and left an offer to jump to that window's Space, pressing the hotkey again within `SummonWindow.gotoGraceSeconds` takes the offer instead of reopening the chooser. The offer is consumed either way, so a third press behaves normally."
+
         ],
         "signature" : "SummonWindow:toggle() -> self",
         "type" : "Method",
         "returns" : [
           " * The SummonWindow object",
-          ""
+          "",
+          "If the last summon failed and left an offer to jump to that window's Space, pressing the hotkey again within `SummonWindow.gotoGraceSeconds` takes the offer instead of reopening the chooser. The offer is consumed either way, so a third press behaves normally."
         ],
         "name" : "toggle",
-        "parameters" : [
-          " * None",
-          ""
-        ]
+        "def" : "SummonWindow:toggle() -> self"
       },
       {
-        "doc" : "Reports whether a window is currently on a given Space.\n\nParameters:\n * win - an `hs.window` object\n * spaceId - the integer id of a Space\n\nReturns:\n * `true` if the window is on that Space, `false` if it is not or cannot be determined\n\nNotes:\n * This is the Spoon's only source of truth about whether a move worked. `hs.spaces.moveWindowToSpace()` returns `true` unconditionally -- it does not check, and cannot check, what the window server actually did with the request -- so its result is ignored entirely in favour of asking where the window ended up.\n * Only meaningful once a move has settled. During a drag the window server does not commit the move until the mouse button is released, so this reports the *old* Space right up until the drop.",
+        "doc" : "Reports whether a window is currently on a given Space.\n\nParameters:\n * win - an `hs.window` object\n * spaceId - the integer id of a Space\n\nReturns:\n * `true` if the window is on that Space, `false` if it is not or cannot be determined\n\nThe Spoon's only source of truth about whether a move worked. `hs.spaces.moveWindowToSpace()` returns `true` unconditionally and cannot check what the window server did, so its result is ignored in favour of asking where the window ended up.\nOnly meaningful once a move has settled: during a drag the window server does not commit until the mouse button is released, so this reports the *old* Space right up until the drop.",
         "stripped_doc" : [
           "Reports whether a window is currently on a given Space.",
           ""
         ],
-        "def" : "SummonWindow:windowIsOn(win, spaceId) -> boolean",
         "desc" : "Reports whether a window is currently on a given Space.",
+        "parameters" : [
+          " * win - an `hs.window` object",
+          " * spaceId - the integer id of a Space",
+          ""
+        ],
         "notes" : [
-          " * This is the Spoon's only source of truth about whether a move worked. `hs.spaces.moveWindowToSpace()` returns `true` unconditionally -- it does not check, and cannot check, what the window server actually did with the request -- so its result is ignored entirely in favour of asking where the window ended up.",
-          " * Only meaningful once a move has settled. During a drag the window server does not commit the move until the mouse button is released, so this reports the *old* Space right up until the drop."
+
         ],
         "signature" : "SummonWindow:windowIsOn(win, spaceId) -> boolean",
         "type" : "Method",
         "returns" : [
           " * `true` if the window is on that Space, `false` if it is not or cannot be determined",
-          ""
+          "",
+          "The Spoon's only source of truth about whether a move worked. `hs.spaces.moveWindowToSpace()` returns `true` unconditionally and cannot check what the window server did, so its result is ignored in favour of asking where the window ended up.",
+          "Only meaningful once a move has settled: during a drag the window server does not commit until the mouse button is released, so this reports the *old* Space right up until the drop."
         ],
         "name" : "windowIsOn",
-        "parameters" : [
-          " * win - an `hs.window` object",
-          " * spaceId - the integer id of a Space",
-          ""
-        ]
+        "def" : "SummonWindow:windowIsOn(win, spaceId) -> boolean"
       }
+    ],
+    "Field" : [
+
     ],
     "name" : "SummonWindow"
   }
