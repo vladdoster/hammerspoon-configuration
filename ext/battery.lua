@@ -112,11 +112,14 @@ local updateMenuTitle = function()
         local amp = battery.amperage()
         if amp then
             local text = string.format('%+d\n', amp)
+            -- Defaulted, because both of these return nil when the reading is unavailable
+            -- and the comparison below would throw on nil. -1 is already this module's
+            -- "still calculating" value, which is what an unavailable reading amounts to.
             local timeValue = -999
             if batteryPowerSource() == 'AC Power' then
-                timeValue = battery.timeToFullCharge()
+                timeValue = battery.timeToFullCharge() or -1
             else
-                timeValue = battery.timeRemaining()
+                timeValue = battery.timeRemaining() or -1
             end
             text = text
                 .. ((timeValue < 0) and '???' or string.format('%d:%02d', math.floor(timeValue / 60), timeValue % 60))
@@ -194,7 +197,7 @@ local powerSourceChangeFN = function(justOn)
                         end
                     elseif
                         notificationStatus[i]
-                        and doEvery
+                        and v.doEvery
                         and (test.timeStamp - notificationStatus[i]) > v.doEvery
                     then
                         shouldWeDoSomething = true
@@ -235,15 +238,24 @@ local powerSourceChangeFN = function(justOn)
     end
 end
 -- local powerWatcher = battery.watcher.new(powerSourceChangeFN)
+-- Keys are stringified before they reach styledtext, and sorted as strings.
+--
+-- Both matter because this walks whatever hs.battery.getAll() nests, which it does not
+-- control. otherBatteryInfo() and privateBluetoothBatteryInfo() return one entry per
+-- connected Bluetooth device, so those sub-tables are arrays and their keys are numbers:
+-- styledtext.new() takes a string, a table or a styledtext object and throws on a number,
+-- and sortByKeys' default comparator throws on any table mixing number and string keys.
 local rawBatteryData
 rawBatteryData = function(tbl)
     local data = {}
     local rawStyle = { font = { name = 'Menlo', size = 10 }, color = { blue = 0.5, green = 0.5, red = 0.5 } }
-    for i, v in fnutils.sortByKeys(tbl) do
+    local byName = function(a, b) return tostring(a) < tostring(b) end
+    for i, v in fnutils.sortByKeys(tbl, byName) do
+        local key = tostring(i)
         if type(v) ~= 'table' then
-            table.insert(data, { title = styledtext.new(i .. ' = ' .. tostring(v), rawStyle), disabled = true })
+            table.insert(data, { title = styledtext.new(key .. ' = ' .. tostring(v), rawStyle), disabled = true })
         elseif next(v) then
-            table.insert(data, { title = styledtext.new(i, rawStyle), menu = rawBatteryData(v), disabled = false })
+            table.insert(data, { title = styledtext.new(key, rawStyle), menu = rawBatteryData(v), disabled = false })
         end
     end
     return data
@@ -266,10 +278,14 @@ local displayBatteryData = function(modifier)
         })
     end
     table.insert(menuTable, { title = '-' })
+    -- The fallback has to replace the whole formatted value, not stand in as an argument to
+    -- it: percentage() returns nil when the capacity readings are unavailable, and
+    -- string.format('%.2f%%', 'n/a') throws rather than printing "n/a".
+    local percentage = battery.percentage()
     table.insert(menuTable, {
         title = utf8.codepointToUTF8(0x26A1)
             .. '  Current Charge: '
-            .. string.format('%.2f%%', (battery.percentage() or 'n/a')),
+            .. (percentage and string.format('%.2f%%', percentage) or 'n/a'),
     })
     local timeTitle, timeValue = utf8.codepointToUTF8(0x1F552) .. '  ', nil
     if batteryPowerSource() == 'AC Power' then
@@ -314,7 +330,16 @@ end
 M.start = function()
     menuUserData, currentPowerSource = menubar.new(), ''
     powerSourceChangeFN(true)
-    menuUserData:setMenu(displayBatteryData)
+    -- Wrapped: hs.menubar calls this synchronously and expects a table back, so anything
+    -- thrown while building the menu takes the menu down with it and leaves a dead icon.
+    -- The battery data is read live from IOKit and its shape is not under our control, so
+    -- degrade to a visible row rather than trusting every future reading to be well-formed.
+    menuUserData:setMenu(function(mods)
+        local ok, menu = pcall(displayBatteryData, mods)
+        if ok then return menu end
+        M.logger.ef('battery menu build failed: %s', tostring(menu))
+        return { { title = 'Battery menu failed — see console', disabled = true } }
+    end)
     M.menuTitleChanger = timer.doEvery(5, powerSourceChangeFN)
     M.menuUserdata = menuUserData -- for debugging, may remove in the future
     return M
