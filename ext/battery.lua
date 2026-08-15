@@ -109,9 +109,9 @@ local updateMenuTitle = function()
     if menuUserData then
         local titleText = (batteryPowerSource() == 'AC Power') and onAC or onBattery
         local additionalTitleText
-        local amp = battery.amperage()
+        local amp = battery.percentage()
         if amp then
-            local text = string.format('%+d\n', amp)
+            local text = string.format(' %d%%', amp)
             -- Defaulted, because both of these return nil when the reading is unavailable
             -- and the comparison below would throw on nil. -1 is already this module's
             -- "still calculating" value, which is what an unavailable reading amounts to.
@@ -121,11 +121,11 @@ local updateMenuTitle = function()
             else
                 timeValue = battery.timeRemaining() or -1
             end
-            text = text
-                .. ((timeValue < 0) and '???' or string.format('%d:%02d', math.floor(timeValue / 60), timeValue % 60))
+            -- text = text
+            --     .. ((timeValue < 0) and '???' or string.format('%d:%02d', math.floor(timeValue / 60), timeValue % 60))
             local titleColor = { white = (host.interfaceStyle() == 'Dark') and 1 or 0 }
             additionalTitleText = styledtext.new(text, {
-                font = { name = 'Menlo', size = 9 },
+                font = { name = 'Menlo', size = 12 },
                 color = titleColor,
                 paragraphStyle = { alignment = 'center' },
             })
