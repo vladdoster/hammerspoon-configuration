@@ -5,7 +5,7 @@
 
 ## Features
 
-- Battery watcher
+- Battery menubar readout and low-battery alerts (`BatteryMonitor.spoon`)
 - Spaces navigation
 - Clipboard history
 

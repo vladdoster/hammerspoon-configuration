@@ -1,4 +1,5 @@
 Spoons/*
+!Spoons/BatteryMonitor.spoon
 !Spoons/ClipboardHistory.spoon
 !Spoons/DeminimizeWindow.spoon
 !Spoons/FocusBorder.spoon

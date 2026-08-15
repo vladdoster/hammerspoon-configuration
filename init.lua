@@ -1,13 +1,13 @@
 -- vim: set expandtab filetype=lua:
 require("hs.ipc")
 
-require("ext.battery")
 require("ext.volume")
 
 hs.window.animationDuration = 0.1
 
 hs.loadSpoon("SpoonInstall")
 
+spoon.SpoonInstall:andUse("BatteryMonitor", { start = true })
 spoon.SpoonInstall:andUse("ClipboardHistory", { hotkeys = { show = { { "cmd", "alt", "ctrl" }, "C" } }, start = true })
 spoon.SpoonInstall:andUse(
     "DeminimizeWindow",
