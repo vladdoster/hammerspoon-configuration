@@ -6,21 +6,18 @@ require("ext.volume")
 
 hs.window.animationDuration = 0.1
 
-hs.loadSpoon("PinnedWindows")
-spoon.PinnedWindows:bindHotkeys({ togglePin = { { "cmd", "alt", "shift" }, "P" } })
-spoon.PinnedWindows:start()
+hs.loadSpoon("SpoonInstall")
 
-hs.loadSpoon("SummonWindow")
-spoon.SummonWindow:bindHotkeys({ summon = { { "cmd", "alt", "shift" }, "S" } })
-spoon.SummonWindow:start()
-
-hs.loadSpoon("DeminimizeWindow")
-spoon.DeminimizeWindow:bindHotkeys({ restore = { { "cmd", "alt", "ctrl" }, "M" } })
-spoon.DeminimizeWindow:start()
-
-hs.loadSpoon("ClipboardHistory")
-spoon.ClipboardHistory:bindHotkeys({ show = { { "cmd", "alt", "ctrl" }, "C" } })
-spoon.ClipboardHistory:start()
+spoon.SpoonInstall:andUse("ClipboardHistory", { hotkeys = { show = { { "cmd", "alt", "ctrl" }, "C" } }, start = true })
+spoon.SpoonInstall:andUse(
+    "DeminimizeWindow",
+    { hotkeys = { restore = { { "cmd", "alt", "ctrl" }, "M" } }, start = true }
+)
+spoon.SpoonInstall:andUse(
+    "PinnedWindows",
+    { hotkeys = { togglePin = { { "cmd", "alt", "shift" }, "P" } }, start = true }
+)
+spoon.SpoonInstall:andUse("SummonWindow", { hotkeys = { summon = { { "cmd", "alt", "shift" }, "S" } }, start = true })
 
 require("ext.keybind").bind({
     ["R"] = function()
