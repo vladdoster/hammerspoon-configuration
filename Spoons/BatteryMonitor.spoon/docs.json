@@ -165,6 +165,28 @@
         "type": "Method"
       },
       {
+        "def": "BatteryMonitor:rebuild() -> self",
+        "desc": "Discards the icon canvas so the next update redraws it with the current `iconStyle`.",
+        "doc": "Discards the icon canvas so the next update redraws it with the current `iconStyle`.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nFor picking geometry and colours from the Console without a reload: assign to `BatteryMonitor.iconStyle`, call this, then `BatteryMonitor:update()`.",
+        "name": "rebuild",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "For picking geometry and colours from the Console without a reload: assign to `BatteryMonitor.iconStyle`, call this, then `BatteryMonitor:update()`."
+        ],
+        "signature": "BatteryMonitor:rebuild() -> self",
+        "stripped_doc": [
+          "Discards the icon canvas so the next update redraws it with the current `iconStyle`.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
         "def": "BatteryMonitor:bindHotkeys(mapping) -> self",
         "desc": "Binds hotkeys for BatteryMonitor.",
         "doc": "Binds hotkeys for BatteryMonitor.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * toggleAudio - Silence or restore spoken alerts\n\nReturns:\n * The BatteryMonitor object\n\nFor example: `spoon.BatteryMonitor:bindHotkeys({ toggleAudio = { { \"cmd\", \"alt\", \"shift\" }, \"B\" } })`",
@@ -190,7 +212,7 @@
       {
         "def": "BatteryMonitor:status() -> table",
         "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
-        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys\n\nEach entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `suppressAudio`, `source`, `charging`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys\n\nEach entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold.",
         "name": "status",
         "notes": [],
         "parameters": [
@@ -198,7 +220,7 @@
           ""
         ],
         "returns": [
-          " * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys",
+          " * A table with `running`, `suppressAudio`, `source`, `charging`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys",
           "",
           "Each entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold."
         ],
@@ -273,17 +295,73 @@
       },
       {
         "def": "BatteryMonitor.titleFont",
-        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
-        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "desc": "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.",
+        "doc": "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.\n\nDeliberately smaller than the 13pt an unstyled title gets: menu bar extras label themselves smaller than menu titles do. 11pt is what measuring the system battery against ours gives -- untouched, ours drew \"60%\" 27.5pt wide and 10.5pt tall where the system drew it 23.5 by 9, and both ratios land on 11. Setting the size also fixes the vertical placement, since the two titles share a baseline and only the taller glyphs made ours sit high.",
         "name": "titleFont",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "BatteryMonitor.titleFont",
         "stripped_doc": [
-          "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
+          "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.",
           "",
-          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
+          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+          "",
+          "Deliberately smaller than the 13pt an unstyled title gets: menu bar extras label themselves smaller than menu titles do. 11pt is what measuring the system battery against ours gives -- untouched, ours drew \"60%\" 27.5pt wide and 10.5pt tall where the system drew it 23.5 by 9, and both ratios land on 11. Setting the size also fixes the vertical placement, since the two titles share a baseline and only the taller glyphs made ours sit high."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "BatteryMonitor.iconStyle",
+        "desc": "Geometry and colours of the drawn menubar battery, in points.",
+        "doc": "Geometry and colours of the drawn menubar battery, in points.\n\nBaked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.\n\nThe defaults were measured off a capture of the system battery beside this one, at four pixels to the point: a 22x12 body, a 1.5pt tip one point clear of it, and a bolt inside the body rather than next to it. The icon is therefore the same width charging or not, exactly as the system icon is.\n\nThe greys were matched to the system icon by luminance, measured from a capture of the two side by side: outline 114, terminal 138, bolt 229. They are three separate values because the system icon uses three, not because a gradient was wanted.\n\nNone of them follows the system appearance, so they are tuned for a dark menubar and will read heavy on a light one. The percentage does follow the appearance, but only because it is a real menubar title rather than anything drawn here.",
+        "name": "iconStyle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.iconStyle",
+        "stripped_doc": [
+          "Geometry and colours of the drawn menubar battery, in points.",
+          "",
+          "Baked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.",
+          "",
+          "The defaults were measured off a capture of the system battery beside this one, at four pixels to the point: a 22x12 body, a 1.5pt tip one point clear of it, and a bolt inside the body rather than next to it. The icon is therefore the same width charging or not, exactly as the system icon is.",
+          "",
+          "The greys were matched to the system icon by luminance, measured from a capture of the two side by side: outline 114, terminal 138, bolt 229. They are three separate values because the system icon uses three, not because a gradient was wanted.",
+          "",
+          "None of them follows the system appearance, so they are tuned for a dark menubar and will read heavy on a light one. The percentage does follow the appearance, but only because it is a real menubar title rather than anything drawn here."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "BatteryMonitor.iconLevels",
+        "desc": "Charge thresholds that colour the icon's fill, evaluated in order.",
+        "doc": "Charge thresholds that colour the icon's fill, evaluated in order.\n\nEach entry is a table with `percentage` and `color`. The first entry whose `percentage` is at or above the current charge wins, so the list must run from the lowest threshold up. An entry with no `percentage` matches anything and is how the list ends.\n\n`color` is an `hs.drawing.color` table. Note that there is no `orange` or `yellow` key: a colour is specified with `red`/`green`/`blue`, `white`, `hue`/`saturation`/`brightness`, `list`+`name` or `hex`, and any component left out defaults to `0`, so `{ orange = 1 }` is opaque black rather than an error.",
+        "name": "iconLevels",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.iconLevels",
+        "stripped_doc": [
+          "Charge thresholds that colour the icon's fill, evaluated in order.",
+          "",
+          "Each entry is a table with `percentage` and `color`. The first entry whose `percentage` is at or above the current charge wins, so the list must run from the lowest threshold up. An entry with no `percentage` matches anything and is how the list ends.",
+          "",
+          "`color` is an `hs.drawing.color` table. Note that there is no `orange` or `yellow` key: a colour is specified with `red`/`green`/`blue`, `white`, `hue`/`saturation`/`brightness`, `list`+`name` or `hex`, and any component left out defaults to `0`, so `{ orange = 1 }` is opaque black rather than an error."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "BatteryMonitor.iconChargingColor",
+        "desc": "Fill colour used while the battery is charging, overriding `BatteryMonitor.iconLevels`. Defaults to green.",
+        "doc": "Fill colour used while the battery is charging, overriding `BatteryMonitor.iconLevels`. Defaults to green.",
+        "name": "iconChargingColor",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.iconChargingColor",
+        "stripped_doc": [
+          "Fill colour used while the battery is charging, overriding `BatteryMonitor.iconLevels`. Defaults to green."
         ],
         "type": "Variable"
       },
@@ -328,7 +406,7 @@
       }
     ],
     "desc": "Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.",
-    "doc": "Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.\n\nWakes on `hs.battery.watcher` rather than a stopwatch, and keeps a slow fallback timer only so the\ntime-remaining figure keeps counting down between IOKit notifications.\n\nEach rule in `BatteryMonitor.rules` fires on the RISING EDGE of its threshold and, optionally,\nrepeats while the threshold stays crossed. A rule whose threshold is not currently met can never\nfire, whatever its repeat cadence.",
+    "doc": "Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.\n\nThe menubar item is laid out like the system battery it sits beside: the percentage as a plain\ntitle, then an `hs.canvas` battery drawn per update and handed to `setIcon`. Its fill sweeps with\nthe charge and crosses green, orange and red on the way down, and while charging a bolt inside the\nbody knocks a transparent gap through the fill and the outline.\n\nWakes on `hs.battery.watcher` rather than a stopwatch, and keeps a slow fallback timer only so the\ntime-remaining figure keeps counting down between IOKit notifications.\n\nEach rule in `BatteryMonitor.rules` fires on the RISING EDGE of its threshold and, optionally,\nrepeats while the threshold stays crossed. A rule whose threshold is not currently met can never\nfire, whatever its repeat cadence.",
     "items": [
       {
         "def": "BatteryMonitor.brightnessOnPowerChange",
@@ -343,6 +421,60 @@
           "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.",
           "",
           "Set to `nil` to leave brightness alone."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "BatteryMonitor.iconChargingColor",
+        "desc": "Fill colour used while the battery is charging, overriding `BatteryMonitor.iconLevels`. Defaults to green.",
+        "doc": "Fill colour used while the battery is charging, overriding `BatteryMonitor.iconLevels`. Defaults to green.",
+        "name": "iconChargingColor",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.iconChargingColor",
+        "stripped_doc": [
+          "Fill colour used while the battery is charging, overriding `BatteryMonitor.iconLevels`. Defaults to green."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "BatteryMonitor.iconLevels",
+        "desc": "Charge thresholds that colour the icon's fill, evaluated in order.",
+        "doc": "Charge thresholds that colour the icon's fill, evaluated in order.\n\nEach entry is a table with `percentage` and `color`. The first entry whose `percentage` is at or above the current charge wins, so the list must run from the lowest threshold up. An entry with no `percentage` matches anything and is how the list ends.\n\n`color` is an `hs.drawing.color` table. Note that there is no `orange` or `yellow` key: a colour is specified with `red`/`green`/`blue`, `white`, `hue`/`saturation`/`brightness`, `list`+`name` or `hex`, and any component left out defaults to `0`, so `{ orange = 1 }` is opaque black rather than an error.",
+        "name": "iconLevels",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.iconLevels",
+        "stripped_doc": [
+          "Charge thresholds that colour the icon's fill, evaluated in order.",
+          "",
+          "Each entry is a table with `percentage` and `color`. The first entry whose `percentage` is at or above the current charge wins, so the list must run from the lowest threshold up. An entry with no `percentage` matches anything and is how the list ends.",
+          "",
+          "`color` is an `hs.drawing.color` table. Note that there is no `orange` or `yellow` key: a colour is specified with `red`/`green`/`blue`, `white`, `hue`/`saturation`/`brightness`, `list`+`name` or `hex`, and any component left out defaults to `0`, so `{ orange = 1 }` is opaque black rather than an error."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "BatteryMonitor.iconStyle",
+        "desc": "Geometry and colours of the drawn menubar battery, in points.",
+        "doc": "Geometry and colours of the drawn menubar battery, in points.\n\nBaked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.\n\nThe defaults were measured off a capture of the system battery beside this one, at four pixels to the point: a 22x12 body, a 1.5pt tip one point clear of it, and a bolt inside the body rather than next to it. The icon is therefore the same width charging or not, exactly as the system icon is.\n\nThe greys were matched to the system icon by luminance, measured from a capture of the two side by side: outline 114, terminal 138, bolt 229. They are three separate values because the system icon uses three, not because a gradient was wanted.\n\nNone of them follows the system appearance, so they are tuned for a dark menubar and will read heavy on a light one. The percentage does follow the appearance, but only because it is a real menubar title rather than anything drawn here.",
+        "name": "iconStyle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.iconStyle",
+        "stripped_doc": [
+          "Geometry and colours of the drawn menubar battery, in points.",
+          "",
+          "Baked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.",
+          "",
+          "The defaults were measured off a capture of the system battery beside this one, at four pixels to the point: a 22x12 body, a 1.5pt tip one point clear of it, and a bolt inside the body rather than next to it. The icon is therefore the same width charging or not, exactly as the system icon is.",
+          "",
+          "The greys were matched to the system icon by luminance, measured from a capture of the two side by side: outline 114, terminal 138, bolt 229. They are three separate values because the system icon uses three, not because a gradient was wanted.",
+          "",
+          "None of them follows the system appearance, so they are tuned for a dark menubar and will read heavy on a light one. The percentage does follow the appearance, but only because it is a real menubar title rather than anything drawn here."
         ],
         "type": "Variable"
       },
@@ -401,17 +533,19 @@
       },
       {
         "def": "BatteryMonitor.titleFont",
-        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
-        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "desc": "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.",
+        "doc": "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.\n\nDeliberately smaller than the 13pt an unstyled title gets: menu bar extras label themselves smaller than menu titles do. 11pt is what measuring the system battery against ours gives -- untouched, ours drew \"60%\" 27.5pt wide and 10.5pt tall where the system drew it 23.5 by 9, and both ratios land on 11. Setting the size also fixes the vertical placement, since the two titles share a baseline and only the taller glyphs made ours sit high.",
         "name": "titleFont",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "BatteryMonitor.titleFont",
         "stripped_doc": [
-          "Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.",
+          "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.",
           "",
-          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
+          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+          "",
+          "Deliberately smaller than the 13pt an unstyled title gets: menu bar extras label themselves smaller than menu titles do. 11pt is what measuring the system battery against ours gives -- untouched, ours drew \"60%\" 27.5pt wide and 10.5pt tall where the system drew it 23.5 by 9, and both ratios land on 11. Setting the size also fixes the vertical placement, since the two titles share a baseline and only the taller glyphs made ours sit high."
         ],
         "type": "Variable"
       },
@@ -487,6 +621,28 @@
         "signature": "BatteryMonitor:init() -> self",
         "stripped_doc": [
           "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "BatteryMonitor:rebuild() -> self",
+        "desc": "Discards the icon canvas so the next update redraws it with the current `iconStyle`.",
+        "doc": "Discards the icon canvas so the next update redraws it with the current `iconStyle`.\n\nParameters:\n * None\n\nReturns:\n * The BatteryMonitor object\n\nFor picking geometry and colours from the Console without a reload: assign to `BatteryMonitor.iconStyle`, call this, then `BatteryMonitor:update()`.",
+        "name": "rebuild",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The BatteryMonitor object",
+          "",
+          "For picking geometry and colours from the Console without a reload: assign to `BatteryMonitor.iconStyle`, call this, then `BatteryMonitor:update()`."
+        ],
+        "signature": "BatteryMonitor:rebuild() -> self",
+        "stripped_doc": [
+          "Discards the icon canvas so the next update redraws it with the current `iconStyle`.",
           ""
         ],
         "type": "Method"
@@ -584,7 +740,7 @@
       {
         "def": "BatteryMonitor:status() -> table",
         "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
-        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys\n\nEach entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `suppressAudio`, `source`, `charging`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys\n\nEach entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold.",
         "name": "status",
         "notes": [],
         "parameters": [
@@ -592,7 +748,7 @@
           ""
         ],
         "returns": [
-          " * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys",
+          " * A table with `running`, `suppressAudio`, `source`, `charging`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys",
           "",
           "Each entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold."
         ],

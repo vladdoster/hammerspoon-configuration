@@ -2,6 +2,11 @@
 ---
 --- Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.
 ---
+--- The menubar item is laid out like the system battery it sits beside: the percentage as a plain
+--- title, then an `hs.canvas` battery drawn per update and handed to `setIcon`. Its fill sweeps with
+--- the charge and crosses green, orange and red on the way down, and while charging a bolt inside the
+--- body knocks a transparent gap through the fill and the outline.
+---
 --- Wakes on `hs.battery.watcher` rather than a stopwatch, and keeps a slow fallback timer only so the
 --- time-remaining figure keeps counting down between IOKit notifications.
 ---
@@ -54,10 +59,68 @@ obj.brightnessOnPowerChange = 100
 
 --- BatteryMonitor.titleFont
 --- Variable
---- Font for the menubar title, as `hs.styledtext` understands it. Defaults to 12pt Menlo.
+--- Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.
 ---
 --- No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.
-obj.titleFont = { name = "Menlo", size = 12 }
+---
+--- Deliberately smaller than the 13pt an unstyled title gets: menu bar extras label themselves smaller than menu titles do. 11pt is what measuring the system battery against ours gives -- untouched, ours drew "60%" 27.5pt wide and 10.5pt tall where the system drew it 23.5 by 9, and both ratios land on 11. Setting the size also fixes the vertical placement, since the two titles share a baseline and only the taller glyphs made ours sit high.
+obj.titleFont = { name = hs.styledtext.defaultFonts.menuBar.name, size = 11 }
+
+--- BatteryMonitor.iconStyle
+--- Variable
+--- Geometry and colours of the drawn menubar battery, in points.
+---
+--- Baked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.
+---
+--- The defaults were measured off a capture of the system battery beside this one, at four pixels to the point: a 22x12 body, a 1.5pt tip one point clear of it, and a bolt inside the body rather than next to it. The icon is therefore the same width charging or not, exactly as the system icon is.
+---
+--- The greys were matched to the system icon by luminance, measured from a capture of the two side by side: outline 114, terminal 138, bolt 229. They are three separate values because the system icon uses three, not because a gradient was wanted.
+---
+--- None of them follows the system appearance, so they are tuned for a dark menubar and will read heavy on a light one. The percentage does follow the appearance, but only because it is a real menubar title rather than anything drawn here.
+obj.iconStyle = {
+    width = 27.5,
+    height = 22,
+    -- x leaves 1.5pt of clear canvas ahead of the battery: AppKit's own title-to-image gap is 3pt and the system leaves 4.5pt, and padding the image is the only side of that AppKit does not own.
+    -- h is the stroke's centre line, so the drawn body stands strokeWidth taller than this: 11 + 1 is the 12pt the system icon measures
+    body = { x = 2, y = 5.5, w = 22, h = 11 },
+    bodyRadius = 3,
+    strokeWidth = 1,
+    -- Renders at luminance 114, which is what the system outline measures
+    strokeColor = { white = 0.375 },
+    -- The system draws its terminal a shade brighter than its outline, 138 against 114, so the two are not one colour
+    tipColor = { white = 0.465 },
+    tipWidth = 1.5,
+    tipHeight = 4,
+    -- Measured from the body's stroke centre line, not from the edge you can see, so this is half a point more than the 1pt gap the system leaves
+    tipGap = 1.5,
+    tipRadius = 0.75,
+    fillInset = 1.5,
+    fillRadius = 1.5,
+    -- Only the height: the bolt is a glyph, so its width follows from the glyph's own aspect. This is the ink height exactly, and 11.5 is what the system bolt measures on screen
+    boltHeight = 11.5,
+    boltOffset = -0.25, -- the system bolt sits a quarter point left of the body's centre
+    haloWidth = 1, -- transparent gap the bolt cuts through the fill and the outline alike
+    -- The system bolt renders at luminance 229 against this outline's 114; 0.875 is what draws 229 here. Deliberately not the mid-grey the outline uses: a dim bolt has fewer antialiasing levels between background and core, so the same glyph comes out looking both softer and a point narrower than it measures
+    boltColor = { white = 0.875 },
+}
+
+--- BatteryMonitor.iconLevels
+--- Variable
+--- Charge thresholds that colour the icon's fill, evaluated in order.
+---
+--- Each entry is a table with `percentage` and `color`. The first entry whose `percentage` is at or above the current charge wins, so the list must run from the lowest threshold up. An entry with no `percentage` matches anything and is how the list ends.
+---
+--- `color` is an `hs.drawing.color` table. Note that there is no `orange` or `yellow` key: a colour is specified with `red`/`green`/`blue`, `white`, `hue`/`saturation`/`brightness`, `list`+`name` or `hex`, and any component left out defaults to `0`, so `{ orange = 1 }` is opaque black rather than an error.
+obj.iconLevels = {
+    { percentage = 20, color = { red = 1 } },
+    { percentage = 50, color = { red = 1, green = 0.6 } },
+    { color = { green = 1 } },
+}
+
+--- BatteryMonitor.iconChargingColor
+--- Variable
+--- Fill colour used while the battery is charging, overriding `BatteryMonitor.iconLevels`. Defaults to green.
+obj.iconChargingColor = { green = 1 }
 
 --- BatteryMonitor.suppressAudio
 --- Variable
@@ -133,7 +196,8 @@ obj.updateTimer = nil
 obj.synthesizer = nil -- held for the duration of an utterance; a collected synthesizer stops mid-word
 obj.ruleState = {} -- per rule: { met = boolean, lastFired = number }
 obj.currentSource = nil -- last seen power source, so a transition can be told from a plain update
-obj.titleText = nil -- last string handed to setTitle, so an unchanged update costs no AppKit work
+obj.iconCanvas = nil -- built once and only re-textured; rebuilding per update would allocate an NSView each time
+obj.iconKey = nil -- last drawn state, so an unchanged update costs neither a raster nor an AppKit write
 obj.running = false
 obj.warned = {}
 
@@ -168,6 +232,8 @@ function obj:snapshot()
     local source = hs.battery.powerSource() or "no battery"
     local onBattery = source == "Battery Power"
     local snapshot = { source = source, onBattery = onBattery, percentage = hs.battery.percentage() }
+    -- Its own round trip, and the reason the icon can tell a topped-up charger from a charging one: on AC at 100% this goes false while the source stays "AC Power"
+    snapshot.charging = hs.battery.isCharging() and true or false
     -- Only the figure the current source can produce; the other one is a sentinel either way
     if onBattery then
         snapshot.timeRemaining = hs.battery.timeRemaining()
@@ -252,17 +318,162 @@ end
 
 -- The menubar item
 
-function obj:updateTitle(snapshot)
+-- The element indices ensureCanvas() appends in, and the only handle updateMenubar() has on them. BODY and TIP never change after the build
+local BODY, TIP, FILL, HALO, BOLT = 1, 2, 3, 4, 5
+
+-- The system's own bolt, not a copy of it: U+1002E6 is `bolt.fill` in the SF Symbols private use area, and the system UI font carries it, so nothing has to be installed. A traced polygon cannot match it -- the glyph's corners are rounded and its long edges bow about three parts in a hundred away from straight, which is exactly what reads as "smooth" beside a polygon's hard vertices.
+-- Not U+26A1: that character renders as a colour emoji and ignores textColor, which would leave a yellow bolt inside a mid-grey battery
+local BOLT_GLYPH = utf8.char(0x1002E6)
+
+-- The glyph's ink within its text box, measured once at 96pt. All six are ratios of the font size and hold at every size, so a target ink rectangle can be turned into a font size and a frame without measuring again
+local GLYPH_INK_W, GLYPH_INK_H = 0.69271, 1.09375
+local GLYPH_INK_X, GLYPH_INK_Y = 0.13542, 0.0625
+local GLYPH_BOX_W, GLYPH_BOX_H = 0.96143, 1.17708
+
+-- Font size and frame that land the glyph's ink centred on the body at exactly boltHeight tall. Its width follows from the glyph's own aspect and is not ours to choose
+local function boltLayout(style)
+    local body = style.body
+    local size = style.boltHeight / GLYPH_INK_H
+    local inkW = GLYPH_INK_W * size
+    local inkX = body.x + body.w / 2 + style.boltOffset - inkW / 2
+    local inkY = body.y + body.h / 2 - style.boltHeight / 2
+    return size,
+        {
+            x = inkX - GLYPH_INK_X * size,
+            y = inkY - GLYPH_INK_Y * size,
+            w = GLYPH_BOX_W * size,
+            h = GLYPH_BOX_H * size,
+        }
+end
+
+-- `strokeWidth` is a percentage of the font size, not points, and negative means stroke AND fill. Stroking straddles the glyph outline, so a stroke of twice haloWidth dilates it by haloWidth
+local function boltText(size, color, haloWidth)
+    return hs.styledtext.new(BOLT_GLYPH, {
+        font = { name = hs.styledtext.defaultFonts.menuBar.name, size = size },
+        color = color,
+        strokeColor = color,
+        strokeWidth = haloWidth and -(haloWidth * 2 / size) * 100 or 0,
+    })
+end
+
+-- Built once, then only re-textured: an update runs on every IOKit notification, and rebuilding would allocate an NSView each time
+function obj:ensureCanvas()
+    if self.iconCanvas then return self.iconCanvas end
+
+    local style = self.iconStyle
+    local body = style.body
+    local stroke = style.strokeWidth
+
+    local ok, canvas = pcall(hs.canvas.new, { x = 0, y = 0, w = style.width, h = style.height })
+    if not ok or not canvas then
+        self:warnOnce("canvas", "could not create the icon canvas: %s", tostring(canvas))
+        return nil
+    end
+
+    local fillFrame = {
+        x = body.x + style.fillInset,
+        y = body.y + style.fillInset,
+        w = 0,
+        h = body.h - style.fillInset * 2,
+    }
+    -- One frame for both bolt elements, so the halo can never drift out of register with the bolt it surrounds
+    local boltSize, boltFrame = boltLayout(style)
+
+    canvas:appendElements({
+        type = "rectangle",
+        action = "stroke",
+        strokeWidth = stroke,
+        strokeColor = style.strokeColor,
+        roundedRectRadii = { xRadius = style.bodyRadius, yRadius = style.bodyRadius },
+        frame = body,
+    }, {
+        type = "rectangle",
+        action = "fill",
+        fillColor = style.tipColor,
+        roundedRectRadii = { xRadius = style.tipRadius, yRadius = style.tipRadius },
+        frame = {
+            x = body.x + body.w + style.tipGap,
+            y = body.y + (body.h - style.tipHeight) / 2,
+            w = style.tipWidth,
+            h = style.tipHeight,
+        },
+    }, {
+        type = "rectangle",
+        action = "fill",
+        fillColor = self.iconChargingColor,
+        roundedRectRadii = { xRadius = style.fillRadius, yRadius = style.fillRadius },
+        frame = fillFrame,
+    }, {
+        -- destinationOut erases rather than draws, so this cuts a transparent gap through the fill and the outline alike. The stroke carried by the styledtext is what widens the gap past the glyph itself
+        type = "text",
+        action = "skip",
+        compositeRule = "destinationOut",
+        text = boltText(boltSize, { white = 1 }, style.haloWidth),
+        frame = boltFrame,
+    }, {
+        type = "text",
+        action = "skip",
+        text = boltText(boltSize, style.boltColor),
+        frame = boltFrame,
+    })
+
+    self.iconCanvas = canvas
+    return canvas
+end
+
+-- delete(), not hide(), so no NSWindow outlives a reload
+function obj:discardCanvas()
+    if self.iconCanvas then
+        pcall(self.iconCanvas.delete, self.iconCanvas)
+        self.iconCanvas = nil
+    end
+    self.iconKey = nil
+end
+
+-- First entry at or above the charge wins, so iconLevels reads low to high and ends with a thresholdless catch-all
+function obj:fillColorFor(percentage, charging)
+    if charging then return self.iconChargingColor end
+    for _, level in ipairs(self.iconLevels) do
+        if not level.percentage or percentage <= level.percentage then return level.color end
+    end
+    return self.iconStyle.textColor
+end
+
+function obj:updateMenubar(snapshot)
     if not self.menubarItem then return end
 
-    local glyph = (snapshot.source == "AC Power") and GLYPH_AC or GLYPH_BATTERY
+    local hasBattery = snapshot.source ~= "no battery" and snapshot.percentage ~= nil
     -- floor(), since percentage() is a ratio of capacities and %d rejects a fractional float
-    local text = snapshot.percentage and string.format("%s %d%%", glyph, math.floor(snapshot.percentage)) or glyph
+    local percentage = hasBattery and math.floor(snapshot.percentage) or nil
+    local key = string.format("%s/%s/%s", tostring(percentage), tostring(snapshot.charging), snapshot.source)
 
-    -- setTitle is a real AppKit write, and on an idle machine most updates change nothing
-    if text == self.titleText then return end
-    self.titleText = text
-    self.menubarItem:setTitle(hs.styledtext.new(text, { font = self.titleFont }))
+    -- Each update otherwise costs a raster as well as two AppKit writes, and on an idle machine most updates change nothing
+    if key == self.iconKey then return end
+
+    local canvas = self:ensureCanvas()
+    if not canvas then return end
+
+    local style = self.iconStyle
+    local innerWidth = style.body.w - style.fillInset * 2
+    local width = hasBattery and innerWidth * percentage / 100 or 0
+
+    -- Both halves together, or the halo is left cutting a gap with no bolt in it
+    local boltAction = snapshot.charging and "fill" or "skip"
+    canvas[HALO].action = boltAction
+    canvas[BOLT].action = boltAction
+
+    canvas[FILL].action = width > 0 and "fill" or "skip"
+    if width > 0 then
+        canvas[FILL].fillColor = self:fillColorFor(percentage, snapshot.charging)
+        canvas[FILL].frame.w = width
+    end
+
+    -- Styled for the size only. Leaving the colour out is what keeps AppKit's own menubar label colour, and with it light and dark appearance for free
+    local title = hasBattery and string.format("%d%%", percentage) or ""
+    self.menubarItem:setTitle(hs.styledtext.new(title, { font = self.titleFont }))
+    -- `false`, or AppKit takes the image as a template mask and throws away every colour in it
+    self.menubarItem:setIcon(canvas:imageFromCanvas(), false)
+    self.iconKey = key
 end
 
 -- The readings behind "Raw Battery Data...", gathered WITHOUT hs.battery.getAll(), whose privateBluetoothBatteryInfo() and otherBatteryInfo() block the main thread on a semaphore when the Bluetooth daemon does not answer -- a native deadlock that pcall cannot catch
@@ -447,7 +658,7 @@ end
 --- Called for you by the battery watcher and the fallback timer; exposed for prodding from the Console.
 function obj:update(arming)
     local snapshot = self:snapshot()
-    self:updateTitle(snapshot)
+    self:updateMenubar(snapshot)
 
     if snapshot.source == "no battery" then return self end
 
@@ -507,10 +718,12 @@ function obj:start()
 
     self.ruleState = {}
     self.currentSource = nil
-    self.titleText = nil
+    self.iconKey = nil
 
     self.menubarItem = hs.menubar.new()
     if self.menubarItem then
+        -- The icon trails the title, so the reading is "56% [battery]" as the system item is, rather than AppKit's default of the image first. A number and not the string "imageTrailing": the setter rejects strings whatever the documentation implies
+        pcall(self.menubarItem.imagePosition, self.menubarItem, hs.menubar.imagePositions.imageTrailing)
         -- Wrapped: hs.menubar builds this synchronously, so a throw here leaves a dead icon
         self.menubarItem:setMenu(function()
             local ok, menu = pcall(self.buildMenu, self)
@@ -571,9 +784,10 @@ function obj:stop()
         self.menubarItem = nil
     end
 
+    self:discardCanvas()
+
     self.ruleState = {}
     self.currentSource = nil
-    self.titleText = nil
     self.warned = {}
     self.running = false
     self.logger.i("stopped")
@@ -603,6 +817,22 @@ function obj:setSuppressAudio(state)
         self.synthesizer = nil
     end
     self.logger.i("suppress audio " .. tostring(self.suppressAudio))
+    return self
+end
+
+--- BatteryMonitor:rebuild() -> self
+--- Method
+--- Discards the icon canvas so the next update redraws it with the current `iconStyle`.
+---
+--- Parameters:
+---  * None
+---
+--- Returns:
+---  * The BatteryMonitor object
+---
+--- For picking geometry and colours from the Console without a reload: assign to `BatteryMonitor.iconStyle`, call this, then `BatteryMonitor:update()`.
+function obj:rebuild()
+    self:discardCanvas()
     return self
 end
 
@@ -636,7 +866,7 @@ end
 ---  * None
 ---
 --- Returns:
----  * A table with `running`, `suppressAudio`, `source`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys
+---  * A table with `running`, `suppressAudio`, `source`, `charging`, `percentage`, `timeRemaining`, `timeToFull` and `rules` keys
 ---
 --- Each entry in `rules` carries `met` and `lastFired`. A rule showing `met = false` cannot fire, whatever `lastFired` says, which is the invariant the old `ext/battery.lua` did not hold.
 function obj:status()
@@ -657,6 +887,7 @@ function obj:status()
         running = self.running,
         suppressAudio = self.suppressAudio,
         source = snapshot.source,
+        charging = snapshot.charging,
         percentage = snapshot.percentage,
         timeRemaining = snapshot.timeRemaining,
         timeToFull = snapshot.timeToFull,
