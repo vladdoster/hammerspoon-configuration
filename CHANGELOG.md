@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.6.0...v2.7.0) (2026-08-16)
+
+
+### Features
+
+* **battery:** draw menubar icon to match macOS ([9668896](https://github.com/vladdoster/hammerspoon-configuration/commit/96688968615c9e02e65fedfff45e7a0d5a504cf4))
+
 # [2.6.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.5.0...v2.6.0) (2026-08-15)
 
 
