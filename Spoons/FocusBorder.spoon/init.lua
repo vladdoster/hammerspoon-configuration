@@ -9,15 +9,15 @@
 local obj = {}
 obj.__index = obj
 
-obj.name = 'FocusBorder'
-obj.version = '1.0'
-obj.author = 'Vladislav Doster <mvdoster@gmail.com>'
-obj.license = 'MIT - https://opensource.org/licenses/MIT'
+obj.name = "FocusBorder"
+obj.version = "1.0"
+obj.author = "Vladislav Doster <mvdoster@gmail.com>"
+obj.license = "MIT - https://opensource.org/licenses/MIT"
 
 --- FocusBorder.logger
 --- Variable
 --- Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.
-obj.logger = hs.logger.new('FocusBorder', 'info')
+obj.logger = hs.logger.new("FocusBorder", "info")
 
 -- Configuration
 
@@ -110,7 +110,9 @@ local AX = hs.uielement.watcher
 -- Small helpers
 
 -- Stateless, so a plain local rather than a method
-local function now() return hs.timer.secondsSinceEpoch() end
+local function now()
+  return hs.timer.secondsSinceEpoch()
+end
 
 -- Log a given message only once, so a broken system API cannot spam the console
 function obj:warnOnce(key, fmt, ...)
@@ -145,8 +147,8 @@ end
 function obj:isOnCurrentSpace(win)
   if not (hs.spaces and hs.spaces.windowSpaces) then return true end
   local ok, spaces = pcall(hs.spaces.windowSpaces, win)
-  if not ok or type(spaces) ~= 'table' then
-    self:warnOnce('spaces', 'hs.spaces.windowSpaces unavailable (%s); assuming current space', tostring(spaces))
+  if not ok or type(spaces) ~= "table" then
+    self:warnOnce("spaces", "hs.spaces.windowSpaces unavailable (%s); assuming current space", tostring(spaces))
     return true
   end
   local okCur, current = pcall(hs.spaces.focusedSpace)
@@ -172,7 +174,10 @@ function obj:isFullScreen(win, frame)
   if not okB or not full then return false end
 
   local t = self.fullTolerance
-  return math.abs(f.x - full.x) <= t and math.abs(f.y - full.y) <= t and math.abs(f.w - full.w) <= t and math.abs(f.h - full.h) <= t
+  return math.abs(f.x - full.x) <= t
+    and math.abs(f.y - full.y) <= t
+    and math.abs(f.w - full.w) <= t
+    and math.abs(f.h - full.h) <= t
 end
 
 -- Every reason the border should be absent. `fs` is a boolean, so "supplied" tests `== nil`
@@ -195,7 +200,7 @@ function obj:ensureCanvas()
 
   local ok, canvas = pcall(hs.canvas.new, { x = 0, y = 0, w = 1, h = 1 })
   if not ok or not canvas then
-    self:warnOnce('canvas', 'could not create the border canvas: %s', tostring(canvas))
+    self:warnOnce("canvas", "could not create the border canvas: %s", tostring(canvas))
     return nil
   end
 
@@ -203,9 +208,9 @@ function obj:ensureCanvas()
   local pathRadius = self.cornerRadius + self.borderWidth / 2
 
   canvas:appendElements({
-    type = 'rectangle',
+    type = "rectangle",
     -- "stroke", never "strokeAndFill": a fill would paint over the window it is framing
-    action = 'stroke',
+    action = "stroke",
     strokeColor = self.borderColor,
     strokeWidth = self.borderWidth,
     -- Radii depend only on config, so they are set here rather than on redraw()'s hot path
@@ -217,7 +222,7 @@ function obj:ensureCanvas()
   canvas:level(hs.canvas.windowLevels.floating)
 
   -- Never own a Space, and hide under Exposé. ("stationary" means the opposite: the trap.)
-  canvas:behaviorAsLabels({ 'canJoinAllSpaces', 'transient' })
+  canvas:behaviorAsLabels({ "canJoinAllSpaces", "transient" })
 
   -- Click-through needs no code; canvasMouseEvents(), mouseCallback() or clickActivating(false) all break it, the last by changing the AXSubrole that hides this canvas from hs.window.filter
 
@@ -266,7 +271,7 @@ function obj:redraw(win, frame, fs)
   else
     canvas:frame(rect)
     -- A stroke straddles its path, so a w/2 inset puts all of it in the band, unclipped
-    canvas:elementAttribute(1, 'frame', { x = w / 2, y = w / 2, w = f.w + w, h = f.h + w })
+    canvas:elementAttribute(1, "frame", { x = w / 2, y = w / 2, w = f.w + w, h = f.h + w })
   end
 
   self.lastRect = rect
@@ -306,7 +311,7 @@ function obj:onAXEvent(_, event, watcher, id)
     self.wasFullScreen = fs
     self.suppressUntil = now() + self.fullscreenSettle
     self:hideBorder()
-    self:debounce('settleTimer', self.fullscreenSettle, function()
+    self:debounce("settleTimer", self.fullscreenSettle, function()
       self.suppressUntil = 0
       self:redraw(self:resolveTracked())
     end)
@@ -330,14 +335,16 @@ function obj:attachTo(win, id)
   self.trackedId, self.trackedWin = id, win
   self.wasFullScreen = self:isFullScreen(win)
 
-  if type(win.newWatcher) ~= 'function' then
-    self:warnOnce('newWatcher', 'hs.window has no newWatcher; the border will not follow drags')
+  if type(win.newWatcher) ~= "function" then
+    self:warnOnce("newWatcher", "hs.window has no newWatcher; the border will not follow drags")
     return
   end
   -- fn(element, event, watcher, userData) has no slot for self, hence the closure
-  local ok, watcher = pcall(win.newWatcher, win, function(el, ev, w, wid) self:onAXEvent(el, ev, w, wid) end, id)
+  local ok, watcher = pcall(win.newWatcher, win, function(el, ev, w, wid)
+    self:onAXEvent(el, ev, w, wid)
+  end, id)
   if not ok or not watcher then
-    self:warnOnce('axcreate', 'could not create an AX watcher: %s', tostring(watcher))
+    self:warnOnce("axcreate", "could not create an AX watcher: %s", tostring(watcher))
     return
   end
   local started = pcall(watcher.start, watcher, {
@@ -350,7 +357,7 @@ function obj:attachTo(win, id)
   if not started then
     -- start() registers before arming, so a half-started watcher is stopped, not dropped
     pcall(watcher.stop, watcher)
-    self:warnOnce('axstart', 'could not start the AX watcher; the border will not follow drags')
+    self:warnOnce("axstart", "could not start the AX watcher; the border will not follow drags")
     return
   end
   self.axWatcher = watcher
@@ -388,11 +395,13 @@ function obj:attachToApp(win)
 
   self:detachApp()
   -- No newWatcher pre-check here: it is inherited from hs.uielement, and pcall covers both
-  local ok, watcher = pcall(app.newWatcher, app, function(el, ev, w, wpid) self:onAppAXEvent(el, ev, w, wpid) end, pid)
+  local ok, watcher = pcall(app.newWatcher, app, function(el, ev, w, wpid)
+    self:onAppAXEvent(el, ev, w, wpid)
+  end, pid)
   if not ok or not watcher then
     self:warnOnce(
-      'appaxcreate',
-      'could not create an application AX watcher (%s); the border will not follow same-app focus',
+      "appaxcreate",
+      "could not create an application AX watcher (%s); the border will not follow same-app focus",
       tostring(watcher)
     )
     return
@@ -401,7 +410,7 @@ function obj:attachToApp(win)
   local started = pcall(watcher.start, watcher, { AX.focusedWindowChanged })
   if not started then
     pcall(watcher.stop, watcher)
-    self:warnOnce('appaxstart', 'could not start the application AX watcher; the border will not follow same-app focus')
+    self:warnOnce("appaxstart", "could not start the application AX watcher; the border will not follow same-app focus")
     return
   end
   self.appAxPid = pid
@@ -413,7 +422,7 @@ function obj:isOwnWindow(win)
   local okA, app = pcall(win.application, win)
   if not okA or not app then return false end
   local okN, name = pcall(app.name, app)
-  return okN and name == 'Hammerspoon'
+  return okN and name == "Hammerspoon"
 end
 
 function obj:onWindowFocused(win)
@@ -446,12 +455,18 @@ end
 
 -- System watchers
 
-function obj:onScreensChanged() self:debounce('screenTimer', self.screenSettle, function() self:refresh() end) end
+function obj:onScreensChanged()
+  self:debounce("screenTimer", self.screenSettle, function()
+    self:refresh()
+  end)
+end
 
 function obj:onAppEvent(_, event)
   if event == hs.application.watcher.activated or event == hs.application.watcher.terminated then
     -- Delayed: just after an app activates or dies, focusedWindow() reports the outgoing one
-    self:debounce('appTimer', self.appSettle, function() self:refresh() end)
+    self:debounce("appTimer", self.appSettle, function()
+      self:refresh()
+    end)
   end
 end
 
@@ -484,7 +499,9 @@ end
 ---
 --- Deliberately starts nothing. Every watcher and timer belongs to `FocusBorder:start()`, and the canvas is built lazily on the first redraw.
 --- Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so resetting here would clear state out from under running watchers.
-function obj:init() return self end
+function obj:init()
+  return self
+end
 
 --- FocusBorder:start() -> self
 --- Method
@@ -504,45 +521,57 @@ function obj:start()
   -- A second, redundant path beside the application observer: a filter costs an AX observer per running app, but the global watcher is refcounted and shared with PinnedWindows
   local ok, filter = pcall(hs.window.filter.new)
   if not ok or not filter then
-    self:warnOnce('filter', 'could not create a window filter (%s); the border will not track focus', tostring(filter))
+    self:warnOnce("filter", "could not create a window filter (%s); the border will not track focus", tostring(filter))
   else
     self.focusFilter = filter
     -- Guard 1 against the self-focus loop described above
-    pcall(self.focusFilter.rejectApp, self.focusFilter, 'Hammerspoon')
-    self.onFocusEvent = function(win) self:onWindowFocused(win) end
-    self.onUnfocusEvent = function() self:hideBorder() end
+    pcall(self.focusFilter.rejectApp, self.focusFilter, "Hammerspoon")
+    self.onFocusEvent = function(win)
+      self:onWindowFocused(win)
+    end
+    self.onUnfocusEvent = function()
+      self:hideBorder()
+    end
     self.focusFilter:subscribe(hs.window.filter.windowFocused, self.onFocusEvent)
     self.focusFilter:subscribe(hs.window.filter.windowUnfocused, self.onUnfocusEvent)
   end
 
-  self.appWatcher = hs.application.watcher.new(function(name, event, app) self:onAppEvent(name, event, app) end)
+  self.appWatcher = hs.application.watcher.new(function(name, event, app)
+    self:onAppEvent(name, event, app)
+  end)
   self.appWatcher:start()
 
   if hs.spaces and hs.spaces.watcher then
     self.spaceWatcher = hs.spaces.watcher.new(function()
       -- Delayed, since focusedSpace() lags a switch; debounced, so a swipe costs one refresh
-      self:debounce('spaceTimer', self.spaceSettle, function() self:refresh() end)
+      self:debounce("spaceTimer", self.spaceSettle, function()
+        self:refresh()
+      end)
     end)
     self.spaceWatcher:start()
   end
 
-  self.screenWatcher = hs.screen.watcher.new(function() self:onScreensChanged() end)
+  self.screenWatcher = hs.screen.watcher.new(function()
+    self:onScreensChanged()
+  end)
   self.screenWatcher:start()
 
   self.running = true
   self.enabled = true
 
   if not hs.accessibilityState() then
-    hs.alert.show('FocusBorder needs Accessibility permission')
-    self.logger.w('accessibility permission not granted; nothing will work until it is')
+    hs.alert.show("FocusBorder needs Accessibility permission")
+    self.logger.w("accessibility permission not granted; nothing will work until it is")
   end
 
   self:refresh()
 
   -- start() runs during config load, when the AX bridge is least responsive; if that first refresh() came back empty nothing would arm the observer until an app switch
-  self:debounce('startTimer', self.startRetry, function() self:refresh() end)
+  self:debounce("startTimer", self.startRetry, function()
+    self:refresh()
+  end)
 
-  self.logger.i('started')
+  self.logger.i("started")
   return self
 end
 
@@ -563,7 +592,9 @@ function obj:stop()
 
   if self.focusFilter then
     -- By (event, fn): by event alone would drop another module's callbacks on a shared filter
-    if self.onFocusEvent then pcall(self.focusFilter.unsubscribe, self.focusFilter, hs.window.filter.windowFocused, self.onFocusEvent) end
+    if self.onFocusEvent then
+      pcall(self.focusFilter.unsubscribe, self.focusFilter, hs.window.filter.windowFocused, self.onFocusEvent)
+    end
     if self.onUnfocusEvent then
       pcall(self.focusFilter.unsubscribe, self.focusFilter, hs.window.filter.windowUnfocused, self.onUnfocusEvent)
     end
@@ -571,14 +602,14 @@ function obj:stop()
   self.focusFilter, self.onFocusEvent, self.onUnfocusEvent = nil, nil, nil
 
   -- Field NAMES, not handles: ipairs over handles halts at the first nil and skips the rest
-  for _, name in ipairs({ 'appWatcher', 'spaceWatcher', 'screenWatcher' }) do
+  for _, name in ipairs({ "appWatcher", "spaceWatcher", "screenWatcher" }) do
     local watcher = self[name]
     -- pcall: stop() reaches into a framework that may already be tearing down
     if watcher then pcall(watcher.stop, watcher) end
     self[name] = nil
   end
 
-  for _, name in ipairs({ 'screenTimer', 'spaceTimer', 'settleTimer', 'appTimer', 'startTimer' }) do
+  for _, name in ipairs({ "screenTimer", "spaceTimer", "settleTimer", "appTimer", "startTimer" }) do
     local timer = self[name]
     if timer then timer:stop() end
     self[name] = nil
@@ -590,7 +621,7 @@ function obj:stop()
   self.wasFullScreen = false
   self.warned = {}
   self.running = false
-  self.logger.i('stopped')
+  self.logger.i("stopped")
   return self
 end
 
@@ -636,7 +667,7 @@ function obj:toggle(state)
   else
     self:hideBorder()
   end
-  hs.alert.show('Focus border ' .. (self.enabled and 'on' or 'off'), 1)
+  hs.alert.show("Focus border " .. (self.enabled and "on" or "off"), 1)
   return self
 end
 
@@ -650,7 +681,7 @@ end
 --- Returns:
 ---  * The FocusBorder object
 function obj:setColor(color)
-  if type(color) ~= 'table' then return self end
+  if type(color) ~= "table" then return self end
   self.borderColor = color
   self:rebuild()
   return self

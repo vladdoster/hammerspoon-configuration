@@ -12,15 +12,15 @@
 local obj = {}
 obj.__index = obj
 
-obj.name = 'PinnedWindows'
-obj.version = '1.0'
-obj.author = 'Vladislav Doster <mvdoster@gmail.com>'
-obj.license = 'MIT - https://opensource.org/licenses/MIT'
+obj.name = "PinnedWindows"
+obj.version = "1.0"
+obj.author = "Vladislav Doster <mvdoster@gmail.com>"
+obj.license = "MIT - https://opensource.org/licenses/MIT"
 
 --- PinnedWindows.logger
 --- Variable
 --- Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.
-obj.logger = hs.logger.new('PinnedWindows', 'info')
+obj.logger = hs.logger.new("PinnedWindows", "info")
 
 -- Configuration
 
@@ -91,14 +91,14 @@ obj.maxWindowsPerApp = 20
 --- Every hint must name a *toggle* the app keeps set, never a one-shot action such as Window > "Bring All to Front": that exists in nearly every Cocoa app, so it would match where no real toggle exists and yank every window forward again on unpin.
 --- Extend this list for an app whose float menu item is worded differently, e.g. `table.insert(spoon.PinnedWindows.floatHints, 1, "pin window")`.
 obj.floatHints = {
-  'always on top',
-  'float on top',
-  'keep on top',
-  'stay on top',
-  'always in front',
-  'float above',
-  'always visible',
-  'on top',
+  "always on top",
+  "float on top",
+  "keep on top",
+  "stay on top",
+  "always in front",
+  "float above",
+  "always visible",
+  "on top",
 }
 
 -- Internal state
@@ -123,7 +123,9 @@ obj.lastAccessibilityState = nil -- last value seen by the poll; nil forces one 
 obj.warned = {}
 
 -- Lets diagnose() tell "no events arrived" from "we raised and macOS ignored us"; a function, so resetStats() cannot drift from this list
-local function newStats() return { focusEvents = 0, appActivations = 0, raiseCalls = 0, frameRestores = 0 } end
+local function newStats()
+  return { focusEvents = 0, appActivations = 0, raiseCalls = 0, frameRestores = 0 }
+end
 
 obj.stats = newStats()
 
@@ -131,26 +133,30 @@ local AX = hs.uielement.watcher
 
 -- Stateless helpers
 
-
 -- Plain table, so comparisons never depend on hs.geometry's metatable behaviour
-local function rectOf(f) return { x = f.x, y = f.y, w = f.w, h = f.h } end
+local function rectOf(f)
+  return { x = f.x, y = f.y, w = f.w, h = f.h }
+end
 
 local function framesEqual(a, b, tol)
-  return math.abs(a.x - b.x) <= tol and math.abs(a.y - b.y) <= tol and math.abs(a.w - b.w) <= tol and math.abs(a.h - b.h) <= tol
+  return math.abs(a.x - b.x) <= tol
+    and math.abs(a.y - b.y) <= tol
+    and math.abs(a.w - b.w) <= tol
+    and math.abs(a.h - b.h) <= tol
 end
 
 -- UTF-8 safe middle-ellipsis: a window title is most distinguishable at both ends
 local function truncate(s, n)
-  if s == nil or s == '' then return '(untitled)' end
+  if s == nil or s == "" then return "(untitled)" end
   local len = (utf8 and utf8.len and utf8.len(s)) or #s
   if not len or len <= n then return s end
   local keep = math.floor((n - 1) / 2)
   if utf8 and utf8.offset then
     local head = s:sub(1, (utf8.offset(s, keep + 1) or keep + 1) - 1)
     local tail = s:sub(utf8.offset(s, -keep) or (#s - keep + 1))
-    return head .. '…' .. tail
+    return head .. "…" .. tail
   end
-  return s:sub(1, keep) .. '…' .. s:sub(-keep)
+  return s:sub(1, keep) .. "…" .. s:sub(-keep)
 end
 
 -- Re-resolve an entry's window. hs.window objects can go stale; the id is the identity
@@ -187,7 +193,7 @@ end
 
 -- Nesting varies, so recurse structurally: a table with an AXTitle is an item, else a container
 local function walkMenu(node, path, visit, depth)
-  if type(node) ~= 'table' or (depth or 0) > 12 then return end
+  if type(node) ~= "table" or (depth or 0) > 12 then return end
   if node.AXTitle then
     local p = hs.fnutils.copy(path)
     p[#p + 1] = node.AXTitle
@@ -207,7 +213,7 @@ local function collectWindows()
     local ok, id = pcall(w.id, w)
     if ok and id and w:isStandard() and not w:isMinimized() then
       local app = w:application()
-      local name = (app and app:name()) or 'Unknown'
+      local name = (app and app:name()) or "Unknown"
       if not groups[name] then
         groups[name] = {}
         names[#names + 1] = name
@@ -224,7 +230,7 @@ local function zOrderExcludingHammerspoon()
   local out = {}
   for _, w in ipairs(hs.window.orderedWindows()) do
     local app = w:application()
-    if not app or app:name() ~= 'Hammerspoon' then out[#out + 1] = w end
+    if not app or app:name() ~= "Hammerspoon" then out[#out + 1] = w end
   end
   return out
 end
@@ -249,8 +255,8 @@ end
 function obj:isOnCurrentSpace(win)
   if not (hs.spaces and hs.spaces.windowSpaces) then return true end
   local ok, spaces = pcall(hs.spaces.windowSpaces, win)
-  if not ok or type(spaces) ~= 'table' then
-    self:warnOnce('spaces', 'hs.spaces.windowSpaces unavailable (%s); assuming current space', tostring(spaces))
+  if not ok or type(spaces) ~= "table" then
+    self:warnOnce("spaces", "hs.spaces.windowSpaces unavailable (%s); assuming current space", tostring(spaces))
     return true
   end
   local okCur, current = pcall(hs.spaces.focusedSpace)
@@ -268,7 +274,9 @@ function obj:isActionable(entry, win)
 end
 
 -- Hoisted out of the table.sort() below, which runs several times per enforcement pass
-local function byPinOrder(a, b) return a.order < b.order end
+local function byPinOrder(a, b)
+  return a.order < b.order
+end
 
 function obj:sortedPins()
   local list = {}
@@ -287,7 +295,7 @@ function obj:maybeRaise(entry)
   if now - entry.lastRaise < self.raiseMinGap then return end
 
   local win = resolve(entry)
-  if not win then return self:unpin(entry.id, 'window went away') end
+  if not win then return self:unpin(entry.id, "window went away") end
   if not self:isActionable(entry, win) then return end
 
   entry.lastRaise = now
@@ -321,7 +329,7 @@ end
 
 function obj:restoreFrame(entry)
   local win = resolve(entry)
-  if not win then return self:unpin(entry.id, 'window went away') end
+  if not win then return self:unpin(entry.id, "window went away") end
 
   if not (entry.lockPos or entry.lockSize) then
     local okF, f = pcall(win.frame, win)
@@ -367,8 +375,12 @@ function obj:restoreFrame(entry)
     entry.attempts = 0
     if not entry.resisted then
       entry.resisted = true
-      self.logger.wf('%s: window will not take the exact frame; locking to %s instead', entry.appName, hs.inspect(entry.frame))
-      hs.alert.show(entry.appName .. ': window resists exact sizing\nlocked to nearest possible')
+      self.logger.wf(
+        "%s: window will not take the exact frame; locking to %s instead",
+        entry.appName,
+        hs.inspect(entry.frame)
+      )
+      hs.alert.show(entry.appName .. ": window resists exact sizing\nlocked to nearest possible")
     end
   end
 end
@@ -391,7 +403,7 @@ function obj:onAXEvent(_, event, watcher, id)
   end
 
   if event == AX.elementDestroyed then
-    self:unpin(id, 'window closed')
+    self:unpin(id, "window closed")
   elseif event == AX.windowMinimized then
     entry.minimized = true
   elseif event == AX.windowUnminimized then
@@ -405,14 +417,20 @@ end
 
 function obj:attachWatcher(entry)
   local win = entry.win
-  if type(win.newWatcher) ~= 'function' then
-    self:warnOnce('newWatcher', 'hs.window has no newWatcher; geometry lock falls back to the %.1fs poll', self.pollInterval)
+  if type(win.newWatcher) ~= "function" then
+    self:warnOnce(
+      "newWatcher",
+      "hs.window has no newWatcher; geometry lock falls back to the %.1fs poll",
+      self.pollInterval
+    )
     return nil
   end
   -- fn(element, event, watcher, userData) has no slot for self, hence the closure
-  local ok, watcher = pcall(win.newWatcher, win, function(el, ev, w, id) self:onAXEvent(el, ev, w, id) end, entry.id)
+  local ok, watcher = pcall(win.newWatcher, win, function(el, ev, w, id)
+    self:onAXEvent(el, ev, w, id)
+  end, entry.id)
   if not ok or not watcher then
-    self.logger.wf('could not create an AX watcher for %s: %s', entry.appName, tostring(watcher))
+    self.logger.wf("could not create an AX watcher for %s: %s", entry.appName, tostring(watcher))
     return nil
   end
   local started = pcall(watcher.start, watcher, {
@@ -425,7 +443,7 @@ function obj:attachWatcher(entry)
   if not started then
     -- start() registers before arming, so a half-started watcher is stopped, not dropped
     pcall(watcher.stop, watcher)
-    self.logger.wf('could not start the AX watcher for %s', entry.appName)
+    self.logger.wf("could not start the AX watcher for %s", entry.appName)
     return nil
   end
   return watcher
@@ -442,7 +460,11 @@ function obj:ensureFocusFilter()
   end
   local ok, filter = pcall(hs.window.filter.new)
   if not ok or not filter then
-    self.logger.wf('could not create a window filter (%s); relying on the %.1fs poll', tostring(filter), self.pollInterval)
+    self.logger.wf(
+      "could not create a window filter (%s); relying on the %.1fs poll",
+      tostring(filter),
+      self.pollInterval
+    )
     return
   end
   self.focusFilter = filter
@@ -489,7 +511,7 @@ function obj:findFloatMenuItem(app, callback)
     local best
     walkMenu(menus, {}, function(item, path)
       local title = item.AXTitle
-      if not title or title == '' then return end
+      if not title or title == "" then return end
       -- Only leaves are actionable; a submenu titled "Always on Top" is not a toggle
       if item.AXChildren then return end
       local lower = title:lower()
@@ -501,7 +523,7 @@ function obj:findFloatMenuItem(app, callback)
               path = path,
               rank = rank,
               title = title,
-              ticked = mark ~= nil and mark ~= '',
+              ticked = mark ~= nil and mark ~= "",
             }
           end
           break
@@ -518,9 +540,11 @@ function obj:clickMenuItem(app, path)
   local previous = hs.window.focusedWindow()
   app:activate()
   hs.timer.doAfter(0.15, function()
-    if not app:selectMenuItem(path) then self.logger.wf('could not select menu item %s', table.concat(path, ' > ')) end
+    if not app:selectMenuItem(path) then self.logger.wf("could not select menu item %s", table.concat(path, " > ")) end
     if previous and previous:application() and previous:application():pid() ~= app:pid() then
-      hs.timer.doAfter(0.15, function() pcall(previous.focus, previous) end)
+      hs.timer.doAfter(0.15, function()
+        pcall(previous.focus, previous)
+      end)
     end
   end)
 end
@@ -533,7 +557,7 @@ function obj:enableNativeFloat(entry)
     if not self.pinned[entry.id] then return end -- unpinned while we were searching
     if not found then
       entry.nativeFloat = false
-      self.logger.f('%s has no native always-on-top menu item', entry.appName)
+      self.logger.f("%s has no native always-on-top menu item", entry.appName)
       self:updateMenubarTitle()
       return
     end
@@ -546,7 +570,7 @@ function obj:enableNativeFloat(entry)
     else
       entry.nativeFloat.enabledByUs = true
       self:clickMenuItem(app, found.path)
-      self.logger.f("%s: enabled native float via '%s'", entry.appName, table.concat(found.path, ' > '))
+      self.logger.f("%s: enabled native float via '%s'", entry.appName, table.concat(found.path, " > "))
       hs.alert.show(entry.appName .. ': using its own "' .. found.title .. '"', 2)
     end
     self:updateMenubarTitle()
@@ -556,12 +580,12 @@ end
 function obj:disableNativeFloat(entry)
   local nf = entry.nativeFloat
   -- Only our own doing, and only if still done: the user may have switched it back off
-  if type(nf) ~= 'table' or not nf.enabledByUs or not nf.on then return end
+  if type(nf) ~= "table" or not nf.enabledByUs or not nf.on then return end
   local win = resolve(entry)
   local app = win and win:application()
   if not app then return end
   self:clickMenuItem(app, nf.path)
-  self.logger.f('%s: turned native float back off', entry.appName)
+  self.logger.f("%s: turned native float back off", entry.appName)
 end
 
 -- Pin lifecycle
@@ -570,7 +594,7 @@ function obj:pin(win)
   if not win then return end
   local id = win:id()
   if not id then
-    hs.alert.show('That window has no id and cannot be pinned')
+    hs.alert.show("That window has no id and cannot be pinned")
     return
   end
   if self.pinned[id] then return end
@@ -586,8 +610,8 @@ function obj:pin(win)
     id = id,
     win = win,
     pid = app and app:pid() or nil,
-    appName = app and app:name() or 'Unknown',
-    title = win:title() or '',
+    appName = app and app:name() or "Unknown",
+    title = win:title() or "",
     frame = rectOf(win:frame()),
     order = self.pinOrder,
     onTop = true,
@@ -610,8 +634,8 @@ function obj:pin(win)
   self:updateMenubarTitle()
   self:enableNativeFloat(entry) -- the real fix, where the app offers one
   self:scheduleRaise() -- best-effort fallback; only helps within the same app
-  self.logger.f('pinned %s - %s', entry.appName, entry.title)
-  hs.alert.show('Pinned: ' .. truncate(entry.appName .. ' - ' .. entry.title, self.titleMax), 1)
+  self.logger.f("pinned %s - %s", entry.appName, entry.title)
+  hs.alert.show("Pinned: " .. truncate(entry.appName .. " - " .. entry.title, self.titleMax), 1)
 end
 
 function obj:unpin(id, reason)
@@ -619,7 +643,7 @@ function obj:unpin(id, reason)
   if not entry then return end
 
   -- Only if we turned it on: our toggle should not outlive the pin, but a closing window is no reason to revert the app's own preference
-  if reason ~= 'window closed' and reason ~= 'app quit' then pcall(self.disableNativeFloat, self, entry) end
+  if reason ~= "window closed" and reason ~= "app quit" then pcall(self.disableNativeFloat, self, entry) end
   if entry.watcher then pcall(entry.watcher.stop, entry.watcher) end
   self.pinned[id] = nil
   self.pinnedCount = self.pinnedCount - 1
@@ -629,7 +653,7 @@ function obj:unpin(id, reason)
   end
 
   self:updateMenubarTitle()
-  self.logger.f('unpinned %s (%s)', entry.appName, reason or 'user')
+  self.logger.f("unpinned %s (%s)", entry.appName, reason or "user")
   return entry
 end
 
@@ -637,8 +661,8 @@ function obj:togglePin(win)
   if not win then return end
   local id = win:id()
   if id and self.pinned[id] then
-    local entry = self:unpin(id, 'toggled off')
-    if entry then hs.alert.show('Unpinned: ' .. truncate(entry.appName, self.titleMax), 1) end
+    local entry = self:unpin(id, "toggled off")
+    if entry then hs.alert.show("Unpinned: " .. truncate(entry.appName, self.titleMax), 1) end
   else
     self:pin(win)
   end
@@ -651,13 +675,13 @@ function obj:resnapshot(entry)
   entry.frame = rectOf(win:frame())
   entry.attempts = 0
   entry.resisted = false
-  hs.alert.show('Saved new position and size', 1)
+  hs.alert.show("Saved new position and size", 1)
 end
 
 -- elementDestroyed usually reports these, but a force-quit app can die without delivering it
 function obj:pruneStale()
   for id, entry in pairs(self.pinned) do
-    if not resolve(entry) then self:unpin(id, 'vanished') end
+    if not resolve(entry) then self:unpin(id, "vanished") end
   end
 end
 
@@ -666,44 +690,44 @@ end
 function obj:updateMenubarTitle()
   if not self.menubarItem then return end
   if not hs.accessibilityState() then
-    self.menubarItem:setTitle('◇!')
-    self.menubarItem:setTooltip('Pinned Windows - Accessibility permission is not granted')
+    self.menubarItem:setTitle("◇!")
+    self.menubarItem:setTooltip("Pinned Windows - Accessibility permission is not granted")
     return
   end
   if self.pinnedCount == 0 then
-    self.menubarItem:setTitle('◇')
-    self.menubarItem:setTooltip('Pinned Windows - nothing pinned')
+    self.menubarItem:setTitle("◇")
+    self.menubarItem:setTooltip("Pinned Windows - nothing pinned")
     return
   end
-  self.menubarItem:setTitle(self.pinnedCount == 1 and '◆' or ('◆' .. self.pinnedCount))
+  self.menubarItem:setTitle(self.pinnedCount == 1 and "◆" or ("◆" .. self.pinnedCount))
   local lines = {}
   for _, e in ipairs(self:sortedPins()) do
-    lines[#lines + 1] = e.appName .. ' - ' .. (e.title ~= '' and e.title or '(untitled)')
+    lines[#lines + 1] = e.appName .. " - " .. (e.title ~= "" and e.title or "(untitled)")
   end
-  self.menubarItem:setTooltip(table.concat(lines, '\n'))
+  self.menubarItem:setTooltip(table.concat(lines, "\n"))
 end
 
 function obj:statusSuffix(entry)
   local win = resolve(entry)
-  if not win then return ' (gone)' end
-  if entry.minimized then return ' (minimized)' end
-  if win:isFullScreen() then return ' (fullscreen)' end
-  if not self:isOnCurrentSpace(win) then return ' (other space)' end
+  if not win then return " (gone)" end
+  if entry.minimized then return " (minimized)" end
+  if win:isFullScreen() then return " (fullscreen)" end
+  if not self:isOnCurrentSpace(win) then return " (other space)" end
   local off = {}
-  if not entry.onTop then off[#off + 1] = 'top' end
-  if not entry.lockSize then off[#off + 1] = 'size' end
-  if not entry.lockPos then off[#off + 1] = 'position' end
-  if #off > 0 then return ' (' .. table.concat(off, '/') .. ' unlocked)' end
-  if type(entry.nativeFloat) == 'table' then return entry.nativeFloat.on and ' ✓floating' or ' (float off)' end
-  if entry.nativeFloat == false then return ' (no real on-top)' end
-  return ''
+  if not entry.onTop then off[#off + 1] = "top" end
+  if not entry.lockSize then off[#off + 1] = "size" end
+  if not entry.lockPos then off[#off + 1] = "position" end
+  if #off > 0 then return " (" .. table.concat(off, "/") .. " unlocked)" end
+  if type(entry.nativeFloat) == "table" then return entry.nativeFloat.on and " ✓floating" or " (float off)" end
+  if entry.nativeFloat == false then return " (no real on-top)" end
+  return ""
 end
 
 function obj:pinSubmenu(entry)
   local floatRow
-  if type(entry.nativeFloat) == 'table' then
+  if type(entry.nativeFloat) == "table" then
     floatRow = {
-      title = 'Always on Top - ' .. entry.appName .. '’s “' .. entry.nativeFloat.title .. '”',
+      title = "Always on Top - " .. entry.appName .. "’s “" .. entry.nativeFloat.title .. "”",
       checked = entry.nativeFloat.on,
       fn = function()
         local win = resolve(entry)
@@ -716,33 +740,33 @@ function obj:pinSubmenu(entry)
     }
   elseif entry.nativeFloat == false then
     floatRow = {
-      title = 'No real always-on-top - ' .. entry.appName .. ' has no float option',
+      title = "No real always-on-top - " .. entry.appName .. " has no float option",
       disabled = true,
     }
   else
-    floatRow = { title = 'Looking for a native float option…', disabled = true }
+    floatRow = { title = "Looking for a native float option…", disabled = true }
   end
 
   return {
     {
-      title = 'Unpin',
+      title = "Unpin",
       fn = function()
-        self:unpin(entry.id, 'menu')
-        hs.alert.show('Unpinned: ' .. truncate(entry.appName, self.titleMax), 1)
+        self:unpin(entry.id, "menu")
+        hs.alert.show("Unpinned: " .. truncate(entry.appName, self.titleMax), 1)
       end,
     },
     -- The one place focus() is used: an explicit, direct user action
     {
-      title = 'Bring to Front & Focus',
+      title = "Bring to Front & Focus",
       fn = function()
         local win = resolve(entry)
         if win then win:focus() end
       end,
     },
-    { title = '-' },
+    { title = "-" },
     floatRow,
     {
-      title = 'Keep re-raising (best effort)',
+      title = "Keep re-raising (best effort)",
       checked = entry.onTop,
       fn = function()
         entry.onTop = not entry.onTop
@@ -750,7 +774,7 @@ function obj:pinSubmenu(entry)
       end,
     },
     {
-      title = 'Lock Size',
+      title = "Lock Size",
       checked = entry.lockSize,
       fn = function()
         entry.lockSize = not entry.lockSize
@@ -759,7 +783,7 @@ function obj:pinSubmenu(entry)
       end,
     },
     {
-      title = 'Lock Position',
+      title = "Lock Position",
       checked = entry.lockPos,
       fn = function()
         entry.lockPos = not entry.lockPos
@@ -767,8 +791,13 @@ function obj:pinSubmenu(entry)
         self:restoreFrame(entry)
       end,
     },
-    { title = '-' },
-    { title = 'Update Saved Position & Size', fn = function() self:resnapshot(entry) end },
+    { title = "-" },
+    {
+      title = "Update Saved Position & Size",
+      fn = function()
+        self:resnapshot(entry)
+      end,
+    },
   }
 end
 
@@ -779,62 +808,73 @@ function obj:buildMenu(mods)
   local front = hs.window.frontmostWindow()
   local frontPinned = front and front:id() and self.pinned[front:id()] ~= nil
   menu[#menu + 1] = {
-    title = frontPinned and 'Unpin Frontmost Window' or 'Pin Frontmost Window',
+    title = frontPinned and "Unpin Frontmost Window" or "Pin Frontmost Window",
     disabled = front == nil,
-    fn = function() self:togglePin(front) end,
+    fn = function()
+      self:togglePin(front)
+    end,
   }
 
   if self.pinnedCount > 0 then
-    menu[#menu + 1] = { title = '-' }
-    menu[#menu + 1] = { title = 'Pinned (' .. self.pinnedCount .. ')', disabled = true }
+    menu[#menu + 1] = { title = "-" }
+    menu[#menu + 1] = { title = "Pinned (" .. self.pinnedCount .. ")", disabled = true }
     for _, entry in ipairs(self:sortedPins()) do
       local win = resolve(entry)
       if win then entry.title = win:title() or entry.title end
       menu[#menu + 1] = {
-        title = truncate(entry.appName .. ' - ' .. (entry.title ~= '' and entry.title or '(untitled)'), self.titleMax)
+        title = truncate(entry.appName .. " - " .. (entry.title ~= "" and entry.title or "(untitled)"), self.titleMax)
           .. self:statusSuffix(entry),
         checked = true,
         indent = 1,
         menu = self:pinSubmenu(entry),
       }
     end
-    menu[#menu + 1] = { title = 'Unpin All', fn = function() self:unpinAll() end }
+    menu[#menu + 1] = {
+      title = "Unpin All",
+      fn = function()
+        self:unpinAll()
+      end,
+    }
   end
 
-  menu[#menu + 1] = { title = '-' }
-  menu[#menu + 1] = { title = 'Windows', disabled = true }
+  menu[#menu + 1] = { title = "-" }
+  menu[#menu + 1] = { title = "Windows", disabled = true }
 
   local groups, names = collectWindows()
-  if #names == 0 then menu[#menu + 1] = { title = 'No windows available', disabled = true } end
+  if #names == 0 then menu[#menu + 1] = { title = "No windows available", disabled = true } end
   for _, name in ipairs(names) do
     local wins = groups[name]
     if #wins == 1 then
       -- Collapse single-window apps to one flat row rather than a submenu of one
       local only = wins[1]
       menu[#menu + 1] = {
-        title = truncate(name .. ' - ' .. (only.win:title() or ''), self.titleMax),
+        title = truncate(name .. " - " .. (only.win:title() or ""), self.titleMax),
         checked = self.pinned[only.id] ~= nil,
         indent = 1,
-        fn = function() self:togglePin(only.win) end,
+        fn = function()
+          self:togglePin(only.win)
+        end,
       }
     else
       local sub = {}
       for i, item in ipairs(wins) do
         if i > self.maxWindowsPerApp then
           sub[#sub + 1] = {
-            title = string.format('… %d more', #wins - self.maxWindowsPerApp),
+            title = string.format("… %d more", #wins - self.maxWindowsPerApp),
             disabled = true,
           }
           break
         end
         sub[#sub + 1] = {
-          title = truncate(item.win:title() or '', self.titleMax),
+          title = truncate(item.win:title() or "", self.titleMax),
           checked = self.pinned[item.id] ~= nil,
-          fn = function() self:togglePin(item.win) end,
+          fn = function()
+            self:togglePin(item.win)
+          end,
         }
       end
       menu[#menu + 1] = {
-        title = string.format('%s (%d)', name, #wins),
+        title = string.format("%s (%d)", name, #wins),
         indent = 1,
         menu = sub,
       }
@@ -843,13 +883,15 @@ function obj:buildMenu(mods)
 
   -- Alt-click reveals diagnostics without cluttering the everyday menu
   if mods and mods.alt then
-    menu[#menu + 1] = { title = '-' }
+    menu[#menu + 1] = { title = "-" }
     menu[#menu + 1] = {
-      title = 'Log level: ' .. tostring(self.logger.getLogLevel()),
-      fn = function() self.logger.setLogLevel(self.logger.getLogLevel() == 3 and 'debug' or 'info') end,
+      title = "Log level: " .. tostring(self.logger.getLogLevel()),
+      fn = function()
+        self.logger.setLogLevel(self.logger.getLogLevel() == 3 and "debug" or "info")
+      end,
     }
     menu[#menu + 1] = {
-      title = 'Dump state to console',
+      title = "Dump state to console",
       fn = function()
         print(hs.inspect({
           pinnedCount = self.pinnedCount,
@@ -894,7 +936,7 @@ function obj:onAppEvent(_, event, app)
     -- AX observers die with the process, sometimes silently; hence the pid kept at pin time
     local pid = app and app:pid()
     for id, entry in pairs(self.pinned) do
-      if pid and entry.pid == pid then self:unpin(id, 'app quit') end
+      if pid and entry.pid == pid then self:unpin(id, "app quit") end
     end
     self:pruneStale()
   end
@@ -904,18 +946,24 @@ end
 
 function obj:runDiagnose()
   local out = {}
-  local function say(fmt, ...) out[#out + 1] = string.format(fmt, ...) end
+  local function say(fmt, ...)
+    out[#out + 1] = string.format(fmt, ...)
+  end
 
   say(
-    'running=%s  accessibility=%s  menubar=%s  pinned=%d',
+    "running=%s  accessibility=%s  menubar=%s  pinned=%d",
     tostring(self.running),
     tostring(hs.accessibilityState()),
     tostring(self.menubarItem ~= nil),
     self.pinnedCount
   )
-  say('pollTimer=%s  focusFilter=%s', tostring(self.pollTimer ~= nil and self.pollTimer:running()), tostring(self.focusFilter ~= nil))
   say(
-    'events seen: focus=%d appActivated=%d raiseCalls=%d frameRestores=%d',
+    "pollTimer=%s  focusFilter=%s",
+    tostring(self.pollTimer ~= nil and self.pollTimer:running()),
+    tostring(self.focusFilter ~= nil)
+  )
+  say(
+    "events seen: focus=%d appActivated=%d raiseCalls=%d frameRestores=%d",
     self.stats.focusEvents,
     self.stats.appActivations,
     self.stats.raiseCalls,
@@ -924,67 +972,69 @@ function obj:runDiagnose()
 
   local focused = hs.window.focusedWindow()
   local focusedApp = focused and focused:application() and focused:application():name()
-  say('focused window: %s (%s)', tostring(focused and focused:title()), tostring(focusedApp))
+  say("focused window: %s (%s)", tostring(focused and focused:title()), tostring(focusedApp))
 
   if self.pinnedCount == 0 then
-    say('')
-    say('NOTHING IS PINNED - pin a window first, then run this again.')
+    say("")
+    say("NOTHING IS PINNED - pin a window first, then run this again.")
   end
 
   for _, entry in ipairs(self:sortedPins()) do
     local win = resolve(entry)
-    say('')
-    say('pin: %s - %s', entry.appName, entry.title)
+    say("")
+    say("pin: %s - %s", entry.appName, entry.title)
     if not win then
-      say('  window no longer resolves')
+      say("  window no longer resolves")
     else
       say(
-        '  onTop=%s visible=%s fullscreen=%s currentSpace=%s minimized=%s',
+        "  onTop=%s visible=%s fullscreen=%s currentSpace=%s minimized=%s",
         tostring(entry.onTop),
         tostring(win:isVisible()),
         tostring(win:isFullScreen()),
         tostring(self:isOnCurrentSpace(win)),
         tostring(entry.minimized)
       )
-      if type(entry.nativeFloat) == 'table' then
+      if type(entry.nativeFloat) == "table" then
         say(
           "  native float: USING '%s' (%s)",
-          table.concat(entry.nativeFloat.path, ' > '),
-          entry.nativeFloat.enabledByUs and 'we turned it on' or 'was already on'
+          table.concat(entry.nativeFloat.path, " > "),
+          entry.nativeFloat.enabledByUs and "we turned it on" or "was already on"
         )
       elseif entry.nativeFloat == false then
         say("  native float: none found in this app's menus")
       else
-        say('  native float: still searching (or search failed)')
+        say("  native float: still searching (or search failed)")
       end
 
       local before = zOrderExcludingHammerspoon()
       local zBefore = zIndexOf(entry.id, before)
       local topApp = before[1] and before[1]:application() and before[1]:application():name()
-      say('  window on top right now: %s', tostring(topApp))
-      say('  z-order before raise: %s of %d', tostring(zBefore), #before)
+      say("  window on top right now: %s", tostring(topApp))
+      say("  z-order before raise: %s of %d", tostring(zBefore), #before)
 
       pcall(win.becomeMain, win)
       pcall(win.raise, win)
 
       local after = zOrderExcludingHammerspoon()
       local zAfter = zIndexOf(entry.id, after)
-      say('  z-order after raise:  %s of %d', tostring(zAfter), #after)
+      say("  z-order after raise:  %s of %d", tostring(zAfter), #after)
 
       if zAfter == 1 then
-        say('  >>> RAISE WORKS. On-top is achievable; the bug is in my logic.')
+        say("  >>> RAISE WORKS. On-top is achievable; the bug is in my logic.")
       elseif zBefore and zAfter and zAfter < zBefore then
-        say('  >>> PARTIAL: climbed %d -> %d but not to the front.', zBefore, zAfter)
-        say('      Consistent with AXRaise only reordering within its own app.')
+        say("  >>> PARTIAL: climbed %d -> %d but not to the front.", zBefore, zAfter)
+        say("      Consistent with AXRaise only reordering within its own app.")
       else
-        say('  >>> RAISE HAS NO EFFECT across applications (OS limitation).')
+        say("  >>> RAISE HAS NO EFFECT across applications (OS limitation).")
       end
-      if topApp and topApp ~= entry.appName then say('      (the covering window belongs to a DIFFERENT app: %s)', topApp) end
+      if topApp and topApp ~= entry.appName then
+        say("      (the covering window belongs to a DIFFERENT app: %s)", topApp)
+      end
     end
   end
 
-  local text = table.concat(out, '\n')
-  print('\n--- PinnedWindows diagnose ---\n' .. text .. '\n--- end ---')
+  local text = table.concat(out, "\n")
+  print("\n--- PinnedWindows diagnose ---\n" .. text .. "\n--- end ---")
   return text
 end
 
@@ -1002,7 +1052,9 @@ end
 ---
 --- Deliberately starts nothing. The menubar item, every watcher and every timer belong to `PinnedWindows:start()`.
 --- Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing `pinned` here would orphan the accessibility watchers of anything already pinned.
-function obj:init() return self end
+function obj:init()
+  return self
+end
 
 --- PinnedWindows:start() -> self
 --- Method
@@ -1021,22 +1073,29 @@ function obj:start()
   if self.running then self:stop() end
 
   -- The autosave name keys the saved menu bar position: renaming it moves the icon back
-  self.menubarItem = hs.menubar.new(true, 'pinnedwindows')
+  self.menubarItem = hs.menubar.new(true, "pinnedwindows")
   if self.menubarItem then
     -- Wrapped: a throw inside the menu callback would leave a dead menubar icon
     self.menubarItem:setMenu(function(mods)
       local ok, menu = pcall(self.buildMenu, self, mods)
       if ok then return menu end
-      self.logger.wf('menu build failed: %s', tostring(menu))
+      self.logger.wf("menu build failed: %s", tostring(menu))
       return {
-        { title = 'Menu failed to build - see console', disabled = true },
-        { title = '-' },
-        { title = 'Unpin All', fn = function() self:unpinAll() end },
+        { title = "Menu failed to build - see console", disabled = true },
+        { title = "-" },
+        {
+          title = "Unpin All",
+          fn = function()
+            self:unpinAll()
+          end,
+        },
       }
     end)
   end
 
-  self.appWatcher = hs.application.watcher.new(function(name, event, app) self:onAppEvent(name, event, app) end)
+  self.appWatcher = hs.application.watcher.new(function(name, event, app)
+    self:onAppEvent(name, event, app)
+  end)
   self.appWatcher:start()
 
   if hs.spaces and hs.spaces.watcher then
@@ -1051,18 +1110,20 @@ function obj:start()
     self.spaceWatcher:start()
   end
 
-  self.screenWatcher = hs.screen.watcher.new(function() self:onScreensChanged() end)
+  self.screenWatcher = hs.screen.watcher.new(function()
+    self:onScreensChanged()
+  end)
   self.screenWatcher:start()
 
   self.running = true
   self:updateMenubarTitle()
 
   if not hs.accessibilityState() then
-    hs.alert.show('PinnedWindows needs Accessibility permission')
-    self.logger.w('accessibility permission not granted; nothing will work until it is')
+    hs.alert.show("PinnedWindows needs Accessibility permission")
+    self.logger.w("accessibility permission not granted; nothing will work until it is")
   end
 
-  self.logger.i('started')
+  self.logger.i("started")
   return self
 end
 
@@ -1092,14 +1153,14 @@ function obj:stop()
   self.focusFilter, self.onFocusEvent = nil, nil
 
   -- Field NAMES, not handles: ipairs over handles halts at the first nil and skips the rest
-  for _, name in ipairs({ 'appWatcher', 'spaceWatcher', 'screenWatcher' }) do
+  for _, name in ipairs({ "appWatcher", "spaceWatcher", "screenWatcher" }) do
     local watcher = self[name]
     -- pcall: stop() reaches into a framework that may already be tearing down
     if watcher then pcall(watcher.stop, watcher) end
     self[name] = nil
   end
 
-  for _, name in ipairs({ 'screenTimer', 'spaceTimer' }) do
+  for _, name in ipairs({ "screenTimer", "spaceTimer" }) do
     local timer = self[name]
     if timer then timer:stop() end
     self[name] = nil
@@ -1107,7 +1168,7 @@ function obj:stop()
 
   self.warned = {}
   self.running = false
-  self.logger.i('stopped')
+  self.logger.i("stopped")
   return self
 end
 
@@ -1149,7 +1210,7 @@ function obj:togglePinFrontmost()
   if win then
     self:togglePin(win)
   else
-    hs.alert.show('No frontmost window')
+    hs.alert.show("No frontmost window")
   end
   return self
 end
@@ -1165,7 +1226,7 @@ end
 ---  * The PinnedWindows object
 function obj:unpinAll()
   for id in pairs(self.pinned) do
-    self:unpin(id, 'unpin all')
+    self:unpin(id, "unpin all")
   end
   return self
 end
@@ -1184,9 +1245,11 @@ end
 function obj:diagnose(delay)
   delay = tonumber(delay) or 0
   if delay <= 0 then return self:runDiagnose() end
-  hs.alert.show(('Diagnosing in %ds - click the app that covers your pinned window'):format(delay), delay)
-  hs.timer.doAfter(delay, function() self:runDiagnose() end)
-  return string.format('measuring in %ds; results will print to this console', delay)
+  hs.alert.show(("Diagnosing in %ds - click the app that covers your pinned window"):format(delay), delay)
+  hs.timer.doAfter(delay, function()
+    self:runDiagnose()
+  end)
+  return string.format("measuring in %ds; results will print to this console", delay)
 end
 
 --- PinnedWindows:resetStats() -> self

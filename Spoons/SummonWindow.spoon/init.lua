@@ -27,15 +27,15 @@
 local obj = {}
 obj.__index = obj
 
-obj.name = 'SummonWindow'
-obj.version = '1.0'
-obj.author = 'Vladislav Doster <mvdoster@gmail.com>'
-obj.license = 'MIT - https://opensource.org/licenses/MIT'
+obj.name = "SummonWindow"
+obj.version = "1.0"
+obj.author = "Vladislav Doster <mvdoster@gmail.com>"
+obj.license = "MIT - https://opensource.org/licenses/MIT"
 
 --- SummonWindow.logger
 --- Variable
 --- Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.
-obj.logger = hs.logger.new('SummonWindow', 'info')
+obj.logger = hs.logger.new("SummonWindow", "info")
 
 -- Configuration
 
@@ -92,7 +92,7 @@ obj.showInMenubar = true
 --- SummonWindow.menubarTitle
 --- Variable
 --- Glyph shown in the menubar. Defaults to `'⧉'`.
-obj.menubarTitle = '⧉'
+obj.menubarTitle = "⧉"
 
 --- SummonWindow.useYabai
 --- Variable
@@ -217,23 +217,24 @@ obj.warned = {}
 
 -- Stateless helpers
 
-
 -- UTF-8 safe middle-ellipsis: a window title is most distinguishable at both ends
 local function truncate(s, n)
-  if s == nil or s == '' then return '(untitled)' end
+  if s == nil or s == "" then return "(untitled)" end
   local len = (utf8 and utf8.len and utf8.len(s)) or #s
   if not len or len <= n then return s end
   local keep = math.floor((n - 1) / 2)
   if utf8 and utf8.offset then
     local head = s:sub(1, (utf8.offset(s, keep + 1) or keep + 1) - 1)
     local tail = s:sub(utf8.offset(s, -keep) or (#s - keep + 1))
-    return head .. '…' .. tail
+    return head .. "…" .. tail
   end
-  return s:sub(1, keep) .. '…' .. s:sub(-keep)
+  return s:sub(1, keep) .. "…" .. s:sub(-keep)
 end
 
 -- yabai rejects "1628.0", which is what tostring() makes of a JSON-decoded id on some builds
-local function fmtId(id) return string.format('%d', math.floor(id)) end
+local function fmtId(id)
+  return string.format("%d", math.floor(id))
+end
 
 -- Hoisted out of the table.sort() below
 local function bySpaceThenApp(a, b)
@@ -260,7 +261,9 @@ function obj:iconFor(bundleID, cache, size)
   local ok, img = pcall(hs.image.imageFromAppBundle, bundleID)
   if not ok then img = nil end
   if img and size then
-    local okCopy, small = pcall(function() return img:copy():size({ w = size, h = size }) end)
+    local okCopy, small = pcall(function()
+      return img:copy():size({ w = size, h = size })
+    end)
     if okCopy and small then img = small end
   end
 
@@ -275,12 +278,12 @@ end
 
 function obj:currentSpace()
   if not (hs.spaces and hs.spaces.focusedSpace) then
-    self:warnOnce('spaces', 'hs.spaces is unavailable; SummonWindow cannot work on this build')
+    self:warnOnce("spaces", "hs.spaces is unavailable; SummonWindow cannot work on this build")
     return nil
   end
   local ok, id = pcall(hs.spaces.focusedSpace)
-  if not ok or type(id) ~= 'number' then
-    self:warnOnce('focusedSpace', 'hs.spaces.focusedSpace failed (%s)', tostring(id))
+  if not ok or type(id) ~= "number" then
+    self:warnOnce("focusedSpace", "hs.spaces.focusedSpace failed (%s)", tostring(id))
     return nil
   end
   return id
@@ -289,8 +292,8 @@ end
 function obj:spacesFor(win)
   if not (hs.spaces and hs.spaces.windowSpaces) then return nil end
   local ok, spaces = pcall(hs.spaces.windowSpaces, win)
-  if not ok or type(spaces) ~= 'table' then
-    self:warnOnce('windowSpaces', 'hs.spaces.windowSpaces failed (%s)', tostring(spaces))
+  if not ok or type(spaces) ~= "table" then
+    self:warnOnce("windowSpaces", "hs.spaces.windowSpaces failed (%s)", tostring(spaces))
     return nil
   end
   return spaces
@@ -300,7 +303,7 @@ end
 local function firstMovableSpace(spaces, types)
   if not spaces then return nil end
   for _, id in ipairs(spaces) do
-    if not types or types[id] ~= 'fullscreen' then return id end
+    if not types or types[id] ~= "fullscreen" then return id end
   end
   return nil
 end
@@ -328,8 +331,12 @@ end
 function obj:awaitArrival(win, spaceId, timeout, done)
   local deadline = hs.timer.secondsSinceEpoch() + (timeout or 0.6)
   local timer
-  timer = hs.timer.waitUntil(function() return self:windowIsOn(win, spaceId) or hs.timer.secondsSinceEpoch() > deadline end, function()
-    if timer then pcall(function() timer:stop() end) end
+  timer = hs.timer.waitUntil(function()
+    return self:windowIsOn(win, spaceId) or hs.timer.secondsSinceEpoch() > deadline
+  end, function()
+    if timer then pcall(function()
+      timer:stop()
+    end) end
     done(self:windowIsOn(win, spaceId))
   end, 0.05)
 end
@@ -337,11 +344,11 @@ end
 -- The Space we would be moving a window into, or nil plus a reason to show the user
 function obj:summonableSpace()
   local current = self:currentSpace()
-  if not current then return nil, 'hs.spaces is unavailable' end
+  if not current then return nil, "hs.spaces is unavailable" end
 
   -- A fullscreen or tiled app owns its Space and refuses arrivals; say so before listing rows that would all fail
   local ok, kind = pcall(hs.spaces.spaceType, current)
-  if ok and kind == 'fullscreen' then return nil, 'cannot summon into a fullscreen Space' end
+  if ok and kind == "fullscreen" then return nil, "cannot summon into a fullscreen Space" end
   return current
 end
 
@@ -351,17 +358,17 @@ function obj:missionControlNames()
   if not (hs.spaces and hs.spaces.missionControlSpaceNames) then return {} end
 
   local ok, byScreen = pcall(hs.spaces.missionControlSpaceNames)
-  if not ok or type(byScreen) ~= 'table' then
-    self:warnOnce('mcNames', 'hs.spaces.missionControlSpaceNames failed (%s)', tostring(byScreen))
+  if not ok or type(byScreen) ~= "table" then
+    self:warnOnce("mcNames", "hs.spaces.missionControlSpaceNames failed (%s)", tostring(byScreen))
     return {}
   end
 
   local names = {}
   for _, spaces in pairs(byScreen) do
-    if type(spaces) == 'table' then
+    if type(spaces) == "table" then
       for id, name in pairs(spaces) do
         local n = tonumber(id) -- keys survive the ObjC round trip as numbers or strings
-        if n and type(name) == 'string' and name ~= '' then names[n] = name end
+        if n and type(name) == "string" and name ~= "" then names[n] = name end
       end
     end
   end
@@ -374,8 +381,8 @@ function obj:spaceModel()
   if not (hs.spaces and hs.spaces.allSpaces) then return model end
 
   local ok, all = pcall(hs.spaces.allSpaces)
-  if not ok or type(all) ~= 'table' then
-    self:warnOnce('allSpaces', 'hs.spaces.allSpaces failed (%s)', tostring(all))
+  if not ok or type(all) ~= "table" then
+    self:warnOnce("allSpaces", "hs.spaces.allSpaces failed (%s)", tostring(all))
     return model
   end
 
@@ -400,18 +407,18 @@ function obj:spaceModel()
     local screenLabel
     if #uuids > 1 then
       local scr = hs.screen.find(uuid)
-      screenLabel = (scr and scr:name()) or 'Display'
+      screenLabel = (scr and scr:name()) or "Display"
     end
 
     for index, id in ipairs(all[uuid] or {}) do
       rank = rank + 1
-      local label = names[id] or string.format('Space %d', index)
-      if screenLabel then label = screenLabel .. ' · ' .. label end
+      local label = names[id] or string.format("Space %d", index)
+      if screenLabel then label = screenLabel .. " · " .. label end
       model.labels[id] = label
       model.order[id] = rank
 
       local okType, kind = pcall(hs.spaces.spaceType, id)
-      if okType and type(kind) == 'string' then model.types[id] = kind end
+      if okType and type(kind) == "string" then model.types[id] = kind end
     end
   end
 
@@ -424,28 +431,28 @@ end
 
 -- Homebrew, nix-darwin and hand installs. Static, because hs.task cannot search PATH and Hammerspoon inherits launchd's environment rather than a login shell's
 local YABAI_PATHS = {
-  '/opt/homebrew/bin/yabai',
-  '/usr/local/bin/yabai',
-  '/run/current-system/sw/bin/yabai',
+  "/opt/homebrew/bin/yabai",
+  "/usr/local/bin/yabai",
+  "/run/current-system/sw/bin/yabai",
   -- Last, and nil-safe: a trailing nil shortens the list rather than erroring
-  os.getenv('HOME') and (os.getenv('HOME') .. '/.local/bin/yabai') or nil,
+  os.getenv("HOME") and (os.getenv("HOME") .. "/.local/bin/yabai") or nil,
 }
 
 -- attributes() follows symlinks, which is wanted: /opt/homebrew/bin/yabai links into the Cellar
 local function executableFile(path)
-  if type(path) ~= 'string' or path == '' then return false end
-  local okMode, mode = pcall(hs.fs.attributes, path, 'mode')
-  if not okMode or mode ~= 'file' then return false end
-  local okPerm, perms = pcall(hs.fs.attributes, path, 'permissions')
+  if type(path) ~= "string" or path == "" then return false end
+  local okMode, mode = pcall(hs.fs.attributes, path, "mode")
+  if not okMode or mode ~= "file" then return false end
+  local okPerm, perms = pcall(hs.fs.attributes, path, "permissions")
   -- Owner-execute, since Hammerspoon runs as the user who installed it
-  return okPerm and type(perms) == 'string' and perms:sub(3, 3) == 'x'
+  return okPerm and type(perms) == "string" and perms:sub(3, 3) == "x"
 end
 
 -- No yabai space selector takes a window server id, so ids must become Mission Control indices, and only yabai can say what its own numbering is
 local function yabaiSpaceMaps(spaces)
   local idToIndex, indexToId = {}, {}
   for _, s in ipairs(spaces or {}) do
-    if type(s) == 'table' and type(s.id) == 'number' and type(s.index) == 'number' then
+    if type(s) == "table" and type(s.id) == "number" and type(s.index) == "number" then
       local id, index = math.floor(s.id), math.floor(s.index)
       idToIndex[id] = index
       indexToId[index] = id
@@ -465,8 +472,8 @@ function obj:yabaiBinary()
       self.yabaiResolved = self.yabaiPath
     else
       self:warnOnce(
-        'yabaipath',
-        'SummonWindow.yabaiPath is set to %s, which is not an executable file; ignoring it',
+        "yabaipath",
+        "SummonWindow.yabaiPath is set to %s, which is not an executable file; ignoring it",
         tostring(self.yabaiPath)
       )
       self.yabaiResolved = false
@@ -477,7 +484,7 @@ function obj:yabaiBinary()
   for _, path in ipairs(YABAI_PATHS) do
     if executableFile(path) then
       self.yabaiResolved = path
-      self.logger.f('found yabai at %s', path)
+      self.logger.f("found yabai at %s", path)
       return path
     end
   end
@@ -489,7 +496,7 @@ end
 -- Calls done() exactly once, or not at all if torn down in flight; answering twice would walk the ladder twice and start a drag nobody asked for
 function obj:yabaiRun(args, done)
   local bin = self:yabaiBinary()
-  if not bin then return done(false, nil, 'not installed') end
+  if not bin then return done(false, nil, "not installed") end
 
   local job = { task = nil, timer = nil, settled = false }
   self.yabaiTasks[job] = true
@@ -497,7 +504,9 @@ function obj:yabaiRun(args, done)
   local function finish(ok, out, err)
     if job.settled then return end
     job.settled = true
-    if job.timer then pcall(function() job.timer:stop() end) end
+    if job.timer then pcall(function()
+      job.timer:stop()
+    end) end
     if job.task then pcall(function()
       if job.task:isRunning() then job.task:terminate() end
     end) end
@@ -511,23 +520,26 @@ function obj:yabaiRun(args, done)
     finish(
       false,
       out,
-      string.format('exit %s%s', tostring(code), (type(err) == 'string' and err ~= '') and (': ' .. err:gsub('%s+$', '')) or '')
+      string.format(
+        "exit %s%s",
+        tostring(code),
+        (type(err) == "string" and err ~= "") and (": " .. err:gsub("%s+$", "")) or ""
+      )
     )
   end, args)
 
-  if not okNew or not made then return finish(false, nil, 'could not create the task (' .. tostring(made) .. ')') end
+  if not okNew or not made then return finish(false, nil, "could not create the task (" .. tostring(made) .. ")") end
   -- Assigned before start(), so the completion callback can always find the task to reap
   job.task = made
 
   local okStart, started = pcall(made.start, made)
-  if not okStart or not started then return finish(false, nil, 'failed to launch') end
+  if not okStart or not started then return finish(false, nil, "failed to launch") end
 
   -- Guarded: a process that exits instantly settles the job before we reach here
   if not job.settled then
-    job.timer = hs.timer.doAfter(
-      self.yabaiTimeout,
-      function() finish(false, nil, string.format('no answer within %ss', tostring(self.yabaiTimeout))) end
-    )
+    job.timer = hs.timer.doAfter(self.yabaiTimeout, function()
+      finish(false, nil, string.format("no answer within %ss", tostring(self.yabaiTimeout)))
+    end)
   end
 end
 
@@ -547,7 +559,9 @@ function obj:abortYabai()
   for job in pairs(self.yabaiTasks) do
     if not job.settled then
       job.settled = true
-      if job.timer then pcall(function() job.timer:stop() end) end
+      if job.timer then pcall(function()
+        job.timer:stop()
+      end) end
       if job.task then pcall(function()
         if job.task:isRunning() then job.task:terminate() end
       end) end
@@ -556,20 +570,22 @@ function obj:abortYabai()
   end
   self.yabaiTasks = {}
   self.yabaiPending = {}
-  if n > 0 then self.logger.f('abandoned %d yabai command(s)', n) end
+  if n > 0 then self.logger.f("abandoned %d yabai command(s)", n) end
   return self
 end
 
 -- Calls done(data, err) once, data nil on failure; `kind` doubles as the query flag
 function obj:yabaiQuery(kind, force, done)
-  if not self:yabaiBinary() then return done(nil, 'not installed') end
+  if not self:yabaiBinary() then return done(nil, "not installed") end
 
   local hit = self.yabaiCache[kind]
-  if not force and hit and (hs.timer.secondsSinceEpoch() - hit.at) < self.yabaiCacheSeconds then return done(hit.data, nil) end
+  if not force and hit and (hs.timer.secondsSinceEpoch() - hit.at) < self.yabaiCacheSeconds then
+    return done(hit.data, nil)
+  end
 
   -- A recent failure is cached as firmly as an answer, and checked even when forced: a socket that refused ten milliseconds ago cannot succeed, and the forcing caller should wait least
   if self.yabaiFailedAt and (hs.timer.secondsSinceEpoch() - self.yabaiFailedAt) < self.yabaiCacheSeconds then
-    return done(nil, self.yabaiLastError or 'yabai failed a moment ago')
+    return done(nil, self.yabaiLastError or "yabai failed a moment ago")
   end
 
   -- Join a query of the same kind already in flight rather than starting a second one
@@ -580,7 +596,7 @@ function obj:yabaiQuery(kind, force, done)
   end
   self.yabaiPending[kind] = { done }
 
-  self:yabaiRun({ '--message', 'query', '--' .. kind }, function(ok, out, err)
+  self:yabaiRun({ "--message", "query", "--" .. kind }, function(ok, out, err)
     local data, why
     if not ok then
       -- A first query failing overwhelmingly means installed but not running; worth one line, since the alternative is silently paying for a second-long drag forever
@@ -588,21 +604,26 @@ function obj:yabaiQuery(kind, force, done)
       self.yabaiLastError = tostring(err)
       self.yabaiFailedAt = hs.timer.secondsSinceEpoch()
       self:warnOnce(
-        'yabaiserver',
-        'yabai is installed but not answering (%s); is the service running? ' .. 'Try `yabai --start-service`. Carrying on without it.',
+        "yabaiserver",
+        "yabai is installed but not answering (%s); is the service running? "
+          .. "Try `yabai --start-service`. Carrying on without it.",
         tostring(err)
       )
     else
       -- decode() raises on malformed input rather than returning nil
-      local okJson, decoded = pcall(hs.json.decode, out or '')
-      if okJson and type(decoded) == 'table' then
+      local okJson, decoded = pcall(hs.json.decode, out or "")
+      if okJson and type(decoded) == "table" then
         data = decoded
         self.yabaiLastError = nil
         self.yabaiFailedAt = nil
         self.yabaiCache[kind] = { at = hs.timer.secondsSinceEpoch(), data = decoded }
       else
-        why = 'unparseable ' .. kind .. ' list'
-        self:warnOnce('yabaijson', 'could not parse `yabai --message query --%s` output; the yabai CLI may have changed shape', kind)
+        why = "unparseable " .. kind .. " list"
+        self:warnOnce(
+          "yabaijson",
+          "could not parse `yabai --message query --%s` output; the yabai CLI may have changed shape",
+          kind
+        )
       end
     end
 
@@ -641,25 +662,28 @@ function obj:refreshYabai(force, done)
     done(false)
     return self
   end
-  self:yabaiQuery('spaces', force, function(spaces)
-    self:yabaiQuery('windows', force, function(windows) done(spaces ~= nil and windows ~= nil) end)
+  self:yabaiQuery("spaces", force, function(spaces)
+    self:yabaiQuery("windows", force, function(windows)
+      done(spaces ~= nil and windows ~= nil)
+    end)
   end)
   return self
 end
 
 -- Calls done(index, err) once. Never cached: indices renumber whenever a Space is created, destroyed or dragged, and a stale one does not fail, it moves the window to the WRONG Space
 function obj:yabaiSpaceIndex(spaceId, done)
-  self:yabaiQuery('spaces', true, function(spaces, err)
-    if not spaces then return done(nil, err or 'no answer from yabai') end
+  self:yabaiQuery("spaces", true, function(spaces, err)
+    if not spaces then return done(nil, err or "no answer from yabai") end
     local idToIndex = yabaiSpaceMaps(spaces)
     local index = idToIndex[spaceId]
     if index then return done(index, nil) end
     self:warnOnce(
-      'yabaispace',
-      'yabai does not list Space %s; its idea of the Space layout disagrees with ' .. 'hs.spaces, so yabai is skipped for moves onto it',
+      "yabaispace",
+      "yabai does not list Space %s; its idea of the Space layout disagrees with "
+        .. "hs.spaces, so yabai is skipped for moves onto it",
       tostring(spaceId)
     )
-    done(nil, string.format('Space %s is unknown to yabai', tostring(spaceId)))
+    done(nil, string.format("Space %s is unknown to yabai", tostring(spaceId)))
   end)
 end
 
@@ -668,15 +692,15 @@ function obj:yabaiMove(winId, target, done)
   self:yabaiSpaceIndex(target, function(index, err)
     if not index then return done(false, err) end
     self:yabaiRun({
-      '-m',
-      'window',
+      "-m",
+      "window",
       fmtId(winId),
-      '--space',
-      string.format('%d', index),
+      "--space",
+      string.format("%d", index),
     }, function(ok, _, moveErr)
       if not ok then
         -- yabai's stderr is the diagnostic part: a missing addition reads differently from an unseen window
-        self:warnOnce('yabaimove', 'yabai refused the move (%s)', tostring(moveErr))
+        self:warnOnce("yabaimove", "yabai refused the move (%s)", tostring(moveErr))
       end
       done(ok, moveErr)
     end)
@@ -685,8 +709,8 @@ end
 
 -- Only for windows with no hs.window, and only where arrival has already been verified
 function obj:yabaiFocus(winId)
-  self:yabaiRun({ '--message', 'window', fmtId(winId), '--focus' }, function(ok, _, err)
-    if not ok then self.logger.f('yabai could not focus window %s (%s)', tostring(winId), tostring(err)) end
+  self:yabaiRun({ "--message", "window", fmtId(winId), "--focus" }, function(ok, _, err)
+    if not ok then self.logger.f("yabai could not focus window %s (%s)", tostring(winId), tostring(err)) end
   end)
 end
 
@@ -707,23 +731,23 @@ function obj:knownWindows(deep)
 
   if self.windowFilter then
     local ok, wins = pcall(self.windowFilter.getWindows, self.windowFilter)
-    if ok and type(wins) == 'table' then
+    if ok and type(wins) == "table" then
       for _, win in ipairs(wins) do
         add(win)
       end
     else
-      self:warnOnce('filter', 'window filter query failed (%s)', tostring(wins))
+      self:warnOnce("filter", "window filter query failed (%s)", tostring(wins))
     end
   end
 
   if deep then
     local ok, wins = pcall(hs.window.allWindows)
-    if ok and type(wins) == 'table' then
+    if ok and type(wins) == "table" then
       for _, win in ipairs(wins) do
         add(win)
       end
     else
-      self:warnOnce('allWindows', 'hs.window.allWindows failed (%s)', tostring(wins))
+      self:warnOnce("allWindows", "hs.window.allWindows failed (%s)", tostring(wins))
     end
   end
 
@@ -753,15 +777,15 @@ function obj:classify(win, current, model)
   local spaceId = firstMovableSpace(spaces, model.types)
   if not spaceId then return nil end
 
-  local title = win:title() or ''
+  local title = win:title() or ""
   return {
     winId = win:id(),
     spaceId = spaceId,
-    appName = (app and app:name()) or '?',
+    appName = (app and app:name()) or "?",
     bundleID = app and app:bundleID() or nil,
     title = title,
     minimized = minimized,
-    label = model.labels[spaceId] or string.format('Space %s', tostring(spaceId)),
+    label = model.labels[spaceId] or string.format("Space %s", tostring(spaceId)),
     -- Unplaceable Spaces sort last rather than erroring out of table.sort()
     order = model.order[spaceId] or math.huge,
   }
@@ -778,7 +802,7 @@ function obj:yabaiEntries(current, model, seen)
   -- Memoised per pass, so an application with eight windows out there costs one AX query
   local apps = {}
   local function appFor(pid)
-    if type(pid) ~= 'number' then return nil end
+    if type(pid) ~= "number" then return nil end
     if apps[pid] then return apps[pid] end
 
     local entry = { app = false, windows = {} }
@@ -787,7 +811,7 @@ function obj:yabaiEntries(current, model, seen)
       entry.app = app
       -- One application's AX query, not the whole system's, which is what makes this affordable
       local okWins, wins = pcall(app.allWindows, app)
-      if okWins and type(wins) == 'table' then
+      if okWins and type(wins) == "table" then
         for _, w in ipairs(wins) do
           local okId, id = pcall(w.id, w)
           if okId and id then entry.windows[id] = w end
@@ -799,21 +823,21 @@ function obj:yabaiEntries(current, model, seen)
   end
 
   for _, w in ipairs(windows) do
-    local id = (type(w) == 'table' and type(w.id) == 'number') and math.floor(w.id) or nil
+    local id = (type(w) == "table" and type(w.id) == "number") and math.floor(w.id) or nil
     -- is-sticky windows are already here; is-hidden is the whole app, which summoning cannot undo
     if
       id
       and not seen[id]
       and w.pid ~= hs.processInfo.processID
-      and w.role == 'AXWindow'
-      and w.subrole == 'AXStandardWindow'
-      and not w['is-sticky']
-      and not w['is-native-fullscreen']
-      and not w['is-hidden']
-      and (self.includeMinimized or not w['is-minimized'])
+      and w.role == "AXWindow"
+      and w.subrole == "AXStandardWindow"
+      and not w["is-sticky"]
+      and not w["is-native-fullscreen"]
+      and not w["is-hidden"]
+      and (self.includeMinimized or not w["is-minimized"])
     then
-      local spaceId = type(w.space) == 'number' and indexToId[math.floor(w.space)] or nil
-      if spaceId and spaceId ~= current and model.types[spaceId] ~= 'fullscreen' then
+      local spaceId = type(w.space) == "number" and indexToId[math.floor(w.space)] or nil
+      if spaceId and spaceId ~= current and model.types[spaceId] ~= "fullscreen" then
         seen[id] = true
 
         local app = appFor(w.pid)
@@ -829,11 +853,11 @@ function obj:yabaiEntries(current, model, seen)
           entry = {
             winId = id,
             spaceId = spaceId,
-            appName = w.app or '?',
+            appName = w.app or "?",
             bundleID = bundleID,
-            title = w.title or '',
-            minimized = w['is-minimized'] and true or false,
-            label = model.labels[spaceId] or string.format('Space %s', tostring(spaceId)),
+            title = w.title or "",
+            minimized = w["is-minimized"] and true or false,
+            label = model.labels[spaceId] or string.format("Space %s", tostring(spaceId)),
             order = model.order[spaceId] or math.huge,
             -- No hs.window behind it, so only the yabai rung can move this one
             yabaiOnly = win == nil,
@@ -880,7 +904,7 @@ function obj:candidates(opts)
     -- Wrapped per window: a window closed since enumeration leaves userdata whose accessors throw, and one dead window should cost one row rather than the list
     local ok, entry = pcall(self.classify, self, win, current, model)
     if not ok then
-      self:warnOnce('classify', 'window inspection failed (%s); skipping', tostring(entry))
+      self:warnOnce("classify", "window inspection failed (%s); skipping", tostring(entry))
     elseif entry then
       byId[entry.winId] = win
       lastEntries[entry.winId] = entry
@@ -890,7 +914,7 @@ function obj:candidates(opts)
 
   local okYabai, found = pcall(self.yabaiEntries, self, current, model, seen)
   if not okYabai then
-    self:warnOnce('yabaientries', "reading yabai's window list failed (%s); skipping it", tostring(found))
+    self:warnOnce("yabaientries", "reading yabai's window list failed (%s); skipping it", tostring(found))
   else
     for _, item in ipairs(found) do
       -- nil for a yabai-only window, which is why summonById reads lastEntries as authority
@@ -919,8 +943,8 @@ function obj:choiceList()
     -- valid = false keeps the row from dismissing the chooser when it is selected
     return {
       {
-        text = 'No windows on other Spaces',
-        subText = 'Everything is already here - or run SummonWindow:diagnose() in the Console',
+        text = "No windows on other Spaces",
+        subText = "Everything is already here - or run SummonWindow:diagnose() in the Console",
         valid = false,
       },
     }
@@ -929,8 +953,8 @@ function obj:choiceList()
   local icons, out = {}, {}
   for _, e in ipairs(entries) do
     out[#out + 1] = {
-      text = e.title ~= '' and e.title or e.appName,
-      subText = string.format('%s - %s%s', e.appName, e.label, e.minimized and ' (minimized)' or ''),
+      text = e.title ~= "" and e.title or e.appName,
+      subText = string.format("%s - %s%s", e.appName, e.label, e.minimized and " (minimized)" or ""),
       image = self:iconFor(e.bundleID, icons),
       -- Only plain values survive the trip into the chooser; the window itself is in byId
       winId = e.winId,
@@ -951,7 +975,7 @@ function obj:ensureChooser()
   self.chooser:rows(self.chooserRows)
   self.chooser:width(self.chooserWidth)
   self.chooser:searchSubText(true)
-  self.chooser:placeholderText('Summon a window from another Space…')
+  self.chooser:placeholderText("Summon a window from another Space…")
   return self.chooser
 end
 
@@ -963,12 +987,12 @@ function obj:buildMenu()
   local entries = self:candidates({ deep = false })
 
   if #entries == 0 then
-    menu[#menu + 1] = { title = 'No windows on other Spaces', disabled = true }
+    menu[#menu + 1] = { title = "No windows on other Spaces", disabled = true }
   else
     local icons, lastLabel = {}, nil
     for _, e in ipairs(entries) do
       if e.label ~= lastLabel then
-        if lastLabel then menu[#menu + 1] = { title = '-' } end
+        if lastLabel then menu[#menu + 1] = { title = "-" } end
         menu[#menu + 1] = { title = e.label, disabled = true }
         lastLabel = e.label
       end
@@ -976,16 +1000,23 @@ function obj:buildMenu()
       -- The id, not `e`: closing over the entry would keep it alive as long as the menu
       local winId = e.winId
       menu[#menu + 1] = {
-        title = string.format('%s - %s', e.appName, truncate(e.title, self.titleMax)),
+        title = string.format("%s - %s", e.appName, truncate(e.title, self.titleMax)),
         image = self:iconFor(e.bundleID, icons, 16),
         indent = 1,
-        fn = function() self:summonById(winId) end,
+        fn = function()
+          self:summonById(winId)
+        end,
       }
     end
   end
 
-  menu[#menu + 1] = { title = '-' }
-  menu[#menu + 1] = { title = 'Search…', fn = function() self:show() end }
+  menu[#menu + 1] = { title = "-" }
+  menu[#menu + 1] = {
+    title = "Search…",
+    fn = function()
+      self:show()
+    end,
+  }
   return menu
 end
 
@@ -998,7 +1029,9 @@ local PR = ET.properties
 -- clickState is set by hand: the constructor leaves it zero, which NSEvent reports as a clickCount of 0, and Chromium-derived apps read that as "not a real click"
 local function mouseDown(pt)
   local e = ET.newMouseEvent(TY.leftMouseDown, pt)
-  pcall(function() e:setProperty(PR.mouseEventClickState, 1) end)
+  pcall(function()
+    e:setProperty(PR.mouseEventClickState, 1)
+  end)
   e:post()
 end
 
@@ -1012,7 +1045,9 @@ local function mouseDrag(pt, dx)
   e:post()
 end
 
-local function mouseUp(pt) ET.newMouseEvent(TY.leftMouseUp, pt):post() end
+local function mouseUp(pt)
+  ET.newMouseEvent(TY.leftMouseUp, pt):post()
+end
 
 -- absolutePosition is a warp and generates no move event, so post one too and satisfy both kinds of observer
 local function placeCursor(pt)
@@ -1024,13 +1059,15 @@ end
 local function releaseCtrl(job)
   if not job.ctrlDown then return end
   job.ctrlDown = false
-  pcall(function() ET.newKeyEvent('ctrl', false):post() end)
+  pcall(function()
+    ET.newKeyEvent("ctrl", false):post()
+  end)
 end
 
 -- The ctrl-up is the dangerous half, posted from a timer: a teardown mid-sequence would strand ctrl down system-wide, so the timers live on the job and ctrlDown records the debt
 local function pressSpaceArrow(job, dir, useFn, keyHold, done)
-  local mods = useFn and { 'ctrl', 'fn' } or { 'ctrl' }
-  ET.newKeyEvent('ctrl', true):post()
+  local mods = useFn and { "ctrl", "fn" } or { "ctrl" }
+  ET.newKeyEvent("ctrl", true):post()
   job.ctrlDown = true
   job.timer = hs.timer.doAfter(keyHold, function()
     if job.finished then return end
@@ -1049,11 +1086,13 @@ end
 -- The dead strip left of the close button: the centre tears off a browser tab, a fixed titlebar height misses compact toolbars, and the close button's frame gives a true centre line
 function obj:grabPoint(win)
   local okF, f = pcall(win.frame, win)
-  if not okF or not f then return nil, 'window has no frame' end
+  if not okF or not f then return nil, "window has no frame" end
 
   local ok, ax = pcall(hs.axuielement.windowElement, win)
   if ok and ax then
-    local okB, btn = pcall(function() return ax.AXCloseButton end)
+    local okB, btn = pcall(function()
+      return ax.AXCloseButton
+    end)
     local cf = okB and btn and btn.AXFrame
     if cf and cf.x and cf.h and cf.h > 0 then
       return {
@@ -1065,7 +1104,7 @@ function obj:grabPoint(win)
 
   -- No close button: the three lights sit 20pt apart, so its left edge is ~40pt from zoom's
   local okZ, zr = pcall(win.zoomButtonRect, win)
-  if okZ and type(zr) == 'table' and zr.x and zr.h and zr.h > 0 then
+  if okZ and type(zr) == "table" and zr.x and zr.h and zr.h > 0 then
     return {
       x = math.floor(f.x + math.max(6, (zr.x - 40 - f.x) / 2)),
       y = math.floor(zr.y + zr.h / 2),
@@ -1073,16 +1112,16 @@ function obj:grabPoint(win)
   end
 
   -- Neither means there is genuinely no titlebar, and a guessed point would press into content
-  return nil, 'window has no titlebar to grab'
+  return nil, "window has no titlebar to grab"
 end
 
 -- The full list, not just user Spaces: the arrow keys step through fullscreen ones too
 function obj:spaceOrder(win)
   local scr = win:screen()
   local uuid = scr and scr:getUUID()
-  if not uuid then return nil, 'window is not on any screen' end
+  if not uuid then return nil, "window is not on any screen" end
   local ok, list = pcall(hs.spaces.spacesForScreen, uuid)
-  if not ok or type(list) ~= 'table' or #list == 0 then return nil, 'could not read the Space order for this screen' end
+  if not ok or type(list) ~= "table" or #list == 0 then return nil, "could not read the Space order for this screen" end
   return list
 end
 
@@ -1093,7 +1132,7 @@ local function pathBetween(order, fromIdx, toIdx)
   for i = fromIdx + step, toIdx, step do
     path[#path + 1] = order[i]
   end
-  return path, (step == 1) and 'right' or 'left'
+  return path, (step == 1) and "right" or "left"
 end
 
 --- SummonWindow:abortDrag() -> self
@@ -1113,11 +1152,15 @@ function obj:abortDrag()
     job.finished = true
     if job.holding then pcall(mouseUp, hs.mouse.absolutePosition()) end
     releaseCtrl(job)
-    if job.watchdog then pcall(function() job.watchdog:stop() end) end
-    if job.timer then pcall(function() job.timer:stop() end) end
+    if job.watchdog then pcall(function()
+      job.watchdog:stop()
+    end) end
+    if job.timer then pcall(function()
+      job.timer:stop()
+    end) end
     pcall(hs.mouse.absolutePosition, job.cursor)
     self.dragJob = nil
-    self.logger.w('drag aborted')
+    self.logger.w("drag aborted")
   end
   return self
 end
@@ -1126,23 +1169,25 @@ end
 function obj:dragToCurrentSpace(win, done)
   local T = self.dragTiming
 
-  if self.dragJob then return done(false, 'a drag is already in progress') end
+  if self.dragJob then return done(false, "a drag is already in progress") end
   if hs.eventtap.isSecureInputEnabled() then
     -- A focused password field anywhere swallows synthetic keys, stranding the window mid-air
-    return done(false, 'secure input is active, so Space switches would be ignored')
+    return done(false, "secure input is active, so Space switches would be ignored")
   end
 
   local okHere, here = pcall(hs.spaces.focusedSpace)
-  if not okHere or type(here) ~= 'number' then return done(false, 'could not determine the current Space') end
+  if not okHere or type(here) ~= "number" then return done(false, "could not determine the current Space") end
   local spaces = self:spacesFor(win)
   if not spaces or #spaces == 0 then return done(false, "could not determine the window's Space") end
   local from = firstMovableSpace(spaces, self:spaceModel().types)
-  if not from then return done(false, 'the window is only on a fullscreen Space, which it cannot be dragged out of') end
+  if not from then return done(false, "the window is only on a fullscreen Space, which it cannot be dragged out of") end
 
   local order, oErr = self:spaceOrder(win)
   if not order then return done(false, oErr) end
   local iFrom, iHere = hs.fnutils.indexOf(order, from), hs.fnutils.indexOf(order, here)
-  if not (iFrom and iHere) then return done(false, 'the window is on a different display; dragging across screens does not work') end
+  if not (iFrom and iHere) then
+    return done(false, "the window is on a different display; dragging across screens does not work")
+  end
 
   local outPath, outDir = pathBetween(order, iHere, iFrom) -- empty-handed, to fetch it
   local backPath, backDir = pathBetween(order, iFrom, iHere) -- loaded, bringing it home
@@ -1172,8 +1217,12 @@ function obj:dragToCurrentSpace(win, done)
       job.holding = false
     end
     releaseCtrl(job)
-    if job.watchdog then pcall(function() job.watchdog:stop() end) end
-    if job.timer then pcall(function() job.timer:stop() end) end
+    if job.watchdog then pcall(function()
+      job.watchdog:stop()
+    end) end
+    if job.timer then pcall(function()
+      job.timer:stop()
+    end) end
     self.dragJob = nil
 
     hs.timer.doAfter(T.postRelease, function()
@@ -1197,7 +1246,9 @@ function obj:dragToCurrentSpace(win, done)
   end
 
   local hops = #outPath + #backPath
-  job.watchdog = hs.timer.doAfter(2.0 + (T.hopTimeout + 0.3) * hops, function() finish(false, 'the drag stalled and was abandoned') end)
+  job.watchdog = hs.timer.doAfter(2.0 + (T.hopTimeout + 0.3) * hops, function()
+    finish(false, "the drag stalled and was abandoned")
+  end)
 
   -- One hop, gated on arriving somewhere known: the window server drops Space-switch input while a switch animates, so a burst of N presses yields one or two hops with no way to tell which
   local function hop(dir, expectId, onOk)
@@ -1207,10 +1258,15 @@ function obj:dragToCurrentSpace(win, done)
         local ok, cur = pcall(hs.spaces.focusedSpace)
         return ok and cur == expectId
       end
-      job.timer = hs.timer.waitUntil(function() return arrived() or hs.timer.secondsSinceEpoch() > deadline end, function()
+      job.timer = hs.timer.waitUntil(function()
+        return arrived() or hs.timer.secondsSinceEpoch() > deadline
+      end, function()
         if not arrived() then
           local _, cur = pcall(hs.spaces.focusedSpace)
-          return finish(false, string.format('Space switch timed out (wanted %s, still on %s)', tostring(expectId), tostring(cur)))
+          return finish(
+            false,
+            string.format("Space switch timed out (wanted %s, still on %s)", tostring(expectId), tostring(cur))
+          )
         end
         hs.timer.doAfter(T.hopSettle, step(onOk))
       end, T.hopPoll)
@@ -1267,7 +1323,12 @@ function obj:dragToCurrentSpace(win, done)
               step(function()
                 mouseDrag(pt, 1)
                 job.dragSign = -1
-                hs.timer.doAfter(T.dragToHop, step(function() walk(backPath, backDir, 1, release) end))
+                hs.timer.doAfter(
+                  T.dragToHop,
+                  step(function()
+                    walk(backPath, backDir, 1, release)
+                  end)
+                )
               end)
             )
           end)
@@ -1276,7 +1337,13 @@ function obj:dragToCurrentSpace(win, done)
     )
   end
 
-  self.logger.f('dragging window %s home: %d hop(s) %s to fetch, %d back', tostring(win:id()), #outPath, outDir, #backPath)
+  self.logger.f(
+    "dragging window %s home: %d hop(s) %s to fetch, %d back",
+    tostring(win:id()),
+    #outPath,
+    outDir,
+    #backPath
+  )
   walk(outPath, outDir, 1, grabAndReturn)
 end
 
@@ -1294,7 +1361,9 @@ end
 ---
 --- Deliberately starts nothing. The menubar item, the chooser and the window filter all belong to `SummonWindow:start()`.
 --- It is also deliberately empty rather than re-initialising state. The declarations above already run on a freshly loaded object, and `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load -- so clearing state here would strand a chooser or menubar item that is already live.
-function obj:init() return self end
+function obj:init()
+  return self
+end
 
 --- SummonWindow:start() -> self
 --- Method
@@ -1315,7 +1384,7 @@ function obj:start()
   -- The default filter already discards menulets and preference panes. setCurrentSpace(nil) is spelled out because it is the exact property this Spoon depends on
   self.windowFilter = hs.window.filter.new()
   self.windowFilter:setCurrentSpace(nil)
-  self.windowFilter:rejectApp('Hammerspoon')
+  self.windowFilter:rejectApp("Hammerspoon")
 
   -- Deliberately NOT forceRefreshOnSpaceChange: it is global, and would tax the filters FocusBorder and PinnedWindows keep alive on every Space change
 
@@ -1323,40 +1392,45 @@ function obj:start()
 
   if self.showInMenubar then
     -- The autosave name keys the saved menu bar position: unique, and never renamed
-    self.menubarItem = hs.menubar.new(true, 'summonwindow')
+    self.menubarItem = hs.menubar.new(true, "summonwindow")
     if self.menubarItem then
       self.menubarItem:setTitle(self.menubarTitle)
-      self.menubarItem:setTooltip('Summon a window from another Space')
+      self.menubarItem:setTooltip("Summon a window from another Space")
       -- Wrapped: a throw inside the menu callback would leave a dead menubar icon. Setting a menu also disables setClickCallback by design, so "Search…" is what opens the chooser
       self.menubarItem:setMenu(function(mods)
         local ok, menu = pcall(self.buildMenu, self, mods)
         if ok then return menu end
-        self.logger.wf('menu build failed: %s', tostring(menu))
+        self.logger.wf("menu build failed: %s", tostring(menu))
         return {
-          { title = 'Menu failed to build - see console', disabled = true },
-          { title = '-' },
-          { title = 'Search…', fn = function() self:show() end },
+          { title = "Menu failed to build - see console", disabled = true },
+          { title = "-" },
+          {
+            title = "Search…",
+            fn = function()
+              self:show()
+            end,
+          },
         }
       end)
     else
-      self.logger.w('could not create the menubar item')
+      self.logger.w("could not create the menubar item")
     end
   end
 
   self.running = true
 
   if not hs.accessibilityState() then
-    hs.alert.show('SummonWindow needs Accessibility permission')
-    self.logger.w('accessibility permission not granted; nothing will work until it is')
+    hs.alert.show("SummonWindow needs Accessibility permission")
+    self.logger.w("accessibility permission not granted; nothing will work until it is")
   end
   if not (hs.spaces and hs.spaces.moveWindowToSpace) then
-    self.logger.w('hs.spaces.moveWindowToSpace is unavailable; relying on yabai and dragging')
+    self.logger.w("hs.spaces.moveWindowToSpace is unavailable; relying on yabai and dragging")
   end
 
   -- Warmed now rather than on the first summon, so the first list after a reload is as complete as every later one; returns immediately when yabai is absent
   self:refreshYabai(true)
 
-  self.logger.i('started')
+  self.logger.i("started")
   return self
 end
 
@@ -1400,7 +1474,7 @@ function obj:stop()
   -- Re-probed on the next start(), so installing yabai or starting its service is noticed after a reload; the failure backoff goes with it
   self.yabaiResolved = nil
   self.running = false
-  self.logger.i('stopped')
+  self.logger.i("stopped")
   return self
 end
 
@@ -1441,8 +1515,8 @@ end
 function obj:show()
   local target, why = self:summonableSpace()
   if not target then
-    hs.alert.show('SummonWindow: ' .. why)
-    self.logger.wf('cannot show chooser: %s', why)
+    hs.alert.show("SummonWindow: " .. why)
+    self.logger.wf("cannot show chooser: %s", why)
     return self
   end
 
@@ -1451,7 +1525,7 @@ function obj:show()
     local chooser = self:ensureChooser()
     -- Static table, so the list rebuilds on open; a callback caches until refreshChoicesCallback()
     chooser:choices(self:choiceList())
-    chooser:query('')
+    chooser:query("")
     chooser:show()
   end)
   return self
@@ -1497,11 +1571,11 @@ function obj:confirmArrival(win, winId, target, timeout, done)
     if not index then return done(false) end
     local deadline = hs.timer.secondsSinceEpoch() + (timeout or 0.6)
     local function poll()
-      self:yabaiRun({ '--message', 'query', '--windows', '--window', fmtId(winId) }, function(ok, out)
+      self:yabaiRun({ "--message", "query", "--windows", "--window", fmtId(winId) }, function(ok, out)
         local landed = false
         if ok then
-          local okJson, w = pcall(hs.json.decode, out or '')
-          landed = okJson and type(w) == 'table' and type(w.space) == 'number' and math.floor(w.space) == index
+          local okJson, w = pcall(hs.json.decode, out or "")
+          landed = okJson and type(w) == "table" and type(w.space) == "number" and math.floor(w.space) == index
         end
         if landed or hs.timer.secondsSinceEpoch() > deadline then return done(landed) end
         hs.timer.doAfter(0.15, poll)
@@ -1517,57 +1591,67 @@ end
 local ENGINES = {
   {
     -- Ahead of the native rung, which is free only in CPU: it costs 350ms of wall clock finding out it did nothing, on every summon, where yabai answers in about thirty
-    name = 'yabai',
+    name = "yabai",
     available = function(self)
-      if not self.useYabai then return false, 'turned off' end
-      if not self:yabaiBinary() then return false, 'not installed' end
+      if not self.useYabai then return false, "turned off" end
+      if not self:yabaiBinary() then return false, "not installed" end
       return true
     end,
-    verify = function(self) return self.yabaiVerifyTimeout end,
-    run = function(self, win, winId, target, done) self:yabaiMove(winId, target, done) end,
+    verify = function(self)
+      return self.yabaiVerifyTimeout
+    end,
+    run = function(self, win, winId, target, done)
+      self:yabaiMove(winId, target, done)
+    end,
     onNoArrival = function(self)
       self:warnOnce(
-        'yabaisilent',
-        'yabai accepted the move but the window did not arrive. Its scripting addition is '
-          .. 'probably not loaded for this macOS build -- try `sudo yabai --load-sa`. '
-          .. 'Falling back to the other rungs.'
+        "yabaisilent",
+        "yabai accepted the move but the window did not arrive. Its scripting addition is "
+          .. "probably not loaded for this macOS build -- try `sudo yabai --load-sa`. "
+          .. "Falling back to the other rungs."
       )
     end,
   },
   {
     -- Kept though it has never worked on a current macOS: one call to try, and this starts using the fast path again by itself the day Hammerspoon adopts the replacement API
-    name = 'native',
+    name = "native",
     available = function(self, win)
-      if not win then return false, 'no window object; only yabai can move this one' end
-      if not (hs.spaces and hs.spaces.moveWindowToSpace) then return false, 'unavailable on this build' end
+      if not win then return false, "no window object; only yabai can move this one" end
+      if not (hs.spaces and hs.spaces.moveWindowToSpace) then return false, "unavailable on this build" end
       return true
     end,
-    verify = function(self) return 0.35 end,
+    verify = function(self)
+      return 0.35
+    end,
     run = function(self, win, winId, target, done)
       local ok, _, err = pcall(hs.spaces.moveWindowToSpace, win, target)
-      if not ok then self:warnOnce('movecall', 'moveWindowToSpace threw: %s', tostring(err)) end
+      if not ok then self:warnOnce("movecall", "moveWindowToSpace threw: %s", tostring(err)) end
       -- Reported as issued whatever it returned: the value carries no information, so confirmArrival is the only thing entitled to an opinion
       done(true, nil)
     end,
     onNoArrival = function(self)
       self:warnOnce(
-        'nativedead',
-        'hs.spaces.moveWindowToSpace reported success but the window did not move; '
-          .. 'this is expected on macOS 15+ (Hammerspoon issue #3698).'
+        "nativedead",
+        "hs.spaces.moveWindowToSpace reported success but the window did not move; "
+          .. "this is expected on macOS 15+ (Hammerspoon issue #3698)."
       )
     end,
   },
   {
     -- Last, always: it borrows the pointer and takes the better part of a second, but it is the only rung needing neither a private API nor a disabled SIP, so on a stock machine it does all the work
-    name = 'drag',
+    name = "drag",
     available = function(self, win)
-      if not win then return false, 'no window object; only yabai can move this one' end
-      if not self.dragFallback then return false, 'dragFallback is off' end
+      if not win then return false, "no window object; only yabai can move this one" end
+      if not self.dragFallback then return false, "dragFallback is off" end
       return true
     end,
-    verify = function(self) return self.dragTiming.verifyTimeout end,
+    verify = function(self)
+      return self.dragTiming.verifyTimeout
+    end,
     -- target is ignored: a drag can only land on the Space you are looking at, which is this one
-    run = function(self, win, winId, target, done) self:dragToCurrentSpace(win, done) end,
+    run = function(self, win, winId, target, done)
+      self:dragToCurrentSpace(win, done)
+    end,
   },
 }
 
@@ -1587,8 +1671,8 @@ function obj:summonById(winId)
   -- lastEntries is the authority, since a yabai-only window has a description and no hs.window
   local entry = self.lastEntries[winId]
   if not entry then
-    self.logger.wf('window %s is not in the current candidate map', tostring(winId))
-    hs.alert.show('SummonWindow: that window is no longer available')
+    self.logger.wf("window %s is not in the current candidate map", tostring(winId))
+    hs.alert.show("SummonWindow: that window is no longer available")
     return self
   end
   local win = self.byId[winId]
@@ -1596,7 +1680,7 @@ function obj:summonById(winId)
   -- Re-checked at the moment of the move: the list may have sat open across a Space change
   local target, why = self:summonableSpace()
   if not target then
-    hs.alert.show('SummonWindow: ' .. why)
+    hs.alert.show("SummonWindow: " .. why)
     return self
   end
 
@@ -1624,17 +1708,17 @@ function obj:summonById(winId)
         self:yabaiFocus(winId)
       end
     end
-    self.logger.f('summoned window %s to space %s via %s', tostring(winId), tostring(target), engine)
+    self.logger.f("summoned window %s to space %s via %s", tostring(winId), tostring(target), engine)
   end
 
   -- The log gets the whole ladder's reasoning; three semicolon-joined clauses do not fit an alert
   local function gaveUp(why, detail)
-    self.logger.wf('could not summon window %s: %s', tostring(winId), tostring(detail or why))
+    self.logger.wf("could not summon window %s: %s", tostring(winId), tostring(detail or why))
     if sourceSpace then
       self:offerGoto(sourceSpace, label)
-      hs.alert.show(string.format('SummonWindow: could not move %s - press again to go to %s', appName, label), 3)
+      hs.alert.show(string.format("SummonWindow: could not move %s - press again to go to %s", appName, label), 3)
     else
-      hs.alert.show('SummonWindow: could not move that window - ' .. tostring(why), 3)
+      hs.alert.show("SummonWindow: could not move that window - " .. tostring(why), 3)
     end
   end
 
@@ -1643,11 +1727,11 @@ function obj:summonById(winId)
 
   local function attempt(i)
     local engine = ENGINES[i]
-    if not engine then return gaveUp(reasons[#reasons] or 'no method available', table.concat(reasons, '; ')) end
+    if not engine then return gaveUp(reasons[#reasons] or "no method available", table.concat(reasons, "; ")) end
 
     local okAvail, available, whyNot = pcall(engine.available, self, win)
     if not okAvail or not available then
-      reasons[#reasons + 1] = engine.name .. ': ' .. tostring(whyNot or available or 'unavailable')
+      reasons[#reasons + 1] = engine.name .. ": " .. tostring(whyNot or available or "unavailable")
       return attempt(i + 1)
     end
 
@@ -1658,14 +1742,14 @@ function obj:summonById(winId)
       answered = true
 
       if not ok then
-        reasons[#reasons + 1] = string.format('%s: %s', engine.name, tostring(err or 'failed'))
+        reasons[#reasons + 1] = string.format("%s: %s", engine.name, tostring(err or "failed"))
         return attempt(i + 1)
       end
 
       self:confirmArrival(win, winId, target, engine.verify(self), function(moved)
         if moved then return arrived(engine.name) end
         if engine.onNoArrival then pcall(engine.onNoArrival, self) end
-        reasons[#reasons + 1] = engine.name .. ': issued, but the window did not arrive'
+        reasons[#reasons + 1] = engine.name .. ": issued, but the window did not arrive"
         attempt(i + 1)
       end)
     end
@@ -1678,9 +1762,13 @@ function obj:summonById(winId)
   return self
 end
 
-function obj:offerGoto(spaceId, label) self.pendingGoto = { spaceId = spaceId, label = label, at = hs.timer.secondsSinceEpoch() } end
+function obj:offerGoto(spaceId, label)
+  self.pendingGoto = { spaceId = spaceId, label = label, at = hs.timer.secondsSinceEpoch() }
+end
 
-function obj:clearPendingGoto() self.pendingGoto = nil end
+function obj:clearPendingGoto()
+  self.pendingGoto = nil
+end
 
 -- Returns true when it acted, so the caller knows not to open the chooser
 function obj:takePendingGoto()
@@ -1688,7 +1776,7 @@ function obj:takePendingGoto()
   if not pending then return false end
   self.pendingGoto = nil
   if hs.timer.secondsSinceEpoch() - pending.at > self.gotoGraceSeconds then return false end
-  self.logger.f('going to space %s instead of summoning', tostring(pending.spaceId))
+  self.logger.f("going to space %s instead of summoning", tostring(pending.spaceId))
   pcall(hs.spaces.gotoSpace, pending.spaceId)
   return true
 end
@@ -1707,11 +1795,13 @@ end
 --- Each listed window is tagged with the source that found it -- `filter`, `ax`, or both -- which shows whether `SummonWindow.deepScan` is earning its keep on this machine.
 function obj:diagnose()
   local out = {}
-  local function say(fmt, ...) out[#out + 1] = (select('#', ...) > 0) and string.format(fmt, ...) or tostring(fmt) end
+  local function say(fmt, ...)
+    out[#out + 1] = (select("#", ...) > 0) and string.format(fmt, ...) or tostring(fmt)
+  end
 
-  say('SummonWindow diagnose')
+  say("SummonWindow diagnose")
   say(
-    'running=%s  deepScan=%s  includeMinimized=%s  filter=%s',
+    "running=%s  deepScan=%s  includeMinimized=%s  filter=%s",
     tostring(self.running),
     tostring(self.deepScan),
     tostring(self.includeMinimized),
@@ -1719,9 +1809,9 @@ function obj:diagnose()
   )
 
   if not (hs.spaces and hs.spaces.focusedSpace) then
-    say('')
-    say('hs.spaces is UNAVAILABLE on this build -- this Spoon cannot work.')
-    local text = table.concat(out, '\n')
+    say("")
+    say("hs.spaces is UNAVAILABLE on this build -- this Spoon cannot work.")
+    local text = table.concat(out, "\n")
     print(text)
     return text
   end
@@ -1729,9 +1819,9 @@ function obj:diagnose()
   local current = self:currentSpace()
   local model = self:spaceModel()
   -- Not reported as a plain "moveWindowToSpace=true": it exists on every build, and what matters is whether it does anything, which on macOS 15+ it does not
-  local major = tonumber((hs.host.operatingSystemVersionString() or ''):match('(%d+)%.')) or 0
+  local major = tonumber((hs.host.operatingSystemVersionString() or ""):match("(%d+)%.")) or 0
   say(
-    'accessibility=%s  secureInput=%s  dragFallback=%s',
+    "accessibility=%s  secureInput=%s  dragFallback=%s",
     tostring(hs.accessibilityState()),
     tostring(hs.eventtap.isSecureInputEnabled()),
     tostring(self.dragFallback)
@@ -1739,23 +1829,23 @@ function obj:diagnose()
   -- Reported as a ladder, since which rung carries the work is now a three-way answer
   local yabaiBin = self:yabaiBinary()
   say(
-    'move ladder: 1.yabai=%s  2.native=%s  3.drag=%s',
-    not self.useYabai and 'off' or yabaiBin or 'not installed',
-    major >= 15 and 'expected DEAD (Hammerspoon #3698)' or 'may work on this macOS',
+    "move ladder: 1.yabai=%s  2.native=%s  3.drag=%s",
+    not self.useYabai and "off" or yabaiBin or "not installed",
+    major >= 15 and "expected DEAD (Hammerspoon #3698)" or "may work on this macOS",
     tostring(self.dragFallback)
   )
   say(
-    'current Space: %s (%s, type=%s)',
+    "current Space: %s (%s, type=%s)",
     tostring(current),
-    current and (model.labels[current] or 'unlabelled') or 'unknown',
-    current and (model.types[current] or 'unknown') or 'n/a'
+    current and (model.labels[current] or "unlabelled") or "unknown",
+    current and (model.types[current] or "unknown") or "n/a"
   )
 
   -- Queried separately rather than through knownWindows(), so every window can be attributed
   local function idSetOf(getter)
     local set, n = {}, 0
     local ok, wins = pcall(getter)
-    if not ok or type(wins) ~= 'table' then return set, n, tostring(wins) end
+    if not ok or type(wins) ~= "table" then return set, n, tostring(wins) end
     for _, win in ipairs(wins) do
       local okId, id = pcall(win.id, win)
       if okId and id and not set[id] then
@@ -1783,15 +1873,20 @@ function obj:diagnose()
   end)
   local axSet, axN, axErr = idSetOf(hs.window.allWindows)
 
-  say('')
-  say('Sources:')
+  say("")
+  say("Sources:")
   say(
-    '  hs.window.filter      %4d windows, %d on other Spaces%s',
+    "  hs.window.filter      %4d windows, %d on other Spaces%s",
     filterN,
     elsewhere(filterSet),
-    filterErr and (' [error: ' .. filterErr .. ']') or ''
+    filterErr and (" [error: " .. filterErr .. "]") or ""
   )
-  say('  hs.window.allWindows  %4d windows, %d on other Spaces%s', axN, elsewhere(axSet), axErr and (' [error: ' .. axErr .. ']') or '')
+  say(
+    "  hs.window.allWindows  %4d windows, %d on other Spaces%s",
+    axN,
+    elsewhere(axSet),
+    axErr and (" [error: " .. axErr .. "]") or ""
+  )
 
   -- From the snapshot rather than re-queried, since a query is a subprocess and diagnose() returns its text on this stack; the age is printed so a stale one cannot pass for current
   local yabaiSet, yabaiN = {}, 0
@@ -1800,28 +1895,29 @@ function obj:diagnose()
     if not windows then
       -- A service that is down looks like one not yet asked, and the fixes are different
       say(
-        '  yabai                 %s',
-        self.yabaiLastError and ('INSTALLED BUT NOT ANSWERING (' .. self.yabaiLastError .. ') - try `yabai --start-service`')
-          or '(no snapshot yet - run diagnose() again in a moment)'
+        "  yabai                 %s",
+        self.yabaiLastError
+            and ("INSTALLED BUT NOT ANSWERING (" .. self.yabaiLastError .. ") - try `yabai --start-service`")
+          or "(no snapshot yet - run diagnose() again in a moment)"
       )
     else
       local _, indexToId = yabaiSpaceMaps(spaces)
       local away = 0
       for _, w in ipairs(windows) do
-        if type(w) == 'table' and type(w.id) == 'number' then
+        if type(w) == "table" and type(w.id) == "number" then
           yabaiSet[math.floor(w.id)] = true
           yabaiN = yabaiN + 1
-          local sid = type(w.space) == 'number' and indexToId[math.floor(w.space)] or nil
+          local sid = type(w.space) == "number" and indexToId[math.floor(w.space)] or nil
           if sid and sid ~= current then away = away + 1 end
         end
       end
-  -- The decisive line when the lists disagree: Spaces yabai reports but hs.spaces cannot match mean the two are numbering the world differently, and the yabai source is quietly useless
+      -- The decisive line when the lists disagree: Spaces yabai reports but hs.spaces cannot match mean the two are numbering the world differently, and the yabai source is quietly useless
       local matched = 0
       for _, s in ipairs(spaces or {}) do
-        if type(s) == 'table' and model.order[s.id] then matched = matched + 1 end
+        if type(s) == "table" and model.order[s.id] then matched = matched + 1 end
       end
       say(
-        '  yabai                 %4d windows, %d on other Spaces  [snapshot %.1fs old, %d/%d Spaces matched to hs.spaces]',
+        "  yabai                 %4d windows, %d on other Spaces  [snapshot %.1fs old, %d/%d Spaces matched to hs.spaces]",
         yabaiN,
         away,
         hs.timer.secondsSinceEpoch() - at,
@@ -1830,70 +1926,72 @@ function obj:diagnose()
       )
     end
   else
-    say('  yabai                 %s', not self.useYabai and '(turned off)' or '(not installed)')
+    say("  yabai                 %s", not self.useYabai and "(turned off)" or "(not installed)")
   end
 
-  say('')
-  say('Spaces:')
+  say("")
+  say("Spaces:")
   local ids = {}
   for id in pairs(model.order) do
     ids[#ids + 1] = id
   end
-  table.sort(ids, function(a, b) return model.order[a] < model.order[b] end)
+  table.sort(ids, function(a, b)
+    return model.order[a] < model.order[b]
+  end)
   for _, id in ipairs(ids) do
     -- windowsForSpace sees every Space but includes overlays and scratch surfaces: a ceiling, not a target
-    local raw = '-'
+    local raw = "-"
     if hs.spaces.windowsForSpace then
       local okRaw, rawIds = pcall(hs.spaces.windowsForSpace, id)
-      if okRaw and type(rawIds) == 'table' then raw = tostring(#rawIds) end
+      if okRaw and type(rawIds) == "table" then raw = tostring(#rawIds) end
     end
     say(
-      '  %-34s id=%-7s type=%-11s windowsForSpace=%-5s%s',
-      model.labels[id] or '?',
+      "  %-34s id=%-7s type=%-11s windowsForSpace=%-5s%s",
+      model.labels[id] or "?",
       tostring(id),
-      model.types[id] or '?',
+      model.types[id] or "?",
       raw,
-      id == current and '  <- current' or ''
+      id == current and "  <- current" or ""
     )
   end
 
   local entries = self:candidates()
-  say('')
-  say('Summonable: %d window(s)', #entries)
+  say("")
+  say("Summonable: %d window(s)", #entries)
   for _, e in ipairs(entries) do
     local tags = {}
-    if filterSet[e.winId] then tags[#tags + 1] = 'filter' end
-    if axSet[e.winId] then tags[#tags + 1] = 'ax' end
-    if yabaiSet[e.winId] then tags[#tags + 1] = 'yabai' end
+    if filterSet[e.winId] then tags[#tags + 1] = "filter" end
+    if axSet[e.winId] then tags[#tags + 1] = "ax" end
+    if yabaiSet[e.winId] then tags[#tags + 1] = "yabai" end
     -- A row tagged only 'yabai' is invisible to Accessibility: summonable, with no fallback
     say(
-      '  [%-16s] %-22s %-50s %s%s',
-      table.concat(tags, '+'),
+      "  [%-16s] %-22s %-50s %s%s",
+      table.concat(tags, "+"),
       e.appName,
       truncate(e.title, 50),
       e.label,
-      e.yabaiOnly and '  (yabai only)' or ''
+      e.yabaiOnly and "  (yabai only)" or ""
     )
   end
 
   if #entries == 0 then
-    say('')
+    say("")
     if #ids <= 1 then
-      say('Nothing to summon: only one Space exists.')
+      say("Nothing to summon: only one Space exists.")
     elseif yabaiBin then
-      say('Nothing to summon, and yabai is installed -- so if windows really are on the other')
-      say('Spaces above, check the yabai source line: a zero count there means the service is')
-      say('not running, and a low Spaces-matched count means yabai and hs.spaces disagree')
-      say('about the Space layout.')
+      say("Nothing to summon, and yabai is installed -- so if windows really are on the other")
+      say("Spaces above, check the yabai source line: a zero count there means the service is")
+      say("not running, and a low Spaces-matched count means yabai and hs.spaces disagree")
+      say("about the Space layout.")
     else
-      say('Nothing to summon. If windows really are on the other Spaces above, then macOS')
-      say('is not exposing them to Accessibility from here. Visit those Spaces once so the')
-      say('window filter can learn them, then run this again -- or install yabai, which sees')
-      say('every Space regardless.')
+      say("Nothing to summon. If windows really are on the other Spaces above, then macOS")
+      say("is not exposing them to Accessibility from here. Visit those Spaces once so the")
+      say("window filter can learn them, then run this again -- or install yabai, which sees")
+      say("every Space regardless.")
     end
   end
 
-  local text = table.concat(out, '\n')
+  local text = table.concat(out, "\n")
   print(text)
   return text
 end

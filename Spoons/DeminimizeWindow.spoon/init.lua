@@ -23,15 +23,15 @@
 local obj = {}
 obj.__index = obj
 
-obj.name = 'DeminimizeWindow'
-obj.version = '1.0'
-obj.author = 'Vladislav Doster <mvdoster@gmail.com>'
-obj.license = 'MIT - https://opensource.org/licenses/MIT'
+obj.name = "DeminimizeWindow"
+obj.version = "1.0"
+obj.author = "Vladislav Doster <mvdoster@gmail.com>"
+obj.license = "MIT - https://opensource.org/licenses/MIT"
 
 --- DeminimizeWindow.logger
 --- Variable
 --- Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.
-obj.logger = hs.logger.new('DeminimizeWindow', 'info')
+obj.logger = hs.logger.new("DeminimizeWindow", "info")
 
 -- Configuration
 
@@ -151,7 +151,7 @@ obj.showInMenubar = false
 --- DeminimizeWindow.menubarTitle
 --- Variable
 --- Text shown in the menubar when `DeminimizeWindow.showInMenubar` is on. Defaults to `'▣'`.
-obj.menubarTitle = '▣'
+obj.menubarTitle = "▣"
 
 --- DeminimizeWindow.chooserRows
 --- Variable
@@ -209,20 +209,22 @@ obj.warned = {}
 
 -- UTF-8 safe middle-ellipsis: a window title is most distinguishable at both ends
 local function truncate(s, n)
-  if s == nil or s == '' then return '(untitled)' end
+  if s == nil or s == "" then return "(untitled)" end
   local len = (utf8 and utf8.len and utf8.len(s)) or #s
   if not len or len <= n then return s end
   local keep = math.floor((n - 1) / 2)
   if utf8 and utf8.offset then
     local head = s:sub(1, (utf8.offset(s, keep + 1) or keep + 1) - 1)
     local tail = s:sub(utf8.offset(s, -keep) or (#s - keep + 1))
-    return head .. '…' .. tail
+    return head .. "…" .. tail
   end
-  return s:sub(1, keep) .. '…' .. s:sub(-keep)
+  return s:sub(1, keep) .. "…" .. s:sub(-keep)
 end
 
 -- yabai rejects "1628.0", which is what tostring() makes of a JSON-decoded id on some builds
-local function fmtId(id) return string.format('%d', math.floor(id)) end
+local function fmtId(id)
+  return string.format("%d", math.floor(id))
+end
 
 -- #t is undefined for keys that are not a 1..n sequence, the shape of every table asked here
 local function countKeys(t)
@@ -256,7 +258,9 @@ end
 
 function obj:abortTimers()
   for timer in pairs(self.timers) do
-    pcall(function() timer:stop() end)
+    pcall(function()
+      timer:stop()
+    end)
   end
   self.timers = {}
   return self
@@ -288,21 +292,21 @@ end
 
 -- Homebrew, nix-darwin and hand installs. Static, because hs.task cannot search PATH and Hammerspoon inherits launchd's environment rather than a login shell's
 local YABAI_PATHS = {
-  '/opt/homebrew/bin/yabai',
-  '/usr/local/bin/yabai',
-  '/run/current-system/sw/bin/yabai',
+  "/opt/homebrew/bin/yabai",
+  "/usr/local/bin/yabai",
+  "/run/current-system/sw/bin/yabai",
   -- Last, and nil-safe: a trailing nil shortens the list rather than erroring
-  os.getenv('HOME') and (os.getenv('HOME') .. '/.local/bin/yabai') or nil,
+  os.getenv("HOME") and (os.getenv("HOME") .. "/.local/bin/yabai") or nil,
 }
 
 -- attributes() follows symlinks, which is wanted: /opt/homebrew/bin/yabai links into the Cellar
 local function executableFile(path)
-  if type(path) ~= 'string' or path == '' then return false end
-  local okMode, mode = pcall(hs.fs.attributes, path, 'mode')
-  if not okMode or mode ~= 'file' then return false end
-  local okPerm, perms = pcall(hs.fs.attributes, path, 'permissions')
+  if type(path) ~= "string" or path == "" then return false end
+  local okMode, mode = pcall(hs.fs.attributes, path, "mode")
+  if not okMode or mode ~= "file" then return false end
+  local okPerm, perms = pcall(hs.fs.attributes, path, "permissions")
   -- Owner-execute, since Hammerspoon runs as the user who installed it
-  return okPerm and type(perms) == 'string' and perms:sub(3, 3) == 'x'
+  return okPerm and type(perms) == "string" and perms:sub(3, 3) == "x"
 end
 
 -- Resolve yabai once and remember the answer, including the negative one
@@ -316,8 +320,8 @@ function obj:yabaiBinary()
       self.yabaiResolved = self.yabaiPath
     else
       self:warnOnce(
-        'yabaipath',
-        'DeminimizeWindow.yabaiPath is set to %s, which is not an executable file; ignoring it',
+        "yabaipath",
+        "DeminimizeWindow.yabaiPath is set to %s, which is not an executable file; ignoring it",
         tostring(self.yabaiPath)
       )
       self.yabaiResolved = false
@@ -328,7 +332,7 @@ function obj:yabaiBinary()
   for _, path in ipairs(YABAI_PATHS) do
     if executableFile(path) then
       self.yabaiResolved = path
-      self.logger.f('found yabai at %s', path)
+      self.logger.f("found yabai at %s", path)
       return path
     end
   end
@@ -340,7 +344,9 @@ end
 -- Raise the flag, THEN signal: terminating a task causes a completion callback rather than cancelling one, so the reverse order answers twice
 local function settleAndKill(job)
   job.settled = true
-  if job.timer then pcall(function() job.timer:stop() end) end
+  if job.timer then pcall(function()
+    job.timer:stop()
+  end) end
   if job.task then pcall(function()
     if job.task:isRunning() then job.task:terminate() end
   end) end
@@ -349,7 +355,7 @@ end
 -- Calls done() exactly once, or not at all if torn down in flight; answering twice would walk the ladder twice and issue a --focus nobody asked for
 function obj:yabaiRun(args, done)
   local bin = self:yabaiBinary()
-  if not bin then return done(false, nil, 'not installed') end
+  if not bin then return done(false, nil, "not installed") end
 
   local job = { task = nil, timer = nil, settled = false }
   self.yabaiTasks[job] = true
@@ -367,23 +373,26 @@ function obj:yabaiRun(args, done)
     finish(
       false,
       out,
-      string.format('exit %s%s', tostring(code), (type(err) == 'string' and err ~= '') and (': ' .. err:gsub('%s+$', '')) or '')
+      string.format(
+        "exit %s%s",
+        tostring(code),
+        (type(err) == "string" and err ~= "") and (": " .. err:gsub("%s+$", "")) or ""
+      )
     )
   end, args)
 
-  if not okNew or not made then return finish(false, nil, 'could not create the task (' .. tostring(made) .. ')') end
+  if not okNew or not made then return finish(false, nil, "could not create the task (" .. tostring(made) .. ")") end
   -- Assigned before start(), so the completion callback can always find the task to reap
   job.task = made
 
   local okStart, started = pcall(made.start, made)
-  if not okStart or not started then return finish(false, nil, 'failed to launch') end
+  if not okStart or not started then return finish(false, nil, "failed to launch") end
 
   -- Guarded: a process that exits instantly settles the job before we reach here
   if not job.settled then
-    job.timer = hs.timer.doAfter(
-      self.yabaiTimeout,
-      function() finish(false, nil, string.format('no answer within %ss', tostring(self.yabaiTimeout))) end
-    )
+    job.timer = hs.timer.doAfter(self.yabaiTimeout, function()
+      finish(false, nil, string.format("no answer within %ss", tostring(self.yabaiTimeout)))
+    end)
   end
 end
 
@@ -407,7 +416,7 @@ function obj:abortYabai()
     end
   end
   self.yabaiTasks = {}
-  if n > 0 then self.logger.f('abandoned %d yabai command(s)', n) end
+  if n > 0 then self.logger.f("abandoned %d yabai command(s)", n) end
   return self
 end
 
@@ -418,18 +427,19 @@ function obj:yabaiJSON(args, done)
       self.yabaiLastError = tostring(err)
       -- A first query failing overwhelmingly means installed but not running. One line only
       self:warnOnce(
-        'yabaiserver',
-        'yabai is installed but not answering (%s); is the service running? ' .. 'Try `yabai --start-service`. Carrying on without it.',
+        "yabaiserver",
+        "yabai is installed but not answering (%s); is the service running? "
+          .. "Try `yabai --start-service`. Carrying on without it.",
         tostring(err)
       )
       return done(nil, err)
     end
 
     -- decode() raises on malformed input rather than returning nil
-    local okJson, decoded = pcall(hs.json.decode, out or '')
-    if not okJson or type(decoded) ~= 'table' then
-      self:warnOnce('yabaijson', 'could not parse yabai query output; the yabai CLI may have changed shape')
-      return done(nil, 'unparseable output')
+    local okJson, decoded = pcall(hs.json.decode, out or "")
+    if not okJson or type(decoded) ~= "table" then
+      self:warnOnce("yabaijson", "could not parse yabai query output; the yabai CLI may have changed shape")
+      return done(nil, "unparseable output")
     end
 
     self.yabaiLastError = nil
@@ -439,8 +449,8 @@ end
 
 -- done(record, err) with the single object `query --windows --window <id>` returns; a window that has gone away exits non-zero, so this also catches one that died since being listed
 function obj:windowRecord(winId, done)
-  self:yabaiJSON({ '-m', 'query', '--windows', '--window', fmtId(winId) }, function(data, err)
-    if type(data) ~= 'table' or type(data.id) ~= 'number' then return done(nil, err or 'no such window') end
+  self:yabaiJSON({ "-m", "query", "--windows", "--window", fmtId(winId) }, function(data, err)
+    if type(data) ~= "table" or type(data.id) ~= "number" then return done(nil, err or "no such window") end
     done(data, nil)
   end)
 end
@@ -457,21 +467,22 @@ function obj:currentSpace(done)
 
   if not self:yabaiBinary() then
     -- No index without yabai, and nothing to consume one: placing is what needs it
-    if not spaceId then return done(nil, 'neither yabai nor hs.spaces can say which Space this is') end
+    if not spaceId then return done(nil, "neither yabai nor hs.spaces can say which Space this is") end
     return done({ index = nil, spaceId = spaceId, fullscreen = self:spaceIsFullscreen(spaceId) }, nil)
   end
 
-  self:yabaiJSON({ '-m', 'query', '--spaces', '--space' }, function(space, err)
-    if type(space) ~= 'table' or type(space.index) ~= 'number' then
-      if not spaceId then return done(nil, err or 'could not determine the current Space') end
+  self:yabaiJSON({ "-m", "query", "--spaces", "--space" }, function(space, err)
+    if type(space) ~= "table" or type(space.index) ~= "number" then
+      if not spaceId then return done(nil, err or "could not determine the current Space") end
       return done({ index = nil, spaceId = spaceId, fullscreen = self:spaceIsFullscreen(spaceId) }, nil)
     end
 
     -- Usually mouse on one display, keyboard on another; yabai wins, since --space eats its index
-    if spaceId and type(space.id) == 'number' and math.floor(space.id) ~= spaceId then
+    if spaceId and type(space.id) == "number" and math.floor(space.id) ~= spaceId then
       self:warnOnce(
-        'spacemismatch',
-        'yabai says the current Space is id %d and hs.spaces says %s; trusting yabai, ' .. 'since its index is what --space consumes',
+        "spacemismatch",
+        "yabai says the current Space is id %d and hs.spaces says %s; trusting yabai, "
+          .. "since its index is what --space consumes",
         math.floor(space.id),
         tostring(spaceId)
       )
@@ -480,8 +491,8 @@ function obj:currentSpace(done)
 
     done({
       index = math.floor(space.index),
-      spaceId = spaceId or (type(space.id) == 'number' and math.floor(space.id)) or nil,
-      fullscreen = space['is-native-fullscreen'] and true or false,
+      spaceId = spaceId or (type(space.id) == "number" and math.floor(space.id)) or nil,
+      fullscreen = space["is-native-fullscreen"] and true or false,
     }, nil)
   end)
 end
@@ -490,7 +501,7 @@ end
 function obj:spaceIsFullscreen(spaceId)
   if not (spaceId and hs.spaces and hs.spaces.spaceType) then return false end
   local ok, kind = pcall(hs.spaces.spaceType, spaceId)
-  return ok and kind == 'fullscreen'
+  return ok and kind == "fullscreen"
 end
 
 -- Finding minimized windows
@@ -505,21 +516,23 @@ local RESTORABLE_SUBROLES = {
 
 -- Only ever asked about yabai records; the Accessibility half came from minimizedWindows(), which has already answered the question
 function obj:isRestorable(record)
-  if type(record) ~= 'table' then return false end
+  if type(record) ~= "table" then return false end
   if record.pid == hs.processInfo.processID then return false end
 
   -- Menulets, overlays and Dock surfaces would pad the list with unrestorable rows
-  if record.role ~= 'AXWindow' then return false end
+  if record.role ~= "AXWindow" then return false end
   if not RESTORABLE_SUBROLES[record.subrole] then return false end
 
   -- Cannot co-exist with minimized, but a window server that disagrees would offer a doomed row
-  if record['is-native-fullscreen'] then return false end
+  if record["is-native-fullscreen"] then return false end
 
-  if not self.includeScratchpad and type(record.scratchpad) == 'string' and record.scratchpad ~= '' then return false end
+  if not self.includeScratchpad and type(record.scratchpad) == "string" and record.scratchpad ~= "" then
+    return false
+  end
 
-  if record['is-minimized'] then return true end
+  if record["is-minimized"] then return true end
   -- Hidden is a different state and is off by default; see DeminimizeWindow.includeHidden
-  if self.includeHidden and record['is-hidden'] then return true end
+  if self.includeHidden and record["is-hidden"] then return true end
   return false
 end
 
@@ -537,17 +550,17 @@ end
 --- Either source alone yields a usable entry: a window only yabai can see is restorable by yabai only, and one only Accessibility can see cannot be placed with confidence.
 function obj:collect(done)
   self:currentSpace(function(space, err)
-    if not space then return done(nil, nil, err or 'could not determine the current Space') end
+    if not space then return done(nil, nil, err or "could not determine the current Space") end
     if space.fullscreen and self.refuseFullscreenSpace then
-      return done(nil, space, 'the current Space is fullscreen; the window server will not accept a window into one')
+      return done(nil, space, "the current Space is fullscreen; the window server will not accept a window into one")
     end
 
     local function merge(windows)
       local byId = {}
 
-      if type(windows) == 'table' then
+      if type(windows) == "table" then
         for _, record in ipairs(windows) do
-          if type(record) == 'table' and type(record.id) == 'number' and self:isRestorable(record) then
+          if type(record) == "table" and type(record.id) == "number" and self:isRestorable(record) then
             byId[math.floor(record.id)] = { record = record }
           end
         end
@@ -555,7 +568,7 @@ function obj:collect(done)
 
       if self.useAccessibilitySweep then
         local ok, wins = pcall(hs.window.minimizedWindows)
-        if ok and type(wins) == 'table' then
+        if ok and type(wins) == "table" then
           for _, win in ipairs(wins) do
             local okId, id = pcall(win.id, win)
             -- Every accessor is pcall'd, so a window dying here costs a row, not the list
@@ -577,7 +590,7 @@ function obj:collect(done)
             end
           end
         else
-          self:warnOnce('minimizedwindows', 'hs.window.minimizedWindows failed (%s)', tostring(wins))
+          self:warnOnce("minimizedwindows", "hs.window.minimizedWindows failed (%s)", tostring(wins))
         end
       end
 
@@ -587,12 +600,12 @@ function obj:collect(done)
         local appName, title
 
         if record then
-          appName, title = record.app or '?', record.title or ''
+          appName, title = record.app or "?", record.title or ""
         else
           local app = win and win:application()
-          appName = (app and app:name()) or '?'
+          appName = (app and app:name()) or "?"
           local okTitle, t = pcall(win.title, win)
-          title = (okTitle and t) or ''
+          title = (okTitle and t) or ""
         end
 
         slot.appName, slot.title = appName, title
@@ -600,7 +613,7 @@ function obj:collect(done)
           winId = id,
           appName = appName,
           title = title,
-          minimized = record and record['is-minimized'] or (record == nil),
+          minimized = record and record["is-minimized"] or (record == nil),
         }
       end
 
@@ -610,7 +623,9 @@ function obj:collect(done)
     end
 
     if not self:yabaiBinary() then return merge(nil) end
-    self:yabaiJSON({ '-m', 'query', '--windows' }, function(windows) merge(windows) end)
+    self:yabaiJSON({ "-m", "query", "--windows" }, function(windows)
+      merge(windows)
+    end)
   end)
   return self
 end
@@ -622,7 +637,7 @@ function obj:choiceList(items)
   for _, item in ipairs(items) do
     out[#out + 1] = {
       -- '(untitled)', not the app name, which would print twice and merge two untitled windows
-      text = (item.title ~= '' and item.title) or '(untitled)',
+      text = (item.title ~= "" and item.title) or "(untitled)",
       subText = item.appName,
       -- Only plain values survive the trip into the chooser and back; the rest is in byId
       winId = item.winId,
@@ -644,7 +659,7 @@ function obj:ensureChooser()
   self.chooser:width(self.chooserWidth)
   -- So that typing an application name filters, even though the row itself shows the title
   self.chooser:searchSubText(true)
-  self.chooser:placeholderText('Restore a minimized window…')
+  self.chooser:placeholderText("Restore a minimized window…")
   return self.chooser
 end
 
@@ -664,21 +679,23 @@ function obj:awaitRevealed(ctx, timeout, done)
 
   if not self:yabaiBinary() then return done(false) end
   self:pollUntil(function(answer)
-    self:windowRecord(ctx.winId, function(record) answer(record ~= nil and not record['is-minimized']) end)
+    self:windowRecord(ctx.winId, function(record)
+      answer(record ~= nil and not record["is-minimized"])
+    end)
   end, timeout, self.pollInterval, done)
 end
 
 -- Not hs.spaces.windowSpaces(), which reports a MINIMIZED window as being here wherever it was minimized from; it is trustworthy once visible, hence the no-yabai branch below
 function obj:awaitPlaced(ctx, timeout, done)
   -- Already here by definition: a sticky window reports one `space` but appears on every one
-  if ctx.record and ctx.record['is-sticky'] then return done(true) end
+  if ctx.record and ctx.record["is-sticky"] then return done(true) end
 
   if self:yabaiBinary() and ctx.index then
     return self:pollUntil(function(answer)
       self:windowRecord(ctx.winId, function(record)
         if not record then return answer(false) end
         ctx.record = record -- sticky-ness and ax-reference can change under us
-        answer(record['is-sticky'] and true or record.space == ctx.index)
+        answer(record["is-sticky"] and true or record.space == ctx.index)
       end)
     end, timeout, self.pollInterval, done)
   end
@@ -687,18 +704,18 @@ function obj:awaitPlaced(ctx, timeout, done)
   if not (ctx.win and ctx.revealed and ctx.spaceId and hs.spaces and hs.spaces.windowSpaces) then return done(false) end
   self:pollUntil(function(answer)
     local ok, spaces = pcall(hs.spaces.windowSpaces, ctx.win)
-    answer(ok and type(spaces) == 'table' and hs.fnutils.contains(spaces, ctx.spaceId))
+    answer(ok and type(spaces) == "table" and hs.fnutils.contains(spaces, ctx.spaceId))
   end, timeout, self.pollInterval, done)
 end
 
 -- Three outcomes: "revealed but elsewhere" is a partial success, where "still in the Dock" is a rung that did nothing and needs the next
 function obj:verifyRestored(ctx, done)
   self:awaitRevealed(ctx, self.revealTimeout, function(revealed)
-    if not revealed then return done('still-minimized') end
+    if not revealed then return done("still-minimized") end
     ctx.revealed = true
     self:awaitPlaced(ctx, self.placeTimeout, function(placed)
       ctx.placed = placed
-      done(placed and 'ok' or 'unplaced')
+      done(placed and "ok" or "unplaced")
     end)
   end)
 end
@@ -717,7 +734,7 @@ local STEPS = {}
 -- Place while still minimized if at all possible. Memoised both ways, so the three place-first rungs fail fast rather than each paying for the same doomed move
 function STEPS.place(self, ctx, next)
   if ctx.placed then return next(true) end
-  if ctx.placeFailed then return next(false, 'placing already failed for this window') end
+  if ctx.placeFailed then return next(false, "placing already failed for this window") end
 
   if not (self:yabaiBinary() and ctx.index) then
     -- Nothing here moves a window between Spaces, but if it is out of the Dock we can report where it landed -- and a window minimized on this Space is already where it was wanted
@@ -726,15 +743,15 @@ function STEPS.place(self, ctx, next)
         ctx.placed = landed
         if landed then return next(true) end
         ctx.placeFailed = true
-        next(false, 'no yabai; the window came back on the Space it was minimized from')
+        next(false, "no yabai; the window came back on the Space it was minimized from")
       end)
     end
     ctx.placeFailed = true
-    return next(false, 'no yabai; nothing on this machine can move a window between Spaces')
+    return next(false, "no yabai; nothing on this machine can move a window between Spaces")
   end
 
   -- Sticky windows are already everywhere, and --space would pin them to one; only the move is skipped
-  if ctx.record and ctx.record['is-sticky'] then
+  if ctx.record and ctx.record["is-sticky"] then
     ctx.placed = true
     return next(true)
   end
@@ -745,27 +762,27 @@ function STEPS.place(self, ctx, next)
     return next(true)
   end
 
-  self:yabaiRun({ '-m', 'window', fmtId(ctx.winId), '--space', tostring(ctx.index) }, function(ok, _, err)
+  self:yabaiRun({ "-m", "window", fmtId(ctx.winId), "--space", tostring(ctx.index) }, function(ok, _, err)
     if not ok then
       ctx.placeFailed = true
-      return next(false, 'yabai refused the move (' .. tostring(err) .. ')')
+      return next(false, "yabai refused the move (" .. tostring(err) .. ")")
     end
 
     -- Exit zero means accepted, never moved, so confirm positively; failing here is safe, the window being still in the Dock, which is why the ladder places before it reveals
     self:awaitPlaced(ctx, self.placeTimeout, function(landed)
       ctx.placed, ctx.placeFailed = landed, not landed
       if landed then return next(true) end
-      next(false, 'yabai accepted the move but the window is still not on this Space')
+      next(false, "yabai accepted the move but the window is still not on this Space")
     end)
   end)
 end
 
 -- Reveal, quietly, via yabai
 function STEPS.deminimize(self, ctx, next)
-  if not self:yabaiBinary() then return next(false, 'no yabai') end
+  if not self:yabaiBinary() then return next(false, "no yabai") end
   -- Inverted grammar: --deminimize takes its window selector AFTER the flag, unlike --space
-  self:yabaiRun({ '-m', 'window', '--deminimize', fmtId(ctx.winId) }, function(ok, _, err)
-    if not ok then return next(false, 'yabai refused to deminimize (' .. tostring(err) .. ')') end
+  self:yabaiRun({ "-m", "window", "--deminimize", fmtId(ctx.winId) }, function(ok, _, err)
+    if not ok then return next(false, "yabai refused to deminimize (" .. tostring(err) .. ")") end
     markRevealed(ctx)
     next(true)
   end)
@@ -773,7 +790,7 @@ end
 
 -- An independent path: yabai may hold a stale AXUIElement for a window Hammerspoon can address
 function STEPS.unminimize(self, ctx, next)
-  if not ctx.win then return next(false, 'no window object') end
+  if not ctx.win then return next(false, "no window object") end
 
   -- A window can be hidden AND minimized, in which case unminimizing alone leaves it invisible
   if self.includeHidden then
@@ -782,16 +799,16 @@ function STEPS.unminimize(self, ctx, next)
   end
 
   local ok, err = pcall(ctx.win.unminimize, ctx.win)
-  if not ok then return next(false, 'unminimize threw (' .. tostring(err) .. ')') end
+  if not ok then return next(false, "unminimize threw (" .. tostring(err) .. ")") end
   markRevealed(ctx)
   next(true)
 end
 
 -- --focus restores AND focuses, the strongest reveal and the most dangerous command here, so it is only ever reached through requirePlaced
 function STEPS.focus(self, ctx, next)
-  if not self:yabaiBinary() then return next(false, 'no yabai') end
-  self:yabaiRun({ '-m', 'window', '--focus', fmtId(ctx.winId) }, function(ok, _, err)
-    if not ok then return next(false, 'yabai refused to focus (' .. tostring(err) .. ')') end
+  if not self:yabaiBinary() then return next(false, "no yabai") end
+  self:yabaiRun({ "-m", "window", "--focus", fmtId(ctx.winId) }, function(ok, _, err)
+    if not ok then return next(false, "yabai refused to focus (" .. tostring(err) .. ")") end
     markRevealed(ctx)
     next(true)
   end)
@@ -800,7 +817,7 @@ end
 -- The gate. Fails the rung unless placement has been positively confirmed
 function STEPS.requirePlaced(self, ctx, next)
   if ctx.placed then return next(true) end
-  next(false, 'placement unconfirmed; going further could move the user off their Space')
+  next(false, "placement unconfirmed; going further could move the user off their Space")
 end
 
 -- The restore ladder
@@ -808,49 +825,51 @@ end
 -- The control flow: the first three rungs place and differ only in how they reveal, and only once placing has genuinely failed do the last two invert that
 local ENGINES = {
   {
-    name = 'place+deminimize',
-    steps = { 'place', 'deminimize' },
+    name = "place+deminimize",
+    steps = { "place", "deminimize" },
     available = function(self, ctx)
-      if not self:yabaiBinary() then return false, 'yabai unavailable' end
+      if not self:yabaiBinary() then return false, "yabai unavailable" end
       -- No AXUIElement means both reveal verbs fail; skipping saves a second of polling
-      if ctx.record and ctx.record['has-ax-reference'] == false then return false, 'yabai has no accessibility reference' end
+      if ctx.record and ctx.record["has-ax-reference"] == false then
+        return false, "yabai has no accessibility reference"
+      end
       return true
     end,
   },
   {
-    name = 'place+unminimize',
-    steps = { 'place', 'unminimize' },
+    name = "place+unminimize",
+    steps = { "place", "unminimize" },
     available = function(self, ctx)
-      if not ctx.win then return false, 'no window object' end
+      if not ctx.win then return false, "no window object" end
       return true
     end,
   },
   {
     -- Between the two rather than in available(): placing is memoised, so the gate only becomes a meaningful question once this rung's place step has run
-    name = 'place+focus',
-    steps = { 'place', 'requirePlaced', 'focus' },
+    name = "place+focus",
+    steps = { "place", "requirePlaced", "focus" },
     available = function(self)
-      if not self:yabaiBinary() then return false, 'yabai unavailable' end
+      if not self:yabaiBinary() then return false, "yabai unavailable" end
       return true
     end,
   },
   {
-    name = 'deminimize+place',
-    steps = { 'deminimize', 'place', 'requirePlaced' },
+    name = "deminimize+place",
+    steps = { "deminimize", "place", "requirePlaced" },
     available = function(self, ctx)
-      if not self:yabaiBinary() then return false, 'yabai unavailable' end
-      if not self.allowRevealFirst then return false, 'allowRevealFirst is off' end
-      if not ctx.placeFailed then return false, 'placing has not failed, so revealing first is not warranted' end
+      if not self:yabaiBinary() then return false, "yabai unavailable" end
+      if not self.allowRevealFirst then return false, "allowRevealFirst is off" end
+      if not ctx.placeFailed then return false, "placing has not failed, so revealing first is not warranted" end
       return true
     end,
   },
   {
     -- Last, and the whole ladder without yabai: placing degrades to a report, so this rung can reveal while honestly failing to place
-    name = 'unminimize+place',
-    steps = { 'unminimize', 'place' },
+    name = "unminimize+place",
+    steps = { "unminimize", "place" },
     available = function(self, ctx)
-      if not ctx.win then return false, 'no window object' end
-      if self:yabaiBinary() and not self.allowRevealFirst then return false, 'allowRevealFirst is off' end
+      if not ctx.win then return false, "no window object" end
+      if self:yabaiBinary() and not self.allowRevealFirst then return false, "allowRevealFirst is off" end
       return true
     end,
   },
@@ -865,7 +884,7 @@ function obj:runSteps(ctx, names, done)
     local name = names[i]
     if not name then return done(true, nil) end
     local fn = STEPS[name]
-    if not fn then return done(false, 'unknown step ' .. tostring(name)) end
+    if not fn then return done(false, "unknown step " .. tostring(name)) end
 
     -- Exactly one answer per step: these run in timer and task callbacks, where a throw is swallowed, so a step dying mid-flight would strand the ladder with no alert ever shown
     local answered = false
@@ -893,11 +912,11 @@ function obj:runLadder(ctx)
     if self.pending ~= ctx then return end
 
     local engine = ENGINES[i]
-    if not engine then return self:finishRestore(ctx, nil, table.concat(reasons, '; ')) end
+    if not engine then return self:finishRestore(ctx, nil, table.concat(reasons, "; ")) end
 
     local okAvail, available, whyNot = pcall(engine.available, self, ctx)
     if not okAvail or not available then
-      reasons[#reasons + 1] = engine.name .. ': ' .. tostring(whyNot or available or 'unavailable')
+      reasons[#reasons + 1] = engine.name .. ": " .. tostring(whyNot or available or "unavailable")
       return attempt(i + 1)
     end
 
@@ -905,30 +924,30 @@ function obj:runLadder(ctx)
       if self.pending ~= ctx then return end
 
       if not ok then
-        reasons[#reasons + 1] = string.format('%s: %s', engine.name, tostring(err or 'failed'))
+        reasons[#reasons + 1] = string.format("%s: %s", engine.name, tostring(err or "failed"))
         return attempt(i + 1)
       end
 
       self:verifyRestored(ctx, function(outcome)
         if self.pending ~= ctx then return end
-        if outcome == 'ok' then return self:finishRestore(ctx, engine.name, nil) end
+        if outcome == "ok" then return self:finishRestore(ctx, engine.name, nil) end
 
-        if outcome == 'unplaced' then
+        if outcome == "unplaced" then
           -- One corrective move: the window is visible now, so this is a genuinely new attempt
           ctx.placeFailed = false
-          return self:runSteps(ctx, { 'place' }, function()
+          return self:runSteps(ctx, { "place" }, function()
             if self.pending ~= ctx then return end
             self:awaitPlaced(ctx, self.placeTimeout, function(landed)
               if self.pending ~= ctx then return end
               ctx.placed = landed
               if landed then return self:finishRestore(ctx, engine.name, nil) end
-              reasons[#reasons + 1] = engine.name .. ': revealed, but on another Space'
+              reasons[#reasons + 1] = engine.name .. ": revealed, but on another Space"
               attempt(i + 1)
             end)
           end)
         end
 
-        reasons[#reasons + 1] = engine.name .. ': issued, but the window stayed minimized'
+        reasons[#reasons + 1] = engine.name .. ": issued, but the window stayed minimized"
         attempt(i + 1)
       end)
     end)
@@ -943,7 +962,9 @@ function obj:clearPending(ctx)
   if self.pending ~= ctx then return false end
   self.pending = nil
   if ctx.watchdog then
-    pcall(function() ctx.watchdog:stop() end)
+    pcall(function()
+      ctx.watchdog:stop()
+    end)
     self.timers[ctx.watchdog] = nil
     ctx.watchdog = nil
   end
@@ -954,14 +975,14 @@ end
 function obj:finishRestore(ctx, engine, why)
   if not self:clearPending(ctx) then return self end
 
-  local label = string.format('%s - %s', ctx.appName, truncate(ctx.title, self.titleMax))
+  local label = string.format("%s - %s", ctx.appName, truncate(ctx.title, self.titleMax))
 
   if engine and ctx.placed then
     if self.focusAfterRestore then
       -- yabai first here, the reverse of everywhere else and measured: on macOS 26 focus() returns cleanly without changing the frontmost app, where `yabai --focus` always moves the keyboard
       if self:yabaiBinary() then
-        self:yabaiRun({ '-m', 'window', '--focus', fmtId(ctx.winId) }, function(ok, _, err)
-          if not ok then self.logger.f('could not focus window %s: %s', tostring(ctx.winId), tostring(err)) end
+        self:yabaiRun({ "-m", "window", "--focus", fmtId(ctx.winId) }, function(ok, _, err)
+          if not ok then self.logger.f("could not focus window %s: %s", tostring(ctx.winId), tostring(err)) end
         end)
       elseif ctx.win then
         -- Raised first, so it is frontmost WITHIN its app before that app comes forward
@@ -976,24 +997,28 @@ function obj:finishRestore(ctx, engine, why)
     if self.returnAfterSpaceChange and ctx.spaceId and hs.spaces and hs.spaces.gotoSpace then
       local ok, now = pcall(hs.spaces.focusedSpace)
       if ok and now and now ~= ctx.spaceId then
-        self.logger.wf('restoring moved the current Space to %s; going back to %s', tostring(now), tostring(ctx.spaceId))
+        self.logger.wf(
+          "restoring moved the current Space to %s; going back to %s",
+          tostring(now),
+          tostring(ctx.spaceId)
+        )
         pcall(hs.spaces.gotoSpace, ctx.spaceId)
       end
     end
 
-    self.logger.f('restored %s via %s', label, engine)
+    self.logger.f("restored %s via %s", label, engine)
     return self
   end
 
   if ctx.revealed then
     -- Partial: out of the Dock but elsewhere, so emphatically not focused, and no trip back
-    self.logger.wf('restored %s, but could not place it on this Space: %s', label, tostring(why or 'unknown'))
-    hs.alert.show(string.format('Restored %s, but it stayed on another Space', ctx.appName), self.alertDuration + 1)
+    self.logger.wf("restored %s, but could not place it on this Space: %s", label, tostring(why or "unknown"))
+    hs.alert.show(string.format("Restored %s, but it stayed on another Space", ctx.appName), self.alertDuration + 1)
     return self
   end
 
-  self.logger.wf('could not restore %s: %s', label, tostring(why or 'no method available'))
-  hs.alert.show(string.format('Could not restore %s', ctx.appName), self.alertDuration + 1)
+  self.logger.wf("could not restore %s: %s", label, tostring(why or "no method available"))
+  hs.alert.show(string.format("Could not restore %s", ctx.appName), self.alertDuration + 1)
   return self
 end
 
@@ -1014,13 +1039,13 @@ end
 function obj:restoreById(winId)
   local slot = self.byId[winId]
   if not slot then
-    self.logger.wf('window %s is not in the current list', tostring(winId))
-    hs.alert.show('DeminimizeWindow: that window is no longer available', self.alertDuration)
+    self.logger.wf("window %s is not in the current list", tostring(winId))
+    hs.alert.show("DeminimizeWindow: that window is no longer available", self.alertDuration)
     return self
   end
 
   if self.pending then
-    self.logger.f('already restoring window %s; ignoring', tostring(self.pending.winId))
+    self.logger.f("already restoring window %s; ignoring", tostring(self.pending.winId))
     return self
   end
 
@@ -1029,8 +1054,8 @@ function obj:restoreById(winId)
     winId = winId,
     win = slot.win,
     record = slot.record,
-    appName = slot.appName or '?',
-    title = slot.title or '',
+    appName = slot.appName or "?",
+    title = slot.title or "",
     placed = false,
     placeFailed = false,
     revealed = false,
@@ -1038,21 +1063,25 @@ function obj:restoreById(winId)
   self.pending = ctx
   ctx.watchdog = self:track(hs.timer.doAfter(self.ladderDeadline, function()
     if self.pending ~= ctx then return end
-    self.logger.wf('restore of window %s did not finish within %ss; abandoning it', tostring(winId), tostring(self.ladderDeadline))
-    self:finishRestore(ctx, nil, 'timed out')
+    self.logger.wf(
+      "restore of window %s did not finish within %ss; abandoning it",
+      tostring(winId),
+      tostring(self.ladderDeadline)
+    )
+    self:finishRestore(ctx, nil, "timed out")
   end))
 
   -- Pre-flight refusals carry a specific reason, so they bypass finishRestore's generic message
   local function giveUp(why)
     if not self:clearPending(ctx) then return end
-    self.logger.wf('not restoring window %s: %s', tostring(winId), tostring(why))
-    hs.alert.show('DeminimizeWindow: ' .. tostring(why), self.alertDuration + 1)
+    self.logger.wf("not restoring window %s: %s", tostring(winId), tostring(why))
+    hs.alert.show("DeminimizeWindow: " .. tostring(why), self.alertDuration + 1)
   end
 
   self:currentSpace(function(space, err)
     if self.pending ~= ctx then return end
-    if not space then return giveUp(err or 'could not determine the current Space') end
-    if space.fullscreen and self.refuseFullscreenSpace then return giveUp('cannot restore into a fullscreen Space') end
+    if not space then return giveUp(err or "could not determine the current Space") end
+    if space.fullscreen and self.refuseFullscreenSpace then return giveUp("cannot restore into a fullscreen Space") end
 
     ctx.index = space.index
     ctx.spaceId = space.spaceId
@@ -1062,8 +1091,8 @@ function obj:restoreById(winId)
       ctx.record = record or ctx.record
 
       -- Restored by somebody else while the chooser was open; place and focus it anyway
-      if ctx.record and ctx.record['is-minimized'] == false then
-        self.logger.f('window %s is already out of the Dock; placing it only', tostring(winId))
+      if ctx.record and ctx.record["is-minimized"] == false then
+        self.logger.f("window %s is already out of the Dock; placing it only", tostring(winId))
         ctx.revealed = true
       end
 
@@ -1077,8 +1106,8 @@ function obj:restoreById(winId)
       if not record then
         -- An hs.window we hold proves it exists whatever yabai thinks, so only absence is fatal
         if not slot.win then
-          self.logger.wf('window %s is gone (%s)', tostring(winId), tostring(recErr))
-          return giveUp('that window is no longer available')
+          self.logger.wf("window %s is gone (%s)", tostring(winId), tostring(recErr))
+          return giveUp("that window is no longer available")
         end
         return begin(nil)
       end
@@ -1105,24 +1134,24 @@ function obj:restore()
   if self.chooser and self.chooser:isVisible() then return self:hide() end
 
   if self.pending then
-    self.logger.f('already restoring window %s; ignoring', tostring(self.pending.winId))
+    self.logger.f("already restoring window %s; ignoring", tostring(self.pending.winId))
     return self
   end
 
   self:collect(function(items, _, err)
     if err then
-      self.logger.wf('could not build the window list: %s', tostring(err))
-      hs.alert.show('DeminimizeWindow: ' .. tostring(err), self.alertDuration + 1)
+      self.logger.wf("could not build the window list: %s", tostring(err))
+      hs.alert.show("DeminimizeWindow: " .. tostring(err), self.alertDuration + 1)
       return
     end
 
-    if #items == 0 then return hs.alert.show('No minimized windows', self.alertDuration) end
+    if #items == 0 then return hs.alert.show("No minimized windows", self.alertDuration) end
     if #items == 1 and self.skipChooserForSingle then return self:restoreById(items[1].winId) end
 
     local chooser = self:ensureChooser()
     -- Static table, so the list rebuilds on open; a callback caches until refreshChoicesCallback()
     chooser:choices(self:choiceList(items))
-    chooser:query('')
+    chooser:query("")
     chooser:show()
   end)
 
@@ -1143,7 +1172,7 @@ end
 function obj:show()
   self:collect(function(items, _, err)
     if err then
-      hs.alert.show('DeminimizeWindow: ' .. tostring(err), self.alertDuration + 1)
+      hs.alert.show("DeminimizeWindow: " .. tostring(err), self.alertDuration + 1)
       return
     end
 
@@ -1151,12 +1180,12 @@ function obj:show()
     if #items == 0 then
       -- valid = false keeps the row from dismissing the chooser when it is selected
       chooser:choices({
-        { text = 'No minimized windows', subText = 'Nothing is in the Dock', valid = false },
+        { text = "No minimized windows", subText = "Nothing is in the Dock", valid = false },
       })
     else
       chooser:choices(self:choiceList(items))
     end
-    chooser:query('')
+    chooser:query("")
     chooser:show()
   end)
   return self
@@ -1184,26 +1213,35 @@ function obj:buildMenu()
   local menu = {}
 
   if #items == 0 then
-    menu[#menu + 1] = { title = 'No minimized windows', disabled = true }
+    menu[#menu + 1] = { title = "No minimized windows", disabled = true }
   else
     for _, item in ipairs(items) do
       local id = item.winId
       menu[#menu + 1] = {
-        title = string.format('%s - %s', item.appName, truncate(item.title, self.titleMax)),
-        fn = function() self:restoreById(id) end,
+        title = string.format("%s - %s", item.appName, truncate(item.title, self.titleMax)),
+        fn = function()
+          self:restoreById(id)
+        end,
       }
     end
   end
 
-  menu[#menu + 1] = { title = '-' }
-  menu[#menu + 1] = { title = 'Search…', fn = function() self:show() end }
+  menu[#menu + 1] = { title = "-" }
+  menu[#menu + 1] = {
+    title = "Search…",
+    fn = function()
+      self:show()
+    end,
+  }
   return menu
 end
 
 -- The menu cannot wait for a subprocess: popupMenu() returns immediately rather than blocking until close, so the set-menu-then-pop trick would tear it down as fast as it appeared
 function obj:refreshMenu()
   if not self.menubarItem then return self end
-  self:collect(function(items) self.lastMenuItems = items or {} end)
+  self:collect(function(items)
+    self.lastMenuItems = items or {}
+  end)
   return self
 end
 
@@ -1221,7 +1259,9 @@ end
 ---
 --- Deliberately starts nothing. The chooser and the menubar item both belong to `DeminimizeWindow:start()`.
 --- Deliberately empty rather than re-initialising state: `hs.loadSpoon()` reaches `init()` through `require()`, which returns a cached object on a second load, so clearing state here would strand a live chooser.
-function obj:init() return self end
+function obj:init()
+  return self
+end
 
 --- DeminimizeWindow:start() -> self
 --- Method
@@ -1244,19 +1284,24 @@ function obj:start()
 
   if self.showInMenubar then
     -- The autosave name keys the saved menu bar position: unique, and never renamed
-    self.menubarItem = hs.menubar.new(true, 'deminimizewindow')
+    self.menubarItem = hs.menubar.new(true, "deminimizewindow")
     if self.menubarItem then
       self.menubarItem:setTitle(self.menubarTitle)
-      self.menubarItem:setTooltip('Restore a minimized window onto this Space')
+      self.menubarItem:setTooltip("Restore a minimized window onto this Space")
       -- Wrapped: a throw inside the menu callback would leave a dead menubar icon
       self.menubarItem:setMenu(function()
         local ok, menu = pcall(self.buildMenu, self)
         if ok then return menu end
-        self.logger.wf('menu build failed: %s', tostring(menu))
+        self.logger.wf("menu build failed: %s", tostring(menu))
         return {
-          { title = 'Menu failed to build - see console', disabled = true },
-          { title = '-' },
-          { title = 'Search…', fn = function() self:show() end },
+          { title = "Menu failed to build - see console", disabled = true },
+          { title = "-" },
+          {
+            title = "Search…",
+            fn = function()
+              self:show()
+            end,
+          },
         }
       end)
 
@@ -1264,35 +1309,37 @@ function obj:start()
       self.windowFilter = hs.window.filter.new()
       self.windowFilter:setDefaultFilter({})
       self.windowFilter:setCurrentSpace(nil)
-      self.windowFilter:rejectApp('Hammerspoon')
+      self.windowFilter:rejectApp("Hammerspoon")
       self.menuEvents = {
         hs.window.filter.windowMinimized,
         hs.window.filter.windowUnminimized,
         hs.window.filter.windowDestroyed,
       }
-      self.menuHandler = function() self:refreshMenu() end
+      self.menuHandler = function()
+        self:refreshMenu()
+      end
       self.windowFilter:subscribe(self.menuEvents, self.menuHandler)
 
       self:refreshMenu()
     else
-      self.logger.w('could not create the menubar item')
+      self.logger.w("could not create the menubar item")
     end
   end
 
   self.running = true
 
   if not hs.accessibilityState() then
-    hs.alert.show('DeminimizeWindow needs Accessibility permission')
-    self.logger.w('accessibility permission not granted; nothing will work until it is')
+    hs.alert.show("DeminimizeWindow needs Accessibility permission")
+    self.logger.w("accessibility permission not granted; nothing will work until it is")
   end
   if not self:yabaiBinary() then
     self.logger.w(
-      'yabai is not available, so restored windows cannot be placed on the current Space; '
-        .. 'they will reappear wherever they were minimized'
+      "yabai is not available, so restored windows cannot be placed on the current Space; "
+        .. "they will reappear wherever they were minimized"
     )
   end
 
-  self.logger.i('started')
+  self.logger.i("started")
   return self
 end
 
@@ -1341,7 +1388,7 @@ function obj:stop()
   -- Re-probed on the next start(), so installing yabai and reloading is enough to notice it
   self.yabaiResolved = nil
   self.running = false
-  self.logger.i('stopped')
+  self.logger.i("stopped")
   return self
 end
 
@@ -1416,26 +1463,31 @@ end
 --- The decisive line is the per-window one: a row tagged only `yabai` has no `hs.window`, so the Accessibility rungs do not apply to it, and a row tagged only `ax` cannot be placed with confidence.
 function obj:diagnose(done)
   local out = {}
-  local function say(fmt, ...) out[#out + 1] = select('#', ...) > 0 and string.format(fmt, ...) or fmt end
+  local function say(fmt, ...)
+    out[#out + 1] = select("#", ...) > 0 and string.format(fmt, ...) or fmt
+  end
 
   local function finish()
-    local text = table.concat(out, '\n')
+    local text = table.concat(out, "\n")
     print(text)
     if done then pcall(done, text) end
   end
 
-  say('DeminimizeWindow diagnosis')
-  say('')
-  say('  running               %s', tostring(self.running))
-  say('  accessibility         %s', tostring(hs.accessibilityState()))
-  say('  yabai                 %s', tostring(self:yabaiBinary() or (not self.useYabai and '(turned off)' or '(not installed)')))
-  say('  hs.spaces             %s', tostring(hs.spaces ~= nil and hs.spaces.focusedSpace ~= nil))
-  say('  minimizedWindows      %s', tostring(hs.window.minimizedWindows ~= nil))
+  say("DeminimizeWindow diagnosis")
+  say("")
+  say("  running               %s", tostring(self.running))
+  say("  accessibility         %s", tostring(hs.accessibilityState()))
+  say(
+    "  yabai                 %s",
+    tostring(self:yabaiBinary() or (not self.useYabai and "(turned off)" or "(not installed)"))
+  )
+  say("  hs.spaces             %s", tostring(hs.spaces ~= nil and hs.spaces.focusedSpace ~= nil))
+  say("  minimizedWindows      %s", tostring(hs.window.minimizedWindows ~= nil))
 
   -- Counted before the union, so a disagreement between sources is visible, not merged away
   local axSet, axN = {}, 0
   local okAx, wins = pcall(hs.window.minimizedWindows)
-  if okAx and type(wins) == 'table' then
+  if okAx and type(wins) == "table" then
     for _, win in ipairs(wins) do
       local okId, id = pcall(win.id, win)
       if okId and id then
@@ -1446,66 +1498,66 @@ function obj:diagnose(done)
   end
 
   self:currentSpace(function(space, err)
-    say('')
+    say("")
     if space then
       say(
-        'Current Space:          yabai index=%s   hs.spaces id=%s   fullscreen=%s',
+        "Current Space:          yabai index=%s   hs.spaces id=%s   fullscreen=%s",
         tostring(space.index),
         tostring(space.spaceId),
         tostring(space.fullscreen)
       )
     else
-      say('Current Space:          UNKNOWN (%s)', tostring(err))
+      say("Current Space:          UNKNOWN (%s)", tostring(err))
     end
 
     self:collect(function(items, _, collectErr)
-      say('')
-      say('Sources:')
-      say('  hs.window.minimizedWindows   %4d window(s)', axN)
+      say("")
+      say("Sources:")
+      say("  hs.window.minimizedWindows   %4d window(s)", axN)
 
       if not self:yabaiBinary() then
-        say('  yabai                        (unavailable) - restored windows cannot be placed')
+        say("  yabai                        (unavailable) - restored windows cannot be placed")
       elseif self.yabaiLastError then
         -- A service that is down looks like one not yet asked, and the fixes differ
-        say('  yabai                        NOT ANSWERING (%s) - try `yabai --start-service`', self.yabaiLastError)
+        say("  yabai                        NOT ANSWERING (%s) - try `yabai --start-service`", self.yabaiLastError)
       else
-        say('  yabai                        answering; %d window(s) in the merged list', countKeys(self.byId))
+        say("  yabai                        answering; %d window(s) in the merged list", countKeys(self.byId))
       end
 
-      say('')
+      say("")
       if collectErr then
-        say('Restorable: none (%s)', tostring(collectErr))
+        say("Restorable: none (%s)", tostring(collectErr))
         return finish()
       end
 
       items = items or {}
-      say('Restorable: %d window(s)', #items)
+      say("Restorable: %d window(s)", #items)
       for _, item in ipairs(items) do
         local slot = self.byId[item.winId] or {}
         local tags = {}
-        if axSet[item.winId] then tags[#tags + 1] = 'ax' end
-        if slot.record then tags[#tags + 1] = 'yabai' end
+        if axSet[item.winId] then tags[#tags + 1] = "ax" end
+        if slot.record then tags[#tags + 1] = "yabai" end
         say(
-          '  [%-9s] %-22s %-52s %s',
-          table.concat(tags, '+'),
+          "  [%-9s] %-22s %-52s %s",
+          table.concat(tags, "+"),
           item.appName,
           truncate(item.title, 52),
           slot.record
               and string.format(
-                'space=%s sticky=%s ax-ref=%s',
+                "space=%s sticky=%s ax-ref=%s",
                 tostring(slot.record.space),
-                tostring(slot.record['is-sticky']),
-                tostring(slot.record['has-ax-reference'])
+                tostring(slot.record["is-sticky"]),
+                tostring(slot.record["has-ax-reference"])
               )
-            or 'no yabai record'
+            or "no yabai record"
         )
       end
 
       if #items == 0 then
-        say('')
-        say('Nothing to restore. If a window really is in the Dock, check the sources above:')
-        say('a zero on both lines means macOS is not reporting it as minimized at all, and a')
-        say('window hidden with cmd-H is not minimized -- see DeminimizeWindow.includeHidden.')
+        say("")
+        say("Nothing to restore. If a window really is in the Dock, check the sources above:")
+        say("a zero on both lines means macOS is not reporting it as minimized at all, and a")
+        say("window hidden with cmd-H is not minimized -- see DeminimizeWindow.includeHidden.")
       end
 
       finish()
