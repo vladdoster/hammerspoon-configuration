@@ -3,6 +3,9 @@ require("hs.ipc")
 
 hs.window.animationDuration = 0.1
 
+-- loginwindow ships only in ignoreInDefaultFilter, which gates windows and not app registration, so wfilter warns about its id-0 phantom window until it is ignored at the root
+hs.window.filter.ignoreAlways["loginwindow"] = true
+
 hs.loadSpoon("SpoonInstall")
 
 spoon.SpoonInstall:andUse("BatteryMonitor", { start = true })
