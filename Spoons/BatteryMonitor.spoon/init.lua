@@ -313,10 +313,10 @@ function obj:showAlert(message, informativeText)
   -- hs.alert falls back to hs.screen.mainScreen() and then indexes it unguarded, so a machine with no active display throws rather than going quiet
   local screen = hs.screen.mainScreen()
   if not screen then
-    self.logger.w("no screen to raise an alert on")
+    self:warnOnce("screen", "no screen to raise an alert on")
     return self
   end
-  hs.alert.show(informativeText and (message .. "\n" .. informativeText) or message, self.alertDuration)
+  hs.alert.show(informativeText and (message .. "\n" .. informativeText) or message, screen, self.alertDuration)
   return self
 end
 
