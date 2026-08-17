@@ -1,0 +1,42 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this is
+
+A Hammerspoon configuration (`~/.hammerspoon`), published as `vladdoster/hammerspoon-configuration`. Everything is Lua running inside Hammerspoon: there is no build step and no test suite. The feedback loop is edit, reload the config (hyper+R or `hs -c "hs.reload()"`), then check the Hammerspoon console. "Hyper" is cmd+alt+ctrl, defined in `ext/keybind.lua`.
+
+## Commands
+
+- `make format` - format all Lua via stylua. The pinned flags in the Makefile are the formatting authority (120 columns, 2-space indent, double quotes, sorted requires); there is no stylua.toml or editorconfig.
+- `make docs` - regenerate `docs.json` for first-party Spoons. Requires Hammerspoon running (the `hs` CLI works because `init.lua` loads `hs.ipc`) plus python3, which sorts keys for stable diffs.
+- `make clean` - destructive: deletes every `Spoons/*.spoon` directory not listed in `KEEP_SPOONS` (removes SpoonInstall downloads).
+- `hs -c "<lua>"` - run Lua inside the live Hammerspoon instance.
+
+Lint runs only as a job in the release workflow; there is no push/PR CI and nothing runs locally. Releases are manual `workflow_dispatch` runs of `.github/workflows/release.yml`, which calls reusable workflows from `vladdoster/.github`. `VERSION` and `CHANGELOG.md` are updated by that release flow (`ci:` commits); never bump them in feature commits.
+
+## Architecture
+
+`init.lua` is the entire wiring: it loads the vendored `SpoonInstall.spoon`, registers each first-party Spoon through `spoon.SpoonInstall:andUse(...)` with its hotkeys, and binds hyper+R to `hs.reload()`. Hotkey assignments live in `init.lua`, not inside Spoons; Spoons only expose `bindHotkeys(mapping)` specs.
+
+### Spoons/ (the real code)
+
+Seven first-party Spoons (BatteryMonitor, ClipboardHistory, DeminimizeWindow, FocusBorder, PinnedWindows, SummonWindow, VolumeControl) plus `SpoonInstall.spoon`, which is vendored upstream: do not edit it by hand, and leave its `docs.json` as shipped, which `make docs` already skips. `make format` is the one exception, because `LUA_FILES` sweeps the whole tree, so its source is stylua-formatted rather than byte-identical to upstream and a re-pull will conflict. Each first-party Spoon follows the standard Spoon shape: an `obj` table with `name`/`version`/`author`/`license` metadata, `obj.logger`, documented config variables, and `start()`/`stop()`/`bindHotkeys()`.
+
+- Spoons are deliberately self-contained. Duplication between them is intentional; do not extract shared modules.
+- LuaDoc `---` blocks are the source for the generated `docs.json`. After changing them or a Spoon's public API, run `make docs`; never hand-edit `docs.json`.
+- Three places encode the first-party Spoon list and must stay in sync: `KEEP_SPOONS` in the Makefile, the `!Spoons/*.spoon` negations in `.gitignore`, and the `andUse` calls in `init.lua`. A Spoon missing from `KEEP_SPOONS` is a Spoon `make clean` deletes.
+
+### ext/ (mostly dormant)
+
+Only `ext/keybind.lua` is required from `init.lua` (hyper modifier plus a bind helper). `dockTime`, `infoDisplay`, `sysStats`, and `spoons` are kept but not loaded; `ext/spoons.lua` is an alternative loader that pulls third-party Spoons via SpoonInstall, and those downloads are what `.gitignore` and `make clean` account for.
+
+## Conventions
+
+### Git commits
+
+- Conventional commits: `<type>(<scope>): <subject>`, 50-char imperative subject, atomic. Always commit with `--signoff`; never add a `Co-authored-by` trailer.
+
+### Code comments
+
+- Plain `--` comments: one line, no trailing period. LuaDoc `---` blocks are prose and exempt.
