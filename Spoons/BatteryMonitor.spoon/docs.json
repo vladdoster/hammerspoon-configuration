@@ -31,24 +31,24 @@
         "type": "Method"
       },
       {
-        "def": "BatteryMonitor:showDialog(message, informativeText) -> self",
-        "desc": "Raises a non-blocking alert panel.",
-        "doc": "Raises a non-blocking alert panel.\n\nParameters:\n * message - The bold headline of the panel\n * informativeText - The body text beneath it\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%.",
-        "name": "showDialog",
+        "def": "BatteryMonitor:showAlert(message[, informativeText]) -> self",
+        "desc": "Shows a transient on-screen alert that fades out on its own.",
+        "doc": "Shows a transient on-screen alert that fades out on its own.\n\nParameters:\n * message - The headline of the alert\n * informativeText - Optional body text, shown on a second line beneath the headline\n\nReturns:\n * The BatteryMonitor object\n\nStays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back.",
+        "name": "showAlert",
         "notes": [],
         "parameters": [
-          " * message - The bold headline of the panel",
-          " * informativeText - The body text beneath it",
+          " * message - The headline of the alert",
+          " * informativeText - Optional body text, shown on a second line beneath the headline",
           ""
         ],
         "returns": [
           " * The BatteryMonitor object",
           "",
-          "Deliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%."
+          "Stays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back."
         ],
-        "signature": "BatteryMonitor:showDialog(message, informativeText) -> self",
+        "signature": "BatteryMonitor:showAlert(message[, informativeText]) -> self",
         "stripped_doc": [
-          "Raises a non-blocking alert panel.",
+          "Shows a transient on-screen alert that fades out on its own.",
           ""
         ],
         "type": "Method"
@@ -145,7 +145,7 @@
       {
         "def": "BatteryMonitor:setSuppressAudio([state]) -> self",
         "desc": "Silences or restores spoken alerts, and remembers the choice across reloads.",
-        "doc": "Silences or restores spoken alerts, and remembers the choice across reloads.\n\nParameters:\n * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped\n\nReturns:\n * The BatteryMonitor object\n\nDialog and `hs.alert` warnings are unaffected; only speech is silenced.",
+        "doc": "Silences or restores spoken alerts, and remembers the choice across reloads.\n\nParameters:\n * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped\n\nReturns:\n * The BatteryMonitor object\n\nOn-screen alerts are unaffected; only speech is silenced.",
         "name": "setSuppressAudio",
         "notes": [],
         "parameters": [
@@ -155,7 +155,7 @@
         "returns": [
           " * The BatteryMonitor object",
           "",
-          "Dialog and `hs.alert` warnings are unaffected; only speech is silenced."
+          "On-screen alerts are unaffected; only speech is silenced."
         ],
         "signature": "BatteryMonitor:setSuppressAudio([state]) -> self",
         "stripped_doc": [
@@ -382,6 +382,22 @@
         "type": "Variable"
       },
       {
+        "def": "BatteryMonitor.alertDuration",
+        "desc": "Seconds an alert raised by `BatteryMonitor:showAlert()` stays up before it fades. Defaults to `10`.",
+        "doc": "Seconds an alert raised by `BatteryMonitor:showAlert()` stays up before it fades. Defaults to `10`.\n\nAn alert takes no click to dismiss, so this is the only thing deciding whether a warning is still on screen by the time the machine is looked at again.",
+        "name": "alertDuration",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.alertDuration",
+        "stripped_doc": [
+          "Seconds an alert raised by `BatteryMonitor:showAlert()` stays up before it fades. Defaults to `10`.",
+          "",
+          "An alert takes no click to dismiss, so this is the only thing deciding whether a warning is still on screen by the time the machine is looked at again."
+        ],
+        "type": "Variable"
+      },
+      {
         "def": "BatteryMonitor.rules",
         "desc": "The alert rules, evaluated in order on every update.",
         "doc": "The alert rules, evaluated in order on every update.\n\nEach entry is a table:\n * onBattery - Boolean; the rule is inert unless the power source matches\n * percentage - Charge threshold. On battery it is a floor (fires at or below); on AC a ceiling (fires at or above)\n * timeRemaining - Minutes-remaining threshold, fires at or below. Mutually exclusive with `percentage`\n * repeatEvery - Seconds between repeats while the threshold stays crossed, or `false` to fire once per crossing\n * fn - Called as `fn(BatteryMonitor, snapshot)` when the rule fires\n\nA rule is only ever consulted while its threshold is met, so `repeatEvery` cannot nag about a battery that has since recovered.",
@@ -405,9 +421,25 @@
         "type": "Variable"
       }
     ],
-    "desc": "Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.",
-    "doc": "Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.\n\nThe menubar item is laid out like the system battery it sits beside: the percentage as a plain\ntitle, then an `hs.canvas` battery drawn per update and handed to `setIcon`. Its fill sweeps with\nthe charge and crosses green, orange and red on the way down, and while charging a bolt inside the\nbody knocks a transparent gap through the fill and the outline.\n\nWakes on `hs.battery.watcher` rather than a stopwatch, and keeps a slow fallback timer only so the\ntime-remaining figure keeps counting down between IOKit notifications.\n\nEach rule in `BatteryMonitor.rules` fires on the RISING EDGE of its threshold and, optionally,\nrepeats while the threshold stays crossed. A rule whose threshold is not currently met can never\nfire, whatever its repeat cadence.",
+    "desc": "Menubar battery readout, plus spoken and on-screen alerts driven by charge thresholds.",
+    "doc": "Menubar battery readout, plus spoken and on-screen alerts driven by charge thresholds.\n\nThe menubar item is laid out like the system battery it sits beside: the percentage as a plain\ntitle, then an `hs.canvas` battery drawn per update and handed to `setIcon`. Its fill sweeps with\nthe charge and crosses green, orange and red on the way down, and while charging a bolt inside the\nbody knocks a transparent gap through the fill and the outline.\n\nWakes on `hs.battery.watcher` rather than a stopwatch, and keeps a slow fallback timer only so the\ntime-remaining figure keeps counting down between IOKit notifications.\n\nEach rule in `BatteryMonitor.rules` fires on the RISING EDGE of its threshold and, optionally,\nrepeats while the threshold stays crossed. A rule whose threshold is not currently met can never\nfire, whatever its repeat cadence.",
     "items": [
+      {
+        "def": "BatteryMonitor.alertDuration",
+        "desc": "Seconds an alert raised by `BatteryMonitor:showAlert()` stays up before it fades. Defaults to `10`.",
+        "doc": "Seconds an alert raised by `BatteryMonitor:showAlert()` stays up before it fades. Defaults to `10`.\n\nAn alert takes no click to dismiss, so this is the only thing deciding whether a warning is still on screen by the time the machine is looked at again.",
+        "name": "alertDuration",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "BatteryMonitor.alertDuration",
+        "stripped_doc": [
+          "Seconds an alert raised by `BatteryMonitor:showAlert()` stays up before it fades. Defaults to `10`.",
+          "",
+          "An alert takes no click to dismiss, so this is the only thing deciding whether a warning is still on screen by the time the machine is looked at again."
+        ],
+        "type": "Variable"
+      },
       {
         "def": "BatteryMonitor.brightnessOnPowerChange",
         "desc": "Display brightness, 0-100, applied whenever the power source changes. Defaults to `100`.",
@@ -650,7 +682,7 @@
       {
         "def": "BatteryMonitor:setSuppressAudio([state]) -> self",
         "desc": "Silences or restores spoken alerts, and remembers the choice across reloads.",
-        "doc": "Silences or restores spoken alerts, and remembers the choice across reloads.\n\nParameters:\n * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped\n\nReturns:\n * The BatteryMonitor object\n\nDialog and `hs.alert` warnings are unaffected; only speech is silenced.",
+        "doc": "Silences or restores spoken alerts, and remembers the choice across reloads.\n\nParameters:\n * state - An optional boolean. `true` silences speech, `false` restores it. If omitted, the current setting is flipped\n\nReturns:\n * The BatteryMonitor object\n\nOn-screen alerts are unaffected; only speech is silenced.",
         "name": "setSuppressAudio",
         "notes": [],
         "parameters": [
@@ -660,7 +692,7 @@
         "returns": [
           " * The BatteryMonitor object",
           "",
-          "Dialog and `hs.alert` warnings are unaffected; only speech is silenced."
+          "On-screen alerts are unaffected; only speech is silenced."
         ],
         "signature": "BatteryMonitor:setSuppressAudio([state]) -> self",
         "stripped_doc": [
@@ -670,24 +702,24 @@
         "type": "Method"
       },
       {
-        "def": "BatteryMonitor:showDialog(message, informativeText) -> self",
-        "desc": "Raises a non-blocking alert panel.",
-        "doc": "Raises a non-blocking alert panel.\n\nParameters:\n * message - The bold headline of the panel\n * informativeText - The body text beneath it\n\nReturns:\n * The BatteryMonitor object\n\nDeliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%.",
-        "name": "showDialog",
+        "def": "BatteryMonitor:showAlert(message[, informativeText]) -> self",
+        "desc": "Shows a transient on-screen alert that fades out on its own.",
+        "doc": "Shows a transient on-screen alert that fades out on its own.\n\nParameters:\n * message - The headline of the alert\n * informativeText - Optional body text, shown on a second line beneath the headline\n\nReturns:\n * The BatteryMonitor object\n\nStays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back.",
+        "name": "showAlert",
         "notes": [],
         "parameters": [
-          " * message - The bold headline of the panel",
-          " * informativeText - The body text beneath it",
+          " * message - The headline of the alert",
+          " * informativeText - Optional body text, shown on a second line beneath the headline",
           ""
         ],
         "returns": [
           " * The BatteryMonitor object",
           "",
-          "Deliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%."
+          "Stays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back."
         ],
-        "signature": "BatteryMonitor:showDialog(message, informativeText) -> self",
+        "signature": "BatteryMonitor:showAlert(message[, informativeText]) -> self",
         "stripped_doc": [
-          "Raises a non-blocking alert panel.",
+          "Shows a transient on-screen alert that fades out on its own.",
           ""
         ],
         "type": "Method"

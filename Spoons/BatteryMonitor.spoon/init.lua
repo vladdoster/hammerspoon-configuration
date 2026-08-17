@@ -1,6 +1,6 @@
 --- === BatteryMonitor ===
 ---
---- Menubar battery readout, plus spoken and dialog alerts driven by charge thresholds.
+--- Menubar battery readout, plus spoken and on-screen alerts driven by charge thresholds.
 ---
 --- The menubar item is laid out like the system battery it sits beside: the percentage as a plain
 --- title, then an `hs.canvas` battery drawn per update and handed to `setIcon`. Its fill sweeps with
@@ -129,6 +129,13 @@ obj.iconChargingColor = { green = 1 }
 --- Toggle it from the menubar item or with `BatteryMonitor:setSuppressAudio()`; assigning to it directly changes this session only.
 obj.suppressAudio = hs.settings.get(SUPPRESS_AUDIO_KEY) or false
 
+--- BatteryMonitor.alertDuration
+--- Variable
+--- Seconds an alert raised by `BatteryMonitor:showAlert()` stays up before it fades. Defaults to `10`.
+---
+--- An alert takes no click to dismiss, so this is the only thing deciding whether a warning is still on screen by the time the machine is looked at again.
+obj.alertDuration = 10
+
 --- BatteryMonitor.rules
 --- Variable
 --- The alert rules, evaluated in order on every update.
@@ -148,7 +155,7 @@ obj.rules = {
     repeatEvery = false,
     fn = function(self)
       self:speak("LOW BATTERY", 25)
-      self:showDialog("Low Battery", "Battery at 10%")
+      self:showAlert("Low Battery", "Battery at 10%")
     end,
   },
   {
@@ -157,7 +164,7 @@ obj.rules = {
     repeatEvery = 60,
     fn = function(self)
       self:speak("PLUG ME IN NOW", 50)
-      self:showDialog("Low Battery", "Connect computer to charger")
+      self:showAlert("Low Battery", "Connect computer to charger")
     end,
   },
   {
@@ -165,8 +172,8 @@ obj.rules = {
     timeRemaining = 30,
     repeatEvery = 300,
     -- ruleMet() has already rejected the -1 and -2 sentinels, so this is a real minute count
-    fn = function(_, snapshot)
-      hs.alert.show(string.format("Battery has %d minutes left...", math.floor(snapshot.timeRemaining)), 10)
+    fn = function(self, snapshot)
+      self:showAlert(string.format("Battery has %d minutes left...", math.floor(snapshot.timeRemaining)))
     end,
   },
   {
@@ -290,29 +297,26 @@ function obj:speak(text, volume)
   return self
 end
 
--- hs.dialog defaults to the screen corner, which reads as a glitch rather than a warning
-local function dialogOrigin()
-  local screen = hs.screen.mainScreen()
-  if not screen then return 1, 1 end
-  local frame = screen:frame()
-  return math.floor(frame.x + frame.w / 2 - 200), math.floor(frame.y + frame.h / 3)
-end
-
---- BatteryMonitor:showDialog(message, informativeText) -> self
+--- BatteryMonitor:showAlert(message[, informativeText]) -> self
 --- Method
---- Raises a non-blocking alert panel.
+--- Shows a transient on-screen alert that fades out on its own.
 ---
 --- Parameters:
----  * message - The bold headline of the panel
----  * informativeText - The body text beneath it
+---  * message - The headline of the alert
+---  * informativeText - Optional body text, shown on a second line beneath the headline
 ---
 --- Returns:
 ---  * The BatteryMonitor object
 ---
---- Deliberately `hs.dialog.alert` and not `hs.dialog.blockAlert`: the blocking variant halts the Lua runloop until the panel is dismissed, which would stall every other Spoon, watcher and hotkey for as long as an unattended laptop sits at 5%.
-function obj:showDialog(message, informativeText)
-  local x, y = dialogOrigin()
-  hs.dialog.alert(x, y, function() end, message, informativeText, "OK")
+--- Stays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back.
+function obj:showAlert(message, informativeText)
+  -- hs.alert falls back to hs.screen.mainScreen() and then indexes it unguarded, so a machine with no active display throws rather than going quiet
+  local screen = hs.screen.mainScreen()
+  if not screen then
+    self.logger.w("no screen to raise an alert on")
+    return self
+  end
+  hs.alert.show(informativeText and (message .. "\n" .. informativeText) or message, self.alertDuration)
   return self
 end
 
@@ -598,7 +602,7 @@ end
 
 -- The rule engine
 
--- pcall: a rule body reaches audio, dialogs and speech, and one that throws must not skip the rest
+-- pcall: a rule body reaches audio, alerts and speech, and one that throws must not skip the rest
 function obj:fire(index, rule, snapshot)
   self.logger.i(string.format("rule %d fired", index))
   local ok, err = pcall(rule.fn, self, snapshot)
@@ -798,7 +802,7 @@ end
 --- Returns:
 ---  * The BatteryMonitor object
 ---
---- Dialog and `hs.alert` warnings are unaffected; only speech is silenced.
+--- On-screen alerts are unaffected; only speech is silenced.
 function obj:setSuppressAudio(state)
   if state == nil then
     self.suppressAudio = not self.suppressAudio
