@@ -7,6 +7,10 @@ hs.window.animationDuration = 0.1
 -- Must stay above the andUse calls: isGuiApp reads this while registering apps, which happens the first time a Spoon activates a window filter
 hs.window.filter.ignoreAlways["loginwindow"] = true
 
+-- Same layer, same reason: appWindowEvent resolves our own pid before it bails on Hammerspoon, and that lookup returns nil while the app's LaunchServices registration is in flux, which is what opening the Console does
+-- rejectApp("Hammerspoon") cannot prevent it, since that filters windows only after the app has been registered and watched
+hs.window.filter.ignoreAlways["Hammerspoon"] = true
+
 hs.loadSpoon("SpoonInstall")
 
 spoon.SpoonInstall:andUse("BatteryMonitor", { start = true })
