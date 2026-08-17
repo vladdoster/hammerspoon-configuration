@@ -8,8 +8,8 @@ A Hammerspoon configuration (`~/.hammerspoon`), published as `vladdoster/hammers
 
 ## Commands
 
-- `make format` - format all Lua via stylua. The pinned flags in the Makefile are the formatting authority (120 columns, 2-space indent, double quotes, sorted requires); there is no stylua.toml or editorconfig.
-- `make docs` - regenerate `docs.json` for first-party Spoons. Requires Hammerspoon running (the `hs` CLI works because `init.lua` loads `hs.ipc`) plus python3, which sorts keys for stable diffs.
+- `make format` - format all Lua via stylua. The flags pinned in the `format` target are the only formatting authority; there is no stylua.toml or editorconfig. Read them there rather than trusting a copy.
+- `make docs` - regenerate `docs.json` for first-party Spoons. Requires Hammerspoon running with the `hs` CLI available: `init.lua` loads `hs.ipc`, but the binary itself comes from a one-time `hs.ipc.cliInstall()`. Also needs python3, which sorts keys for stable diffs.
 - `make clean` - destructive: deletes every `Spoons/*.spoon` directory not listed in `KEEP_SPOONS` (removes SpoonInstall downloads).
 - `hs -c "<lua>"` - run Lua inside the live Hammerspoon instance.
 
@@ -21,9 +21,10 @@ Lint runs only as a job in the release workflow; there is no push/PR CI and noth
 
 ### Spoons/ (the real code)
 
-Seven first-party Spoons (BatteryMonitor, ClipboardHistory, DeminimizeWindow, FocusBorder, PinnedWindows, SummonWindow, VolumeControl) plus `SpoonInstall.spoon`, which is vendored upstream: do not edit it by hand, and leave its `docs.json` as shipped, which `make docs` already skips. `make format` is the one exception, because `LUA_FILES` sweeps the whole tree, so its source is stylua-formatted rather than byte-identical to upstream and a re-pull will conflict. Each first-party Spoon follows the standard Spoon shape: an `obj` table with `name`/`version`/`author`/`license` metadata, `obj.logger`, documented config variables, and `start()`/`stop()`/`bindHotkeys()`.
+Seven first-party Spoons (BatteryMonitor, ClipboardHistory, DeminimizeWindow, FocusBorder, PinnedWindows, SummonWindow, VolumeControl) plus `SpoonInstall.spoon`, which is vendored upstream: do not edit it by hand, and leave its `docs.json` as shipped. Each first-party Spoon follows the standard Spoon shape: an `obj` table with `name`/`version`/`author`/`license` metadata, `obj.logger`, documented config variables, and `start()`/`stop()`/`bindHotkeys()`.
 
 - Spoons are deliberately self-contained. Duplication between them is intentional; do not extract shared modules.
+- `make docs` skips SpoonInstall, but `make format` does not: `LUA_FILES` sweeps the whole tree, so the vendored source has already been reformatted and an upstream re-pull will conflict on it.
 - LuaDoc `---` blocks are the source for the generated `docs.json`. After changing them or a Spoon's public API, run `make docs`; never hand-edit `docs.json`.
 - Three places encode the first-party Spoon list and must stay in sync: `KEEP_SPOONS` in the Makefile, the `!Spoons/*.spoon` negations in `.gitignore`, and the `andUse` calls in `init.lua`. A Spoon missing from `KEEP_SPOONS` is a Spoon `make clean` deletes.
 

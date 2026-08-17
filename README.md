@@ -48,10 +48,13 @@ mv ~/.hammerspoon ~/.hammerspoon.bak
 mv /tmp/hammerspoon-configuration ~/.hammerspoon
 ```
 
-Load it from the Hammerspoon menubar icon, via `Reload Config`. Neither hyper + `R` nor
-`hs -c "hs.reload()"` works yet: the hotkey is bound by `init.lua`, and the `hs` CLI only
-works because of the `require("hs.ipc")` at the top of it. This config has to be loaded
-once before either exists. Both work from then on.
+Load it from the Hammerspoon menubar icon, via `Reload Config`. Hyper + `R` does not work
+yet, because `init.lua` is what binds it; it works on every reload after this one.
+
+`hs -c "hs.reload()"` needs one more step. The `require("hs.ipc")` at the top of `init.lua`
+loads the module the CLI talks to, but the `hs` binary itself is a symlink into the app
+bundle that only `hs.ipc.cliInstall()` creates. Run that once from the Hammerspoon console
+if you want the CLI.
 
 ## Makefile targets
 

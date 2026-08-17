@@ -308,7 +308,7 @@ end
 --- Returns:
 ---  * The BatteryMonitor object
 ---
---- Stays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back.
+--- Stays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle.
 function obj:showAlert(message, informativeText)
   -- hs.alert falls back to hs.screen.mainScreen() and then indexes it unguarded, so a machine with no active display throws rather than going quiet
   local screen = hs.screen.mainScreen()

@@ -33,7 +33,7 @@
       {
         "def": "BatteryMonitor:showAlert(message[, informativeText]) -> self",
         "desc": "Shows a transient on-screen alert that fades out on its own.",
-        "doc": "Shows a transient on-screen alert that fades out on its own.\n\nParameters:\n * message - The headline of the alert\n * informativeText - Optional body text, shown on a second line beneath the headline\n\nReturns:\n * The BatteryMonitor object\n\nStays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back.",
+        "doc": "Shows a transient on-screen alert that fades out on its own.\n\nParameters:\n * message - The headline of the alert\n * informativeText - Optional body text, shown on a second line beneath the headline\n\nReturns:\n * The BatteryMonitor object\n\nStays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle.",
         "name": "showAlert",
         "notes": [],
         "parameters": [
@@ -44,7 +44,7 @@
         "returns": [
           " * The BatteryMonitor object",
           "",
-          "Stays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back."
+          "Stays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle."
         ],
         "signature": "BatteryMonitor:showAlert(message[, informativeText]) -> self",
         "stripped_doc": [
@@ -704,7 +704,7 @@
       {
         "def": "BatteryMonitor:showAlert(message[, informativeText]) -> self",
         "desc": "Shows a transient on-screen alert that fades out on its own.",
-        "doc": "Shows a transient on-screen alert that fades out on its own.\n\nParameters:\n * message - The headline of the alert\n * informativeText - Optional body text, shown on a second line beneath the headline\n\nReturns:\n * The BatteryMonitor object\n\nStays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back.",
+        "doc": "Shows a transient on-screen alert that fades out on its own.\n\nParameters:\n * message - The headline of the alert\n * informativeText - Optional body text, shown on a second line beneath the headline\n\nReturns:\n * The BatteryMonitor object\n\nStays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle.",
         "name": "showAlert",
         "notes": [],
         "parameters": [
@@ -715,7 +715,7 @@
         "returns": [
           " * The BatteryMonitor object",
           "",
-          "Stays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle. An alert expires by itself, so `alertDuration` is where persistence is bought back."
+          "Stays up for `BatteryMonitor.alertDuration` seconds. Deliberately `hs.alert` and not `hs.dialog.alert`, which is a trade: a dialog waits to be acknowledged, but it waits forever, and nothing acknowledges it on the unattended machine these warnings are for. Under `repeatEvery` it also stacked a fresh panel every cycle."
         ],
         "signature": "BatteryMonitor:showAlert(message[, informativeText]) -> self",
         "stripped_doc": [
