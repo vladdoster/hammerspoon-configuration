@@ -9,7 +9,7 @@ My `~/.hammerspoon`. Seven self-contained Spoons, wired together in `init.lua`.
 
 | Spoon              | What it does                                                                |
 | ------------------ | --------------------------------------------------------------------------- |
-| `BatteryMonitor`   | Menubar battery readout, plus spoken and dialog alerts on charge thresholds  |
+| `BatteryMonitor`   | Menubar battery readout, plus spoken and on-screen alerts on charge levels   |
 | `ClipboardHistory` | Searchable clipboard history that survives a Hammerspoon restart             |
 | `DeminimizeWindow` | Restores a minimized window onto the Space you are on, not the one it left   |
 | `FocusBorder`      | Red border around the focused window, hidden while that window is fullscreen |
@@ -19,8 +19,8 @@ My `~/.hammerspoon`. Seven self-contained Spoons, wired together in `init.lua`.
 
 ## Hotkeys
 
-Hyper is `cmd+alt+ctrl`, defined in `ext/keybind.lua`. Note that the window Spoons
-below deliberately use `cmd+alt+shift` instead.
+Hyper is `cmd+alt+ctrl`, defined in `ext/keybind.lua`. `PinnedWindows` and `SummonWindow`
+deliberately use `cmd+alt+shift` instead.
 
 | Keys                | Action                              |
 | ------------------- | ----------------------------------- |
@@ -39,13 +39,19 @@ spec, so change a key here and nowhere else.
 Requires [Hammerspoon](https://www.hammerspoon.org/). The window Spoons need the
 Accessibility permission that Hammerspoon prompts for on first launch.
 
-Clone into the path Hammerspoon actually reads:
+That first launch also creates `~/.hammerspoon/init.lua`, so cloning straight into
+`~/.hammerspoon` fails on a non-empty directory. Clone elsewhere and swap it in:
 
 ```shell
-git clone https://github.com/vladdoster/hammerspoon-configuration ~/.hammerspoon
+git clone https://github.com/vladdoster/hammerspoon-configuration /tmp/hammerspoon-configuration
+mv ~/.hammerspoon ~/.hammerspoon.bak
+mv /tmp/hammerspoon-configuration ~/.hammerspoon
 ```
 
-Then reload the config with hyper + `R`, or `hs -c "hs.reload()"`.
+Load it from the Hammerspoon menubar icon, via `Reload Config`. Neither hyper + `R` nor
+`hs -c "hs.reload()"` works yet: the hotkey is bound by `init.lua`, and the `hs` CLI only
+works because of the `require("hs.ipc")` at the top of it. This config has to be loaded
+once before either exists. Both work from then on.
 
 ## Makefile targets
 
