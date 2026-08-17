@@ -226,11 +226,11 @@ local function collectWindows()
 end
 
 -- Backed by the real window-server order. Hammerspoon is excluded because it is frontmost when this runs from the Console, and would always take slot 1
+-- By pid, not by name: w:application() builds an HSapplication and logs an error whenever that lookup misses, and a miss used to keep the window rather than exclude it
 local function zOrderExcludingHammerspoon()
   local out = {}
   for _, w in ipairs(hs.window.orderedWindows()) do
-    local app = w:application()
-    if not app or app:name() ~= "Hammerspoon" then out[#out + 1] = w end
+    if w:pid() ~= hs.processInfo.processID then out[#out + 1] = w end
   end
   return out
 end
