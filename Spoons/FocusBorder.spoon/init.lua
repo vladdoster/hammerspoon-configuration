@@ -418,11 +418,10 @@ function obj:attachToApp(win)
 end
 
 -- The canvas is a window, and mistaken for the focused one it would draw around itself forever, so start() rejects Hammerspoon on the filter and every candidate is checked here
+-- By pid, not by name: refresh() reads focusedWindow() directly and bypasses the filter, so this is the only guard there, and win:application() would fail open on the transient nil that NSRunningApplication returns even for a live process
 function obj:isOwnWindow(win)
-  local okA, app = pcall(win.application, win)
-  if not okA or not app then return false end
-  local okN, name = pcall(app.name, app)
-  return okN and name == "Hammerspoon"
+  local okP, pid = pcall(win.pid, win)
+  return okP and pid == hs.processInfo.processID
 end
 
 function obj:onWindowFocused(win)
