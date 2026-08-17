@@ -288,17 +288,17 @@
       },
       {
         "def": "ClipboardHistory.menuItems",
-        "desc": "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
-        "doc": "How many recent entries to list inline in the menubar menu. Defaults to `10`.\n\n`Search…` opens the chooser over the whole history.",
+        "desc": "How many recent entries to list inline in the menubar menu. Defaults to `30`.",
+        "doc": "How many recent entries to list inline in the menubar menu. Defaults to `30`.\n\n`Search…` opens the chooser over the whole history. Capped in practice by `ClipboardHistory.historySize`, and the menu is built on demand, so a larger number costs nothing per copy.",
         "name": "menuItems",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "ClipboardHistory.menuItems",
         "stripped_doc": [
-          "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
+          "How many recent entries to list inline in the menubar menu. Defaults to `30`.",
           "",
-          "`Search…` opens the chooser over the whole history."
+          "`Search…` opens the chooser over the whole history. Capped in practice by `ClipboardHistory.historySize`, and the menu is built on demand, so a larger number costs nothing per copy."
         ],
         "type": "Variable"
       },
@@ -521,17 +521,17 @@
       },
       {
         "def": "ClipboardHistory.menuItems",
-        "desc": "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
-        "doc": "How many recent entries to list inline in the menubar menu. Defaults to `10`.\n\n`Search…` opens the chooser over the whole history.",
+        "desc": "How many recent entries to list inline in the menubar menu. Defaults to `30`.",
+        "doc": "How many recent entries to list inline in the menubar menu. Defaults to `30`.\n\n`Search…` opens the chooser over the whole history. Capped in practice by `ClipboardHistory.historySize`, and the menu is built on demand, so a larger number costs nothing per copy.",
         "name": "menuItems",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "ClipboardHistory.menuItems",
         "stripped_doc": [
-          "How many recent entries to list inline in the menubar menu. Defaults to `10`.",
+          "How many recent entries to list inline in the menubar menu. Defaults to `30`.",
           "",
-          "`Search…` opens the chooser over the whole history."
+          "`Search…` opens the chooser over the whole history. Capped in practice by `ClipboardHistory.historySize`, and the menu is built on demand, so a larger number costs nothing per copy."
         ],
         "type": "Variable"
       },

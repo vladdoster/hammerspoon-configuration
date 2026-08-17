@@ -49,10 +49,10 @@ obj.labelLength = 80
 
 --- ClipboardHistory.menuItems
 --- Variable
---- How many recent entries to list inline in the menubar menu. Defaults to `10`.
+--- How many recent entries to list inline in the menubar menu. Defaults to `30`.
 ---
---- `Search…` opens the chooser over the whole history.
-obj.menuItems = 10
+--- `Search…` opens the chooser over the whole history. Capped in practice by `ClipboardHistory.historySize`, and the menu is built on demand, so a larger number costs nothing per copy.
+obj.menuItems = 30
 
 --- ClipboardHistory.saveDelay
 --- Variable
