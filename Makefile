@@ -9,11 +9,6 @@ help: ## Display all Makfile targets
 	| sort \
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-install-luaformatter: ## Install luaformatter via luarocks
-	luarocks install \
-		--server https://luarocks.org/dev \
-		luaformatter
-
 format: ## Run stylua
 	stylua \
 		--call-parentheses Always \
