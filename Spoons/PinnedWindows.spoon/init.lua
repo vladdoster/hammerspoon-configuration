@@ -687,19 +687,31 @@ end
 
 -- Menubar
 
+-- SF Symbols pin, pin.fill and pin.slash. They are reachable only as private-use codepoints rendered in the menu bar font, since hs.image cannot resolve them by name
+-- SF Pro is an Apple download rather than part of macOS, so without it these render as missing-glyph boxes
+local PIN_EMPTY = utf8.char(0x1003A6)
+local PIN_FILLED = utf8.char(0x1003A7)
+local PIN_DENIED = utf8.char(0x1003A8)
+
+-- Styled for the size only. Leaving the colour out is what keeps AppKit's own menubar label colour, and with it light and dark appearance for free
+local MENUBAR_FONT = { name = hs.styledtext.defaultFonts.menuBar.name, size = 14 }
+
 function obj:updateMenubarTitle()
   if not self.menubarItem then return end
+  local function setTitle(text)
+    self.menubarItem:setTitle(hs.styledtext.new(text, { font = MENUBAR_FONT }))
+  end
   if not hs.accessibilityState() then
-    self.menubarItem:setTitle("◇!")
+    setTitle(PIN_DENIED)
     self.menubarItem:setTooltip("Pinned Windows - Accessibility permission is not granted")
     return
   end
   if self.pinnedCount == 0 then
-    self.menubarItem:setTitle("◇")
+    setTitle(PIN_EMPTY)
     self.menubarItem:setTooltip("Pinned Windows - nothing pinned")
     return
   end
-  self.menubarItem:setTitle(self.pinnedCount == 1 and "◆" or ("◆" .. self.pinnedCount))
+  setTitle(self.pinnedCount == 1 and PIN_FILLED or (PIN_FILLED .. self.pinnedCount))
   local lines = {}
   for _, e in ipairs(self:sortedPins()) do
     lines[#lines + 1] = e.appName .. " - " .. (e.title ~= "" and e.title or "(untitled)")
