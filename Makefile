@@ -10,10 +10,11 @@ help: ## Display all Makfile targets
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 format-md: ## Format markdown via mdformat
-	@uvx --with mdformat-gfm mdformat --wrap 120 README.md
+	uvx --with mdformat-gfm mdformat --wrap 120 README.md
+	@echo "\033[36mFormatted markdown\033[0m"
 
 format-lua: ## Format lua via stylua
-	@stylua \
+	stylua \
 		--call-parentheses Always \
 		--collapse-simple-statement ConditionalOnly \
 		--column-width 120 \
@@ -24,6 +25,7 @@ format-lua: ## Format lua via stylua
 		--quote-style AutoPreferDouble \
 		--sort-requires \
 		$(LUA_FILES)
+	@echo "\033[36mFormatted lua\033[0m"
 
 format: format-lua format-md ## Format lua and markdown
 
