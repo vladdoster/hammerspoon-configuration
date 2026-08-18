@@ -41,6 +41,11 @@ nowhere else.
 Requires [Hammerspoon](https://www.hammerspoon.org/). The window Spoons need the Accessibility permission that
 Hammerspoon prompts for on first launch.
 
+The menubar icons are SF Symbols, drawn as private-use codepoints from [SF Pro](https://developer.apple.com/fonts/),
+which is an Apple download rather than part of macOS. Without that font installed, BatteryMonitor, ClipboardHistory,
+PinnedWindows and SummonWindow show missing-glyph boxes in the menubar; set each Spoon's `menubarTitle` to a character
+of your own if you would rather not install it.
+
 That first launch also creates `~/.hammerspoon/init.lua`, so cloning straight into `~/.hammerspoon` fails on a non-empty
 directory. Clone elsewhere and swap it in:
 
