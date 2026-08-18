@@ -1,3 +1,5 @@
+<!-- vim: set expandtab filetype=markdown shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120: -->
+
 # hammerspoon configuration
 
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/vladdoster/hammerspoon-configuration)

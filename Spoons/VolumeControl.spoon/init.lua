@@ -1,3 +1,4 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120:
 --- === VolumeControl ===
 ---
 --- Steps the default output device's volume from a hotkey, with an on-screen readout.

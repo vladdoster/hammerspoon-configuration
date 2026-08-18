@@ -1,3 +1,4 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120:
 --- === DeleteSpace ===
 ---
 --- Lists Mission Control Spaces with their managed window counts, and deletes the one you pick.

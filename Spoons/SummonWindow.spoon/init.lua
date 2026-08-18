@@ -1,3 +1,4 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120:
 --- === SummonWindow ===
 ---
 --- Brings a window from another Mission Control Space to the one you are on.

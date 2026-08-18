@@ -1,3 +1,4 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120:
 --- === PinnedWindows ===
 ---
 --- A menubar item for pinning windows: always on top, locked size, locked position.

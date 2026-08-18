@@ -1,4 +1,4 @@
--- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120:
 local obj = {}
 obj.__index = obj
 

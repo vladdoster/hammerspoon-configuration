@@ -222,3 +222,5 @@
 ### maint
 
 * add commit prefix `feat` to release rules ([9966815](https://github.com/vladdoster/hammerspoon-configuration/commit/99668156cbd68170354c8e8570ff09631b268518))
+
+<!-- vim: set expandtab filetype=markdown shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120: -->

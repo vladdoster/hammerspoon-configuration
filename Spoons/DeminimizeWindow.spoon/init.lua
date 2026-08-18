@@ -1,3 +1,4 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120:
 --- === DeminimizeWindow ===
 ---
 --- Brings a minimized window back, onto the Space you are on rather than the one it left.

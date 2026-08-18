@@ -1,4 +1,4 @@
-# vim: set fenc=utf8 ffs=unix ft=make list noet sw=2 ts=2 tw=100:
+# vim: set fileencoding=utf8 fileformats=unix filetype=make list noexpandtab shiftwidth=2 tabstop=2 textwidth=100:
 SHELL = /bin/zsh
 .ONESHELL:
 

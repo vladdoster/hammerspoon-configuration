@@ -1,3 +1,4 @@
+# vim: set expandtab filetype=yaml shiftwidth=2 softtabstop=2 tabstop=2:
 name: Release
 
 on:

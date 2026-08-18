@@ -1,3 +1,4 @@
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120:
 --- === FocusBorder ===
 ---
 --- Draws a red border around the focused window, hidden while that window is fullscreen.

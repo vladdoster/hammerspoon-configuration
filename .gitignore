@@ -1,3 +1,4 @@
+# vim: set expandtab filetype=gitignore shiftwidth=2 softtabstop=2 tabstop=2:
 Spoons/*
 !Spoons/BatteryMonitor.spoon
 !Spoons/ClipboardHistory.spoon

@@ -1,4 +1,4 @@
--- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2:
+-- vim: set expandtab filetype=lua shiftwidth=2 softtabstop=2 tabstop=2 textwidth=120:
 -- a more modern take on https://github.com/szymonkaliski/Dotfiles/blob/ae42c100a56c26bc65f6e3ca2ad36e30b558ba10/Dotfiles/hammerspoon/utils/spaces/dots.lua
 local canvas = require("hs.canvas")
 local screen = require("hs.screen")
