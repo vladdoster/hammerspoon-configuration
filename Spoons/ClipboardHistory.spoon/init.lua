@@ -79,15 +79,25 @@ obj.showInMenubar = true
 
 --- ClipboardHistory.menubarTitle
 --- Variable
---- Menubar title while recording. Defaults to a clipboard glyph.
-obj.menubarTitle = "📋"
+--- Menubar title while recording. Defaults to the SF Symbols `doc.on.clipboard` glyph.
+---
+--- SF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.
+--- They are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box.
+obj.menubarTitle = utf8.char(0x100243)
 
 --- ClipboardHistory.menubarTitlePaused
 --- Variable
---- Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.
+--- Menubar title while recording is paused. Defaults to the clipboard glyph followed by `pause.fill`.
 ---
 --- Deliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.
-obj.menubarTitlePaused = "📋⏸"
+obj.menubarTitlePaused = utf8.char(0x100243) .. utf8.char(0x100286)
+
+--- ClipboardHistory.menubarFont
+--- Variable
+--- Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.
+---
+--- No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.
+obj.menubarFont = { name = hs.styledtext.defaultFonts.menuBar.name, size = 14 }
 
 --- ClipboardHistory.ignoredIdentifiers
 --- Variable
@@ -495,7 +505,9 @@ end
 
 function obj:updateMenubar()
   if not self.menubarItem then return end
-  self.menubarItem:setTitle(self.paused and self.menubarTitlePaused or self.menubarTitle)
+  -- Styled for the size only. Leaving the colour out is what keeps AppKit's own menubar label colour, and with it light and dark appearance for free
+  local title = self.paused and self.menubarTitlePaused or self.menubarTitle
+  self.menubarItem:setTitle(hs.styledtext.new(title, { font = self.menubarFont }))
   self.menubarItem:setTooltip(
     self.paused and "Clipboard recording is paused" or string.format("%d clipboard entries", #self.items)
   )

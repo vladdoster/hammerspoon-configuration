@@ -363,31 +363,50 @@
       },
       {
         "def": "ClipboardHistory.menubarTitle",
-        "desc": "Menubar title while recording. Defaults to a clipboard glyph.",
-        "doc": "Menubar title while recording. Defaults to a clipboard glyph.",
+        "desc": "Menubar title while recording. Defaults to the SF Symbols `doc.on.clipboard` glyph.",
+        "doc": "Menubar title while recording. Defaults to the SF Symbols `doc.on.clipboard` glyph.\n\nSF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.\nThey are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box.",
         "name": "menubarTitle",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "ClipboardHistory.menubarTitle",
         "stripped_doc": [
-          "Menubar title while recording. Defaults to a clipboard glyph."
+          "Menubar title while recording. Defaults to the SF Symbols `doc.on.clipboard` glyph.",
+          "",
+          "SF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.",
+          "They are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box."
         ],
         "type": "Variable"
       },
       {
         "def": "ClipboardHistory.menubarTitlePaused",
-        "desc": "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
-        "doc": "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.\n\nDeliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.",
+        "desc": "Menubar title while recording is paused. Defaults to the clipboard glyph followed by `pause.fill`.",
+        "doc": "Menubar title while recording is paused. Defaults to the clipboard glyph followed by `pause.fill`.\n\nDeliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.",
         "name": "menubarTitlePaused",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "ClipboardHistory.menubarTitlePaused",
         "stripped_doc": [
-          "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
+          "Menubar title while recording is paused. Defaults to the clipboard glyph followed by `pause.fill`.",
           "",
           "Deliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.menubarFont",
+        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "name": "menubarFont",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.menubarFont",
+        "stripped_doc": [
+          "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+          "",
+          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
         ],
         "type": "Variable"
       },
@@ -536,30 +555,49 @@
         "type": "Variable"
       },
       {
+        "def": "ClipboardHistory.menubarFont",
+        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "name": "menubarFont",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.menubarFont",
+        "stripped_doc": [
+          "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+          "",
+          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
+        ],
+        "type": "Variable"
+      },
+      {
         "def": "ClipboardHistory.menubarTitle",
-        "desc": "Menubar title while recording. Defaults to a clipboard glyph.",
-        "doc": "Menubar title while recording. Defaults to a clipboard glyph.",
+        "desc": "Menubar title while recording. Defaults to the SF Symbols `doc.on.clipboard` glyph.",
+        "doc": "Menubar title while recording. Defaults to the SF Symbols `doc.on.clipboard` glyph.\n\nSF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.\nThey are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box.",
         "name": "menubarTitle",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "ClipboardHistory.menubarTitle",
         "stripped_doc": [
-          "Menubar title while recording. Defaults to a clipboard glyph."
+          "Menubar title while recording. Defaults to the SF Symbols `doc.on.clipboard` glyph.",
+          "",
+          "SF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.",
+          "They are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box."
         ],
         "type": "Variable"
       },
       {
         "def": "ClipboardHistory.menubarTitlePaused",
-        "desc": "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
-        "doc": "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.\n\nDeliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.",
+        "desc": "Menubar title while recording is paused. Defaults to the clipboard glyph followed by `pause.fill`.",
+        "doc": "Menubar title while recording is paused. Defaults to the clipboard glyph followed by `pause.fill`.\n\nDeliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off.",
         "name": "menubarTitlePaused",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "ClipboardHistory.menubarTitlePaused",
         "stripped_doc": [
-          "Menubar title while recording is paused. Defaults to a clipboard glyph with a pause sign.",
+          "Menubar title while recording is paused. Defaults to the clipboard glyph followed by `pause.fill`.",
           "",
           "Deliberately different from `ClipboardHistory.menubarTitle`, so a paused recorder is obviously off."
         ],
