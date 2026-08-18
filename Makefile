@@ -9,8 +9,11 @@ help: ## Display all Makfile targets
 	| sort \
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-format: ## Run stylua
-	stylua \
+format-md: ## Format markdown via mdformat
+	@uvx --with mdformat-gfm mdformat --wrap 120 README.md
+
+format-lua: ## Format lua via stylua
+	@stylua \
 		--call-parentheses Always \
 		--collapse-simple-statement ConditionalOnly \
 		--column-width 120 \
@@ -20,8 +23,9 @@ format: ## Run stylua
 		--no-editorconfig \
 		--quote-style AutoPreferDouble \
 		--sort-requires \
-		--verbose \
 		$(LUA_FILES)
+
+format: format-lua format-md ## Format lua and markdown
 
 # Spoons that live here as source rather than as SpoonInstall downloads. Keep this list in
 # sync with the !Spoons/*.spoon negations in .gitignore -- both encode the same fact, and
