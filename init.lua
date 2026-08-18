@@ -19,6 +19,7 @@ spoon.SpoonInstall:andUse(
   "DeminimizeWindow",
   { hotkeys = { restore = { { "cmd", "alt", "ctrl" }, "M" } }, start = true }
 )
+spoon.SpoonInstall:andUse("DeleteSpace", { hotkeys = { show = { { "cmd", "alt", "ctrl" }, "S" } }, start = true })
 spoon.SpoonInstall:andUse("FocusBorder", { start = true })
 spoon.SpoonInstall:andUse(
   "PinnedWindows",

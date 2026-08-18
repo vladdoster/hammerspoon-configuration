@@ -3,7 +3,7 @@
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/vladdoster/hammerspoon-configuration)
 [![Release](https://github.com/vladdoster/hammerspoon-configuration/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/vladdoster/hammerspoon-configuration/actions/workflows/release.yml)
 
-My `~/.hammerspoon`. Seven self-contained Spoons, wired together in `init.lua`.
+My `~/.hammerspoon`. Eight self-contained Spoons, wired together in `init.lua`.
 
 ## Features
 
@@ -11,6 +11,7 @@ My `~/.hammerspoon`. Seven self-contained Spoons, wired together in `init.lua`.
 | ------------------ | ---------------------------------------------------------------------------- |
 | `BatteryMonitor`   | Menubar battery readout, plus spoken and on-screen alerts on charge levels   |
 | `ClipboardHistory` | Searchable clipboard history that survives a Hammerspoon restart             |
+| `DeleteSpace`      | Deletes a Mission Control Space, listed with its managed window count        |
 | `DeminimizeWindow` | Restores a minimized window onto the Space you are on, not the one it left   |
 | `FocusBorder`      | Red border around the focused window, hidden while that window is fullscreen |
 | `PinnedWindows`    | Menubar item for pinning windows: always on top, locked size and position    |
@@ -28,6 +29,7 @@ Hyper is `cmd+alt+ctrl`, defined in `ext/keybind.lua`. `PinnedWindows` and `Summ
 | hyper + `C`         | Show clipboard history             |
 | hyper + `M`         | Restore a minimized window         |
 | hyper + `Up`/`Down` | Raise / lower output volume        |
+| hyper + `S`         | Delete a Mission Control Space     |
 | `cmd+alt+shift`+`P` | Toggle pin on the focused window   |
 | `cmd+alt+shift`+`S` | Summon a window from another Space |
 
