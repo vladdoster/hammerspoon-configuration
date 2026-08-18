@@ -91,8 +91,18 @@ obj.showInMenubar = true
 
 --- SummonWindow.menubarTitle
 --- Variable
---- Glyph shown in the menubar. Defaults to `'⧉'`.
-obj.menubarTitle = "⧉"
+--- Glyph shown in the menubar. Defaults to the SF Symbols `macwindow` glyph.
+---
+--- SF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.
+--- They are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box.
+obj.menubarTitle = utf8.char(0x1003DC)
+
+--- SummonWindow.menubarFont
+--- Variable
+--- Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.
+---
+--- No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.
+obj.menubarFont = { name = hs.styledtext.defaultFonts.menuBar.name, size = 14 }
 
 --- SummonWindow.useYabai
 --- Variable
@@ -1394,7 +1404,8 @@ function obj:start()
     -- The autosave name keys the saved menu bar position: unique, and never renamed
     self.menubarItem = hs.menubar.new(true, "summonwindow")
     if self.menubarItem then
-      self.menubarItem:setTitle(self.menubarTitle)
+      -- Styled for the size only. Leaving the colour out is what keeps AppKit's own menubar label colour, and with it light and dark appearance for free
+      self.menubarItem:setTitle(hs.styledtext.new(self.menubarTitle, { font = self.menubarFont }))
       self.menubarItem:setTooltip("Summon a window from another Space")
       -- Wrapped: a throw inside the menu callback would leave a dead menubar icon. Setting a menu also disables setClickCallback by design, so "Search…" is what opens the chooser
       self.menubarItem:setMenu(function(mods)

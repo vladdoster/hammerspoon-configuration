@@ -487,15 +487,34 @@
       },
       {
         "def": "SummonWindow.menubarTitle",
-        "desc": "Glyph shown in the menubar. Defaults to `'⧉'`.",
-        "doc": "Glyph shown in the menubar. Defaults to `'⧉'`.",
+        "desc": "Glyph shown in the menubar. Defaults to the SF Symbols `macwindow` glyph.",
+        "doc": "Glyph shown in the menubar. Defaults to the SF Symbols `macwindow` glyph.\n\nSF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.\nThey are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box.",
         "name": "menubarTitle",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "SummonWindow.menubarTitle",
         "stripped_doc": [
-          "Glyph shown in the menubar. Defaults to `'⧉'`."
+          "Glyph shown in the menubar. Defaults to the SF Symbols `macwindow` glyph.",
+          "",
+          "SF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.",
+          "They are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "SummonWindow.menubarFont",
+        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "name": "menubarFont",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "SummonWindow.menubarFont",
+        "stripped_doc": [
+          "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+          "",
+          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
         ],
         "type": "Variable"
       },
@@ -794,16 +813,35 @@
         "type": "Variable"
       },
       {
+        "def": "SummonWindow.menubarFont",
+        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "name": "menubarFont",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "SummonWindow.menubarFont",
+        "stripped_doc": [
+          "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+          "",
+          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
+        ],
+        "type": "Variable"
+      },
+      {
         "def": "SummonWindow.menubarTitle",
-        "desc": "Glyph shown in the menubar. Defaults to `'⧉'`.",
-        "doc": "Glyph shown in the menubar. Defaults to `'⧉'`.",
+        "desc": "Glyph shown in the menubar. Defaults to the SF Symbols `macwindow` glyph.",
+        "doc": "Glyph shown in the menubar. Defaults to the SF Symbols `macwindow` glyph.\n\nSF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.\nThey are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box.",
         "name": "menubarTitle",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "SummonWindow.menubarTitle",
         "stripped_doc": [
-          "Glyph shown in the menubar. Defaults to `'⧉'`."
+          "Glyph shown in the menubar. Defaults to the SF Symbols `macwindow` glyph.",
+          "",
+          "SF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.",
+          "They are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box."
         ],
         "type": "Variable"
       },
