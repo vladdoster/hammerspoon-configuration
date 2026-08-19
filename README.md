@@ -17,12 +17,12 @@ because `hs.spaces.moveWindowToSpace()` has been a silent no-op since macOS 15. 
 | ------------------ | --------------------------------------------------------------------------------- |
 | `BatteryMonitor`   | Menubar battery readout, plus spoken and on-screen alerts on charge and time left |
 | `ClipboardHistory` | Searchable clipboard history that survives a Hammerspoon restart                  |
-| `DeleteSpace`      | Deletes a Mission Control Space, listed with its window count                     |
 | `DeminimizeWindow` | Restores a minimized window, onto the Space you are on when yabai is installed    |
 | `FocusBorder`      | Red border around the focused window, hidden while that window is fullscreen      |
 | `PinnedWindows`    | Menubar item for pinning windows: kept on top, locked size and position           |
 | `SummonWindow`     | Pulls a window from another Mission Control Space onto the current one            |
 | `VolumeControl`    | Steps the default output device's volume, with an on-screen readout               |
+| `Yabai`            | Modal verb-then-noun grammar for Spaces and windows, with a which-key panel       |
 
 Five put an item in the menubar as shipped. `DeminimizeWindow` has one but leaves it off by default; `FocusBorder` and
 `VolumeControl` have none.
@@ -34,13 +34,40 @@ Five put an item in the menubar as shipped. `DeminimizeWindow` has one but leave
 | hyper + `R`         | Reload the config                  |
 | hyper + `C`         | Show clipboard history             |
 | hyper + `M`         | Restore a minimized window         |
-| hyper + `S`         | Delete a Mission Control Space     |
+| hyper + `Y`         | Enter the Space and window modal   |
 | hyper + `Up`/`Down` | Raise / lower output volume        |
 | `cmd+alt+shift`+`P` | Toggle pin on the focused window   |
 | `cmd+alt+shift`+`S` | Summon a window from another Space |
 
 Hyper is `cmd+alt+ctrl`. `PinnedWindows` and `SummonWindow` deliberately use `cmd+alt+shift` instead, to stay clear of
 the hyper chords.
+
+### The Yabai modal
+
+hyper + `Y` is a leader rather than a command. It enters an `hs.hotkey.modal` where one key names the verb and one
+further key names each operand that verb takes, so `f3` focuses Desktop 3 and `ma3` moves window `a` onto Space 3. A
+panel lists what the next key can be, drawn after a fifth of a second so a sequence typed from memory never puts
+anything on screen.
+
+| Key | Verb                   | Then                 |
+| --- | ---------------------- | -------------------- |
+| `f` | Focus Space            | Space                |
+| `c` | Create Space           | display              |
+| `d` | Delete Space           | Space                |
+| `r` | Reorder Space          | Space, then position |
+| `s` | Send Space to Display  | Space, then display  |
+| `w` | Focus Window           | window               |
+| `m` | Move Window to Space   | window, then Space   |
+| `p` | Push Window to Display | window, then display |
+
+Spaces, displays and positions answer to the number Mission Control already gives them; windows are lettered from the
+home row out. Anything that cannot be picked, such as the Space a window is already on, is listed dimmed and keyless.
+The two send-to-display verbs are omitted outright on a single-screen machine.
+
+`esc` and `delete` pop one level and leave from the top, `/` hands the half-finished operation to the chooser (where a
+long window title is easier to type than to hunt for), and five seconds of doing nothing leaves by itself. Every letter
+and digit belongs to the modal while it is up, so a stray keystroke is swallowed and named in the panel rather than
+reaching the window underneath.
 
 Every binding is assigned in `init.lua`, so change a key there. Note that each Spoon line spells its modifiers out as a
 literal table: `ext/keybind.lua` exports an `M.hyper`, but only the hyper + `R` reload binding reads it, so editing that
@@ -57,14 +84,14 @@ Spoons need the Accessibility permission Hammerspoon prompts for on first launch
 
 ### yabai, for anything crossing a Space
 
-`SummonWindow`, `DeminimizeWindow` and `DeleteSpace` shell out to [yabai](https://github.com/koekeishiya/yabai) when it
-is present. It is optional and its absence is never reported as an error, but the three degrade differently:
+`SummonWindow`, `DeminimizeWindow` and `Yabai` shell out to [yabai](https://github.com/koekeishiya/yabai) when it is
+present. It is optional and its absence is never reported as an error, but the three degrade differently:
 
 | Spoon              | Without yabai                                                                      |
 | ------------------ | ---------------------------------------------------------------------------------- |
 | `SummonWindow`     | Falls back to a slower rung that borrows the mouse pointer                         |
 | `DeminimizeWindow` | Cannot place the window on your current Space; it reappears where it was minimized |
-| `DeleteSpace`      | Loses its managed-window counts and its non-Mission-Control delete                 |
+| `Yabai`            | Loses reordering and send-to-display entirely; the rest falls back to `hs.spaces`  |
 
 yabai's window-moving needs its scripting addition, which needs System Integrity Protection partially disabled:
 

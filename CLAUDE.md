@@ -22,12 +22,16 @@ Lint runs only as a job in the release workflow; there is no push/PR CI and noth
 
 ### Spoons/ (the real code)
 
-Seven first-party Spoons (BatteryMonitor, ClipboardHistory, DeminimizeWindow, FocusBorder, PinnedWindows, SummonWindow, VolumeControl) plus `SpoonInstall.spoon`, which is vendored upstream: do not edit it by hand, and leave its `docs.json` as shipped. Each first-party Spoon follows the standard Spoon shape: an `obj` table with `name`/`version`/`author`/`license` metadata, `obj.logger`, documented config variables, and `start()`/`stop()`/`bindHotkeys()`.
+The first-party Spoons (BatteryMonitor, ClipboardHistory, DeminimizeWindow, FocusBorder, PinnedWindows, SummonWindow, VolumeControl, Yabai) plus `SpoonInstall.spoon`, which is vendored upstream: do not edit it by hand, and leave its `docs.json` as shipped. Each first-party Spoon follows the standard Spoon shape: an `obj` table with `name`/`version`/`author`/`license` metadata, `obj.logger`, documented config variables, and `start()`/`stop()`/`bindHotkeys()`.
 
 - Spoons are deliberately self-contained. Duplication between them is intentional; do not extract shared modules.
 - `make docs` skips SpoonInstall, but `make format` does not: `LUA_FILES` sweeps the whole tree, so the vendored source has already been reformatted and an upstream re-pull will conflict on it.
 - LuaDoc `---` blocks are the source for the generated `docs.json`. After changing them or a Spoon's public API, run `make docs`; never hand-edit `docs.json`.
 - Three places encode the first-party Spoon list and must stay in sync: `KEEP_SPOONS` in the Makefile, the `!Spoons/*.spoon` negations in `.gitignore`, and the `andUse` calls in `init.lua`. A Spoon missing from `KEEP_SPOONS` is a Spoon `make clean` deletes.
+
+### yabai (optional)
+
+`DeminimizeWindow`, `SummonWindow` and `Yabai` use `yabai` when it is installed and fall back to `hs.spaces` when it is not. Mind the split: yabai answers queries over its socket with no special privileges, but mutating Spaces goes through its scripting addition, a separate install. A machine can list Spaces through yabai and still fail to destroy one, so every mutation needs a fallback behind it, not just the absent-yabai case.
 
 ### ext/ (mostly dormant)
 
