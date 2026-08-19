@@ -1,0 +1,476 @@
+[
+  {
+    "Command": [],
+    "Constant": [],
+    "Constructor": [],
+    "Deprecated": [],
+    "Field": [],
+    "Function": [],
+    "Method": [
+      {
+        "def": "PictureInPicture:init() -> self",
+        "desc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "doc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The PictureInPicture object\n\nDeliberately starts nothing. The menubar item and the application watcher both belong to `PictureInPicture:start()`.",
+        "name": "init",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object",
+          "",
+          "Deliberately starts nothing. The menubar item and the application watcher both belong to `PictureInPicture:start()`."
+        ],
+        "signature": "PictureInPicture:init() -> self",
+        "stripped_doc": [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:toggle() -> self",
+        "desc": "Puts the front tab's video into Picture in Picture, or takes it out again.",
+        "doc": "Puts the front tab's video into Picture in Picture, or takes it out again.\n\nParameters:\n * None\n\nReturns:\n * The PictureInPicture object\n\nDoes nothing but say so when the focused window belongs to neither Safari nor Google Chrome. Nothing is sent in that case, so an unsupported application is never asked for permission it does not need to grant.\n\nWhat \"does it\" means differs by browser. Safari is told outright, and answers, so a page with no video says so. Chrome is only handed `PictureInPicture.chromeShortcut` and never replies, so a missing extension, a page with no video and a working toggle are indistinguishable from here.",
+        "name": "toggle",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object",
+          "",
+          "Does nothing but say so when the focused window belongs to neither Safari nor Google Chrome. Nothing is sent in that case, so an unsupported application is never asked for permission it does not need to grant.",
+          "",
+          "What \"does it\" means differs by browser. Safari is told outright, and answers, so a page with no video says so. Chrome is only handed `PictureInPicture.chromeShortcut` and never replies, so a missing extension, a page with no video and a working toggle are indistinguishable from here."
+        ],
+        "signature": "PictureInPicture:toggle() -> self",
+        "stripped_doc": [
+          "Puts the front tab's video into Picture in Picture, or takes it out again.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:start() -> self",
+        "desc": "Places the menubar item and begins tracking which application is in front.",
+        "doc": "Places the menubar item and begins tracking which application is in front.\n\nParameters:\n * None\n\nReturns:\n * The PictureInPicture object",
+        "name": "start",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object"
+        ],
+        "signature": "PictureInPicture:start() -> self",
+        "stripped_doc": [
+          "Places the menubar item and begins tracking which application is in front.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:stop() -> self",
+        "desc": "Stops tracking the front application and removes the menubar item.",
+        "doc": "Stops tracking the front application and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The PictureInPicture object\n\nClears the record of which browsers were refusing Apple Events, so turning the setting on and reloading re-probes rather than believing what it was told last time.\nAny hotkeys bound with `PictureInPicture:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object",
+          "",
+          "Clears the record of which browsers were refusing Apple Events, so turning the setting on and reloading re-probes rather than believing what it was told last time.",
+          "Any hotkeys bound with `PictureInPicture:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
+        ],
+        "signature": "PictureInPicture:stop() -> self",
+        "stripped_doc": [
+          "Stops tracking the front application and removes the menubar item.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for this Spoon.",
+        "doc": "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier/key details for the following items:\n   * toggle - put the front tab's video into Picture in Picture, or take it out again\n\nReturns:\n * The PictureInPicture object\n\nFor example: `spoon.PictureInPicture:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"ctrl\" }, \"P\" } })`",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - a table containing hotkey modifier/key details for the following items:",
+          "   * toggle - put the front tab's video into Picture in Picture, or take it out again",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object",
+          "",
+          "For example: `spoon.PictureInPicture:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"ctrl\" }, \"P\" } })`"
+        ],
+        "signature": "PictureInPicture:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for this Spoon.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:status() -> table",
+        "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `frontBundle`, `browser`, `chromeShortcut` and `blocked` keys\n\n`browser` is nil whenever the front application is neither Safari nor Google Chrome, which is exactly when `PictureInPicture:toggle()` declines to do anything. `blocked` lists the browsers that have refused to run JavaScript from an Apple Event since the Spoon last started.",
+        "name": "status",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * A table with `running`, `menubar`, `frontBundle`, `browser`, `chromeShortcut` and `blocked` keys",
+          "",
+          "`browser` is nil whenever the front application is neither Safari nor Google Chrome, which is exactly when `PictureInPicture:toggle()` declines to do anything. `blocked` lists the browsers that have refused to run JavaScript from an Apple Event since the Spoon last started."
+        ],
+        "signature": "PictureInPicture:status() -> table",
+        "stripped_doc": [
+          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+          ""
+        ],
+        "type": "Method"
+      }
+    ],
+    "Variable": [
+      {
+        "def": "PictureInPicture.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.logger",
+        "stripped_doc": [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.showInMenubar",
+        "desc": "Whether to place an item in the menubar. Defaults to `true`.",
+        "doc": "Whether to place an item in the menubar. Defaults to `true`.",
+        "name": "showInMenubar",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.showInMenubar",
+        "stripped_doc": [
+          "Whether to place an item in the menubar. Defaults to `true`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.menubarTitle",
+        "desc": "Menubar title. Defaults to the SF Symbols `pip.enter` glyph.",
+        "doc": "Menubar title. Defaults to the SF Symbols `pip.enter` glyph.\n\nSF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.\nThey are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box.",
+        "name": "menubarTitle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.menubarTitle",
+        "stripped_doc": [
+          "Menubar title. Defaults to the SF Symbols `pip.enter` glyph.",
+          "",
+          "SF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.",
+          "They are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.menubarFont",
+        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "name": "menubarFont",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.menubarFont",
+        "stripped_doc": [
+          "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+          "",
+          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.alertDuration",
+        "desc": "Seconds an alert stays on screen. Defaults to `2`.",
+        "doc": "Seconds an alert stays on screen. Defaults to `2`.",
+        "name": "alertDuration",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.alertDuration",
+        "stripped_doc": [
+          "Seconds an alert stays on screen. Defaults to `2`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.chromeShortcut",
+        "desc": "The Chrome shortcut to forward, as `{ modifiers, key }`. Defaults to `{ { \"alt\" }, \"p\" }`.",
+        "doc": "The Chrome shortcut to forward, as `{ modifiers, key }`. Defaults to `{ { \"alt\" }, \"p\" }`.\n\nThis is Chrome's whole Picture in Picture story: the browser will not let an outside caller enter it, but it will act on its own shortcut, and invoking an extension action is a user gesture as far as the page is concerned.\nThe default matches the suggested key of Google's Picture-in-Picture extension. Change it here to whatever `chrome://extensions/shortcuts` says, since the two have to agree and only Chrome knows the truth.\nNothing verifies the extension is installed, because nothing outside Chrome can: a missing extension makes this a silent no-op.",
+        "name": "chromeShortcut",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.chromeShortcut",
+        "stripped_doc": [
+          "The Chrome shortcut to forward, as `{ modifiers, key }`. Defaults to `{ { \"alt\" }, \"p\" }`.",
+          "",
+          "This is Chrome's whole Picture in Picture story: the browser will not let an outside caller enter it, but it will act on its own shortcut, and invoking an extension action is a user gesture as far as the page is concerned.",
+          "The default matches the suggested key of Google's Picture-in-Picture extension. Change it here to whatever `chrome://extensions/shortcuts` says, since the two have to agree and only Chrome knows the truth.",
+          "Nothing verifies the extension is installed, because nothing outside Chrome can: a missing extension makes this a silent no-op."
+        ],
+        "type": "Variable"
+      }
+    ],
+    "desc": "Toggles the front tab's video into and out of macOS Picture in Picture, for Safari and Google Chrome.",
+    "doc": "Toggles the front tab's video into and out of macOS Picture in Picture, for Safari and Google Chrome.\n\nThe two browsers are reached by entirely different means, because only one of them can be reached at all.\n\nSafari takes an Apple Event: `do JavaScript ... in front document`, calling WebKit's own\n`webkitSetPresentationMode`. That API predates the transient-activation rule, so it answers a script with no user\ngesture behind it, and Safari's Picture in Picture is hosted out of process by `PIPAgent`, so entering it never\nmoves a window or takes focus from the page.\n\nChrome cannot be reached that way, and no amount of API-shopping changes it. Both `requestPictureInPicture` and\n`documentPictureInPicture.requestWindow` refuse without transient activation, which is exactly what JavaScript\ninjected through an Apple Event lacks. What Chrome will accept is one of its own shortcuts: invoking an extension\naction counts as a genuine user gesture, so Google's Picture-in-Picture extension gets the activation an outside\ncaller never can. The Chrome path is therefore a single forwarded keystroke and nothing else -- see\n`PictureInPicture.chromeShortcut`.\n\nThe asymmetry runs all the way through. Safari needs `Allow JavaScript from Apple Events` turned on and an\nAutomation permission macOS asks for once; Chrome needs neither, only the extension. Nothing here is settable from\ncode, so each failure is detected and the fix named in the alert.",
+    "items": [
+      {
+        "def": "PictureInPicture.alertDuration",
+        "desc": "Seconds an alert stays on screen. Defaults to `2`.",
+        "doc": "Seconds an alert stays on screen. Defaults to `2`.",
+        "name": "alertDuration",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.alertDuration",
+        "stripped_doc": [
+          "Seconds an alert stays on screen. Defaults to `2`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.chromeShortcut",
+        "desc": "The Chrome shortcut to forward, as `{ modifiers, key }`. Defaults to `{ { \"alt\" }, \"p\" }`.",
+        "doc": "The Chrome shortcut to forward, as `{ modifiers, key }`. Defaults to `{ { \"alt\" }, \"p\" }`.\n\nThis is Chrome's whole Picture in Picture story: the browser will not let an outside caller enter it, but it will act on its own shortcut, and invoking an extension action is a user gesture as far as the page is concerned.\nThe default matches the suggested key of Google's Picture-in-Picture extension. Change it here to whatever `chrome://extensions/shortcuts` says, since the two have to agree and only Chrome knows the truth.\nNothing verifies the extension is installed, because nothing outside Chrome can: a missing extension makes this a silent no-op.",
+        "name": "chromeShortcut",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.chromeShortcut",
+        "stripped_doc": [
+          "The Chrome shortcut to forward, as `{ modifiers, key }`. Defaults to `{ { \"alt\" }, \"p\" }`.",
+          "",
+          "This is Chrome's whole Picture in Picture story: the browser will not let an outside caller enter it, but it will act on its own shortcut, and invoking an extension action is a user gesture as far as the page is concerned.",
+          "The default matches the suggested key of Google's Picture-in-Picture extension. Change it here to whatever `chrome://extensions/shortcuts` says, since the two have to agree and only Chrome knows the truth.",
+          "Nothing verifies the extension is installed, because nothing outside Chrome can: a missing extension makes this a silent no-op."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.logger",
+        "desc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "doc": "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.",
+        "name": "logger",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.logger",
+        "stripped_doc": [
+          "Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.menubarFont",
+        "desc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+        "doc": "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
+        "name": "menubarFont",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.menubarFont",
+        "stripped_doc": [
+          "Font for the menubar title, as `hs.styledtext` understands it. Defaults to the menu bar font at 14pt.",
+          "",
+          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.menubarTitle",
+        "desc": "Menubar title. Defaults to the SF Symbols `pip.enter` glyph.",
+        "doc": "Menubar title. Defaults to the SF Symbols `pip.enter` glyph.\n\nSF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.\nThey are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box.",
+        "name": "menubarTitle",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.menubarTitle",
+        "stripped_doc": [
+          "Menubar title. Defaults to the SF Symbols `pip.enter` glyph.",
+          "",
+          "SF Symbols are reachable only as private-use codepoints rendered in the menu bar font, since `hs.image` cannot resolve them by name.",
+          "They are drawn from SF Pro, which is an Apple download rather than part of macOS: without it this renders as a missing-glyph box."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture.showInMenubar",
+        "desc": "Whether to place an item in the menubar. Defaults to `true`.",
+        "doc": "Whether to place an item in the menubar. Defaults to `true`.",
+        "name": "showInMenubar",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "PictureInPicture.showInMenubar",
+        "stripped_doc": [
+          "Whether to place an item in the menubar. Defaults to `true`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "PictureInPicture:bindHotkeys(mapping) -> self",
+        "desc": "Binds hotkeys for this Spoon.",
+        "doc": "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier/key details for the following items:\n   * toggle - put the front tab's video into Picture in Picture, or take it out again\n\nReturns:\n * The PictureInPicture object\n\nFor example: `spoon.PictureInPicture:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"ctrl\" }, \"P\" } })`",
+        "name": "bindHotkeys",
+        "notes": [],
+        "parameters": [
+          " * mapping - a table containing hotkey modifier/key details for the following items:",
+          "   * toggle - put the front tab's video into Picture in Picture, or take it out again",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object",
+          "",
+          "For example: `spoon.PictureInPicture:bindHotkeys({ toggle = { { \"cmd\", \"alt\", \"ctrl\" }, \"P\" } })`"
+        ],
+        "signature": "PictureInPicture:bindHotkeys(mapping) -> self",
+        "stripped_doc": [
+          "Binds hotkeys for this Spoon.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:init() -> self",
+        "desc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+        "doc": "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.\n\nParameters:\n * None\n\nReturns:\n * The PictureInPicture object\n\nDeliberately starts nothing. The menubar item and the application watcher both belong to `PictureInPicture:start()`.",
+        "name": "init",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object",
+          "",
+          "Deliberately starts nothing. The menubar item and the application watcher both belong to `PictureInPicture:start()`."
+        ],
+        "signature": "PictureInPicture:init() -> self",
+        "stripped_doc": [
+          "Prepares the Spoon. Called automatically by `hs.loadSpoon()`.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:start() -> self",
+        "desc": "Places the menubar item and begins tracking which application is in front.",
+        "doc": "Places the menubar item and begins tracking which application is in front.\n\nParameters:\n * None\n\nReturns:\n * The PictureInPicture object",
+        "name": "start",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object"
+        ],
+        "signature": "PictureInPicture:start() -> self",
+        "stripped_doc": [
+          "Places the menubar item and begins tracking which application is in front.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:status() -> table",
+        "desc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+        "doc": "Returns the Spoon's current state, for poking at from the Hammerspoon Console.\n\nParameters:\n * None\n\nReturns:\n * A table with `running`, `menubar`, `frontBundle`, `browser`, `chromeShortcut` and `blocked` keys\n\n`browser` is nil whenever the front application is neither Safari nor Google Chrome, which is exactly when `PictureInPicture:toggle()` declines to do anything. `blocked` lists the browsers that have refused to run JavaScript from an Apple Event since the Spoon last started.",
+        "name": "status",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * A table with `running`, `menubar`, `frontBundle`, `browser`, `chromeShortcut` and `blocked` keys",
+          "",
+          "`browser` is nil whenever the front application is neither Safari nor Google Chrome, which is exactly when `PictureInPicture:toggle()` declines to do anything. `blocked` lists the browsers that have refused to run JavaScript from an Apple Event since the Spoon last started."
+        ],
+        "signature": "PictureInPicture:status() -> table",
+        "stripped_doc": [
+          "Returns the Spoon's current state, for poking at from the Hammerspoon Console.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:stop() -> self",
+        "desc": "Stops tracking the front application and removes the menubar item.",
+        "doc": "Stops tracking the front application and removes the menubar item.\n\nParameters:\n * None\n\nReturns:\n * The PictureInPicture object\n\nClears the record of which browsers were refusing Apple Events, so turning the setting on and reloading re-probes rather than believing what it was told last time.\nAny hotkeys bound with `PictureInPicture:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone.",
+        "name": "stop",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object",
+          "",
+          "Clears the record of which browsers were refusing Apple Events, so turning the setting on and reloading re-probes rather than believing what it was told last time.",
+          "Any hotkeys bound with `PictureInPicture:bindHotkeys()` stay bound; rebind or delete them separately if you want them gone."
+        ],
+        "signature": "PictureInPicture:stop() -> self",
+        "stripped_doc": [
+          "Stops tracking the front application and removes the menubar item.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "PictureInPicture:toggle() -> self",
+        "desc": "Puts the front tab's video into Picture in Picture, or takes it out again.",
+        "doc": "Puts the front tab's video into Picture in Picture, or takes it out again.\n\nParameters:\n * None\n\nReturns:\n * The PictureInPicture object\n\nDoes nothing but say so when the focused window belongs to neither Safari nor Google Chrome. Nothing is sent in that case, so an unsupported application is never asked for permission it does not need to grant.\n\nWhat \"does it\" means differs by browser. Safari is told outright, and answers, so a page with no video says so. Chrome is only handed `PictureInPicture.chromeShortcut` and never replies, so a missing extension, a page with no video and a working toggle are indistinguishable from here.",
+        "name": "toggle",
+        "notes": [],
+        "parameters": [
+          " * None",
+          ""
+        ],
+        "returns": [
+          " * The PictureInPicture object",
+          "",
+          "Does nothing but say so when the focused window belongs to neither Safari nor Google Chrome. Nothing is sent in that case, so an unsupported application is never asked for permission it does not need to grant.",
+          "",
+          "What \"does it\" means differs by browser. Safari is told outright, and answers, so a page with no video says so. Chrome is only handed `PictureInPicture.chromeShortcut` and never replies, so a missing extension, a page with no video and a working toggle are indistinguishable from here."
+        ],
+        "signature": "PictureInPicture:toggle() -> self",
+        "stripped_doc": [
+          "Puts the front tab's video into Picture in Picture, or takes it out again.",
+          ""
+        ],
+        "type": "Method"
+      }
+    ],
+    "name": "PictureInPicture",
+    "stripped_doc": [],
+    "submodules": [],
+    "type": "Module"
+  }
+]

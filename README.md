@@ -19,12 +19,13 @@ because `hs.spaces.moveWindowToSpace()` has been a silent no-op since macOS 15. 
 | `ClipboardHistory` | Searchable clipboard history that survives a Hammerspoon restart                  |
 | `DeminimizeWindow` | Restores a minimized window, onto the Space you are on when yabai is installed    |
 | `FocusBorder`      | Red border around the focused window, hidden while that window is fullscreen      |
+| `PictureInPicture` | Toggles the front Safari or Chrome tab's video into and out of Picture in Picture |
 | `PinnedWindows`    | Menubar item for pinning windows: kept on top, locked size and position           |
 | `SummonWindow`     | Pulls a window from another Mission Control Space onto the current one            |
 | `VolumeControl`    | Steps the default output device's volume, with an on-screen readout               |
 | `Yabai`            | Modal verb-then-noun grammar for Spaces and windows, with a which-key panel       |
 
-Five put an item in the menubar as shipped. `DeminimizeWindow` has one but leaves it off by default; `FocusBorder` and
+Six put an item in the menubar as shipped. `DeminimizeWindow` has one but leaves it off by default; `FocusBorder` and
 `VolumeControl` have none.
 
 ## Hotkeys
@@ -36,6 +37,7 @@ Five put an item in the menubar as shipped. `DeminimizeWindow` has one but leave
 | hyper + `M`         | Restore a minimized window         |
 | hyper + `Y`         | Enter the Space and window modal   |
 | hyper + `Up`/`Down` | Raise / lower output volume        |
+| hyper + `P`         | Toggle Picture in Picture          |
 | `cmd+alt+shift`+`P` | Toggle pin on the focused window   |
 | `cmd+alt+shift`+`S` | Summon a window from another Space |
 
@@ -81,6 +83,33 @@ relevant `hotkeys` table in `init.lua` to reach them.
 
 [Hammerspoon](https://www.hammerspoon.org/), running. Developed against Hammerspoon 1.1.1 on macOS 26.6.1. The window
 Spoons need the Accessibility permission Hammerspoon prompts for on first launch.
+
+### Browser setup, for Picture in Picture
+
+`PictureInPicture` reaches the two browsers by completely different routes, because only one of them can be reached at
+all. Both `requestPictureInPicture()` and `documentPictureInPicture.requestWindow()` refuse without a recent user
+gesture, and JavaScript injected through an Apple Event has none.
+
+**Safari** is the easy one. WebKit's `webkitSetPresentationMode` predates that rule, so one Apple Event does the whole
+job. It needs `Develop > Allow JavaScript from Apple Events` turned on (the Develop menu itself is off by default, under
+`Settings > Advanced`), and macOS asks once for permission to let Hammerspoon control Safari. That prompt is modal and
+Apple Events are synchronous, so the very first toggle appears to hang Hammerspoon until you answer it; everything after
+is instant.
+
+**Chrome** cannot be driven from outside at all, so the Spoon does not try. Instead it forwards Chrome's own shortcut,
+because invoking an extension action is a user gesture as far as the page is concerned. Install
+[Picture-in-Picture Extension (by Google)](https://chromewebstore.google.com/detail/picture-in-picture-extens/hkgfoiooedgoejojocmhlaklaeopbecg)
+and make sure the key at `chrome://extensions/shortcuts` matches `PictureInPicture.chromeShortcut`, which defaults to
+the extension's own suggested `⌥P`. Chrome needs neither the Apple Events setting nor an Automation permission.
+
+Consequences worth knowing:
+
+- Nothing outside Chrome can tell whether the extension is installed, so if it is missing the hotkey simply does
+  nothing. The menubar menu names the shortcut it forwards, which is the only clue available.
+- Chrome's Picture in Picture is a real Chrome window, unlike Safari's, which macOS hosts out of process in `PIPAgent`.
+  It does not take focus when it opens, so the hotkey still toggles back out; but if you click the PiP window itself,
+  the shortcut has no tab to act on and cannot close it. Click the page again, or use the PiP window's own control.
+- A video inside a cross-origin `iframe` is unreachable in Safari. The Chrome extension has its own rules.
 
 ### yabai, for anything crossing a Space
 

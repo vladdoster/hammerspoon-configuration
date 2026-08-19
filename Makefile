@@ -32,7 +32,7 @@ format: format-lua format-md ## Format lua and markdown
 # Spoons that live here as source rather than as SpoonInstall downloads. Keep this list in
 # sync with the !Spoons/*.spoon negations in .gitignore -- both encode the same fact, and
 # clean is destructive, so a Spoon missing from here is a Spoon it deletes.
-KEEP_SPOONS := SpoonInstall BatteryMonitor ClipboardHistory DeminimizeWindow FocusBorder PinnedWindows SummonWindow VolumeControl Yabai
+KEEP_SPOONS := SpoonInstall BatteryMonitor ClipboardHistory DeminimizeWindow FocusBorder PictureInPicture PinnedWindows SummonWindow VolumeControl Yabai
 
 # SpoonInstall is vendored upstream, so its docs.json stays as shipped
 DOC_SPOONS := $(filter-out SpoonInstall,$(KEEP_SPOONS))

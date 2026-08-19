@@ -28,6 +28,10 @@ spoon.SpoonInstall:andUse(
   "PinnedWindows",
   { hotkeys = { togglePin = { { "cmd", "alt", "shift" }, "P" } }, start = true }
 )
+spoon.SpoonInstall:andUse(
+  "PictureInPicture",
+  { hotkeys = { toggle = { { "cmd", "alt", "ctrl" }, "P" } }, start = true }
+)
 spoon.SpoonInstall:andUse("SummonWindow", { hotkeys = { summon = { { "cmd", "alt", "shift" }, "S" } }, start = true })
 spoon.SpoonInstall:andUse("VolumeControl", {
   hotkeys = { down = { { "cmd", "alt", "ctrl" }, "Down" }, up = { { "cmd", "alt", "ctrl" }, "Up" } },
