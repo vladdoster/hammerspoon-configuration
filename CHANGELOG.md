@@ -1,3 +1,10 @@
+## [2.9.1](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.9.0...v2.9.1) (2026-09-25)
+
+
+### Bug Fixes
+
+* **volume:** log one enable per hotkey ([cf2d406](https://github.com/vladdoster/hammerspoon-configuration/commit/cf2d4063f604b522eccb797cd581bd0c8b16729a))
+
 # [2.9.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.8.0...v2.9.0) (2026-09-25)
 
 
