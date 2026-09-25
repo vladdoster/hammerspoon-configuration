@@ -1,3 +1,25 @@
+# [2.8.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.7.0...v2.8.0) (2026-09-25)
+
+
+### Bug Fixes
+
+* **battery:** guard alerts, expose their duration ([dcef6ce](https://github.com/vladdoster/hammerspoon-configuration/commit/dcef6ce6fa6b0ab8be43c8f4c0cd6e73bd9b515d))
+* **config:** ignore Hammerspoon in filter root ([69ecfef](https://github.com/vladdoster/hammerspoon-configuration/commit/69ecfef759bf157fb0d7befa7c3f59f0f55e2b7b))
+* **config:** ignore loginwindow in window filter root ([7efbcce](https://github.com/vladdoster/hammerspoon-configuration/commit/7efbccee481efeebbb39281e80c51b2c3ea4a14e))
+* **focusborder:** identify own windows by pid ([7a65da4](https://github.com/vladdoster/hammerspoon-configuration/commit/7a65da4ed8be2e2dba4d1ca9745a52e865d29327))
+* **pinnedwindows:** exclude own windows by pid ([6954e37](https://github.com/vladdoster/hammerspoon-configuration/commit/6954e37335a44f2b3d3e6208a16a7e80acb8b0b0))
+
+
+### Features
+
+* **battery:** move percentage inside the battery ([47dc495](https://github.com/vladdoster/hammerspoon-configuration/commit/47dc4956777c84a9ab6809c252df62cced9afa85))
+* **clipboardhistory:** use SF Pro glyph in menubar ([c8de714](https://github.com/vladdoster/hammerspoon-configuration/commit/c8de71418dee09bcb0b3430af1f8b667d43371a0))
+* **clipboard:** show 30 recent entries in menu ([cf69d51](https://github.com/vladdoster/hammerspoon-configuration/commit/cf69d51f5a005be2fabe424b3179ba6824409a32))
+* **deletespace:** add Space deletion Spoon ([c0575d0](https://github.com/vladdoster/hammerspoon-configuration/commit/c0575d04f9743be3c595ff516867e2ee17e86017))
+* **pictureinpicture:** add browser PiP toggle Spoon ([2445949](https://github.com/vladdoster/hammerspoon-configuration/commit/244594902de05e836e240ff4f5e534d81fabc56f))
+* **pinnedwindows:** use SF Pro pin glyphs in menubar ([59d97e6](https://github.com/vladdoster/hammerspoon-configuration/commit/59d97e6102ef78355ba06ca59284ef84864b2841))
+* **summonwindow:** use SF Pro glyph in menubar ([9e07563](https://github.com/vladdoster/hammerspoon-configuration/commit/9e07563753a83ecdf62466b242a62afbf85c88a8))
+
 # [2.7.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.6.0...v2.7.0) (2026-08-16)
 
 
