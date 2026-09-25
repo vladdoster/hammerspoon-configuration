@@ -63,9 +63,14 @@ every mutation needs a fallback behind it, not just the absent-yabai case.
 ### ext/ (mostly dormant)
 
 `init.lua` requires only two modules: `ext/keybind.lua` (hyper modifier plus a bind helper) and `ext/console.lua`
-(Console style and its toggle hotkey). `dockTime`, `infoDisplay`, `sysStats`, and `spoons` are kept but not loaded;
-`ext/spoons.lua` is an alternative loader that pulls third-party Spoons via SpoonInstall, and those downloads are what
-`.gitignore` and `make clean` account for.
+(Console style, log line format and a toggle hotkey). `dockTime`, `infoDisplay`, `sysStats`, and `spoons` are kept but
+not loaded; `ext/spoons.lua` is an alternative loader that pulls third-party Spoons via SpoonInstall, and those
+downloads are what `.gitignore` and `make clean` account for.
+
+`ext/console.lua` writes log lines as `[name] message`. It uses `debug` upvalues to replace the writer that all
+`hs.logger` instances share and the sink behind `print()`. Styled text skips the Console's 0.2 s output buffer, so the
+module holds its output until that buffer is empty. If a Hammerspoon update renames those upvalues, output keeps the
+stock format and the Console shows one warning.
 
 ## Conventions
 
