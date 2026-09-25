@@ -146,7 +146,7 @@
       {
         "def": "Yabai:moveSpaceToPosition(id, position) -> self",
         "desc": "Moves a Space to another Mission Control position on the display it is already on.",
-        "doc": "Moves a Space to another Mission Control position on the display it is already on.\n\nParameters:\n * id - The Space id to move\n * position - The Mission Control position to move it to, counted across all displays as yabai counts them\n\nReturns:\n * The Yabai object\n\nyabai only. `hs.spaces` can create, remove and switch Spaces but has no way to reorder them, so where yabai cannot do this nothing can, and the failure says so rather than pretending a fallback was tried.",
+        "doc": "Moves a Space to another Mission Control position on the display it is already on.\n\nParameters:\n * id - The Space id to move\n * position - The Mission Control position to move it to, counted across all displays as yabai counts them\n\nReturns:\n * The Yabai object\n\nyabai only, and only with its scripting addition loaded. `hs.spaces` can create, remove and switch Spaces. It cannot reorder them. No other backend can reorder a Space. The error says this and does not claim a fallback.\n\nSystem Integrity Protection blocks the scripting addition. A yabai error about the addition also marks it as unusable. In both cases this method fails at once. The panel greys the verb.",
         "name": "moveSpaceToPosition",
         "notes": [],
         "parameters": [
@@ -157,7 +157,9 @@
         "returns": [
           " * The Yabai object",
           "",
-          "yabai only. `hs.spaces` can create, remove and switch Spaces but has no way to reorder them, so where yabai cannot do this nothing can, and the failure says so rather than pretending a fallback was tried."
+          "yabai only, and only with its scripting addition loaded. `hs.spaces` can create, remove and switch Spaces. It cannot reorder them. No other backend can reorder a Space. The error says this and does not claim a fallback.",
+          "",
+          "System Integrity Protection blocks the scripting addition. A yabai error about the addition also marks it as unusable. In both cases this method fails at once. The panel greys the verb."
         ],
         "signature": "Yabai:moveSpaceToPosition(id, position) -> self",
         "stripped_doc": [
@@ -1517,7 +1519,7 @@
       {
         "def": "Yabai:moveSpaceToPosition(id, position) -> self",
         "desc": "Moves a Space to another Mission Control position on the display it is already on.",
-        "doc": "Moves a Space to another Mission Control position on the display it is already on.\n\nParameters:\n * id - The Space id to move\n * position - The Mission Control position to move it to, counted across all displays as yabai counts them\n\nReturns:\n * The Yabai object\n\nyabai only. `hs.spaces` can create, remove and switch Spaces but has no way to reorder them, so where yabai cannot do this nothing can, and the failure says so rather than pretending a fallback was tried.",
+        "doc": "Moves a Space to another Mission Control position on the display it is already on.\n\nParameters:\n * id - The Space id to move\n * position - The Mission Control position to move it to, counted across all displays as yabai counts them\n\nReturns:\n * The Yabai object\n\nyabai only, and only with its scripting addition loaded. `hs.spaces` can create, remove and switch Spaces. It cannot reorder them. No other backend can reorder a Space. The error says this and does not claim a fallback.\n\nSystem Integrity Protection blocks the scripting addition. A yabai error about the addition also marks it as unusable. In both cases this method fails at once. The panel greys the verb.",
         "name": "moveSpaceToPosition",
         "notes": [],
         "parameters": [
@@ -1528,7 +1530,9 @@
         "returns": [
           " * The Yabai object",
           "",
-          "yabai only. `hs.spaces` can create, remove and switch Spaces but has no way to reorder them, so where yabai cannot do this nothing can, and the failure says so rather than pretending a fallback was tried."
+          "yabai only, and only with its scripting addition loaded. `hs.spaces` can create, remove and switch Spaces. It cannot reorder them. No other backend can reorder a Space. The error says this and does not claim a fallback.",
+          "",
+          "System Integrity Protection blocks the scripting addition. A yabai error about the addition also marks it as unusable. In both cases this method fails at once. The panel greys the verb."
         ],
         "signature": "Yabai:moveSpaceToPosition(id, position) -> self",
         "stripped_doc": [

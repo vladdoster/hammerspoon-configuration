@@ -193,6 +193,8 @@ obj.warned = {}
 obj.running = false
 
 obj.yabaiResolved = nil -- nil not yet looked for, false looked for and absent, string the path
+obj.scriptingAdditionProblem = nil -- nil not known to fail, string why yabai cannot change Spaces
+obj.sipTask = nil
 obj.yabaiTasks = {}
 obj.byId = {} -- last listed Space model, keyed on the stable Space id
 obj.flow = nil -- nil at the verb list, otherwise { verb = <VERBS entry>, step, picks = {}, trail = {} }
@@ -340,7 +342,16 @@ function obj:yabaiRun(args, done)
 
   -- Handed to execve verbatim with no shell in between, so nothing needs quoting or escaping
   local okNew, made = pcall(hs.task.new, bin, function(code, out, err)
-    if code == 0 then return finish(true, out, nil) end
+    if job.settled then return end
+    if code == 0 then
+      -- Success of a space command other than --focus proves a loaded addition
+      if args[2] == "space" and args[3] ~= "--focus" then self.scriptingAdditionProblem = nil end
+      return finish(true, out, nil)
+    end
+    -- yabai puts the text "scripting-addition" in each error from the addition
+    if type(err) == "string" and err:find("scripting-addition", 1, true) then
+      self.scriptingAdditionProblem = self.scriptingAdditionProblem or "yabai reports it as not loaded"
+    end
     finish(
       false,
       out,
@@ -365,6 +376,23 @@ function obj:yabaiRun(args, done)
       finish(false, nil, string.format("no answer within %ss", tostring(self.yabaiTimeout)))
     end)
   end
+end
+
+-- The scripting addition cannot load with SIP fully on. Check SIP once at start
+function obj:probeScriptingAddition()
+  local task
+  local okNew, made = pcall(hs.task.new, "/usr/bin/csrutil", function(code, out)
+    -- Ignore a stale task from stop() or an older probe
+    if self.sipTask ~= task then return end
+    self.sipTask = nil
+    if code ~= 0 or type(out) ~= "string" or not out:find("status: enabled.", 1, true) then return end
+    self.scriptingAdditionProblem = "System Integrity Protection is on"
+    self.logger.i("System Integrity Protection is on. Reorder Space and Send Space to Display are unavailable")
+  end, { "status" })
+  if not okNew or not made then return end
+  task = made
+  local okStart, started = pcall(task.start, task)
+  self.sipTask = (okStart and started) and task or nil
 end
 
 -- Deliberately uncached. Every read here either builds a list the user is about to act on or re-checks one immediately after acting, and a stale answer in either place is the bug this Spoon exists to avoid
@@ -1070,10 +1098,18 @@ end
 --- Returns:
 ---  * The Yabai object
 ---
---- yabai only. `hs.spaces` can create, remove and switch Spaces but has no way to reorder them, so where yabai cannot do this nothing can, and the failure says so rather than pretending a fallback was tried.
+--- yabai only, and only with its scripting addition loaded. `hs.spaces` can create, remove and switch Spaces. It cannot reorder them. No other backend can reorder a Space. The error says this and does not claim a fallback.
+---
+--- System Integrity Protection blocks the scripting addition. A yabai error about the addition also marks it as unusable. In both cases this method fails at once. The panel greys the verb.
 function obj:moveSpaceToPosition(id, position)
   if not self:yabaiBinary() then
     return self:reportFailure("reorder a Space", "yabai is required; nothing else can reorder Spaces")
+  end
+  if self.scriptingAdditionProblem then
+    return self:reportFailure(
+      "reorder a Space",
+      "this needs yabai's scripting addition: " .. self.scriptingAdditionProblem
+    )
   end
 
   self:listSpaces(function(entries, err)
@@ -1116,6 +1152,12 @@ function obj:moveSpaceToDisplay(id, displayIndex)
     return self:reportFailure(
       "send a Space to another display",
       "yabai is required; nothing else can move Spaces between displays"
+    )
+  end
+  if self.scriptingAdditionProblem then
+    return self:reportFailure(
+      "send a Space to another display",
+      "this needs yabai's scripting addition: " .. self.scriptingAdditionProblem
     )
   end
 
@@ -1610,7 +1652,12 @@ function obj:verbChoices(done)
     local out = {}
     for _, v in ipairs(VERBS) do
       if multiDisplay or not v.multiDisplay then
-        local blocked = (v.yabaiOnly and not hasYabai) and "needs yabai" or nil
+        local blocked = nil
+        if v.yabaiOnly and not hasYabai then
+          blocked = "needs yabai"
+        elseif v.yabaiOnly and self.scriptingAdditionProblem then
+          blocked = "needs yabai's scripting addition"
+        end
         out[#out + 1] = {
           text = blocked and (v.text .. "  (" .. blocked .. ")") or v.text,
           subText = v.subText,
@@ -2383,6 +2430,8 @@ function obj:start()
       "yabai is not available; reordering Spaces and moving them between displays are unavailable, "
         .. "and moving a window between Spaces falls back to hs.spaces, which macOS 15 ignores"
     )
+  else
+    self:probeScriptingAddition()
   end
 
   self.logger.i("started")
@@ -2415,6 +2464,12 @@ function obj:stop()
     end) end
   end
   self.yabaiTasks = {}
+  if self.sipTask then
+    pcall(function()
+      if self.sipTask:isRunning() then self.sipTask:terminate() end
+    end)
+    self.sipTask = nil
+  end
   self:abortPolls()
 
   if self.flowTimer then
@@ -2459,6 +2514,7 @@ function obj:stop()
   self.warned = {}
   -- Re-probed on the next start(), so installing yabai and reloading is enough to notice it
   self.yabaiResolved = nil
+  self.scriptingAdditionProblem = nil
 
   self.logger.i("stopped")
   return self
