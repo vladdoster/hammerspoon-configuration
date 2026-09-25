@@ -1,3 +1,15 @@
+# [2.9.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.8.0...v2.9.0) (2026-09-25)
+
+
+### Bug Fixes
+
+* **yabai:** find Mission Control on macOS 27 ([c031d34](https://github.com/vladdoster/hammerspoon-configuration/commit/c031d341ae1a506991940e06fd4808e6454ebf19))
+
+
+### Features
+
+* **console:** style console and add toggle key ([cc21595](https://github.com/vladdoster/hammerspoon-configuration/commit/cc21595a11d45b706827df2321a8308f502b1ab1))
+
 # [2.8.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.7.0...v2.8.0) (2026-09-25)
 
 
