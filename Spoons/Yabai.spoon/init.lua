@@ -840,9 +840,10 @@ function obj:createSpaceOnDisplay(displayIndex)
         if not display.screen then
           return self:reportFailure("create a Space", "no hs.screen matches display " .. tostring(displayIndex))
         end
-        local ok, why = hs.spaces.addSpaceToScreen(display.screen)
-        if ok ~= true then return self:reportFailure("create a Space on " .. display.name, why) end
-        self:confirmThen(what, probe)
+        self:createViaSpaces(display.screen, function(ok, why)
+          if not ok then return self:reportFailure("create a Space on " .. display.name, why) end
+          self:confirmThen(what, probe)
+        end)
       end
 
       if self:yabaiBinary() then
@@ -885,19 +886,38 @@ local function axChild(element, identifier)
 end
 
 -- hs.spaces searches only the Dock for Mission Control, but macOS 27 moved it to WindowManager, so search both
-local function missionControlSpaceButtons(screenId)
+local function missionControlRoots()
   local roots = {}
   local windowManager = axApp("com.apple.WindowManager")
   if windowManager then roots[#roots + 1] = windowManager end
   local dockGroup = axChild(axApp("com.apple.dock"), "mc")
   if dockGroup then roots[#roots + 1] = dockGroup end
+  return roots
+end
 
-  for _, root in ipairs(roots) do
+-- hs.spaces.openMissionControl and closeMissionControl also search only the Dock. On macOS 27 they misread its state
+local function missionControlIsOpen()
+  for _, root in ipairs(missionControlRoots()) do
+    if axChild(root, "mc.display") then return true end
+  end
+  return false
+end
+
+local function openMissionControl()
+  if not missionControlIsOpen() then hs.spaces.toggleMissionControl() end
+end
+
+local function closeMissionControl()
+  if missionControlIsOpen() then hs.spaces.toggleMissionControl() end
+end
+
+local function missionControlSpaces(screenId)
+  for _, root in ipairs(missionControlRoots()) do
     for _, display in ipairs(axChildren(root)) do
       if
         display:attributeValue("AXIdentifier") == "mc.display" and display:attributeValue("AXDisplayID") == screenId
       then
-        return axChildren(axChild(axChild(display, "mc.spaces"), "mc.spaces.list"))
+        return axChild(display, "mc.spaces")
       end
     end
   end
@@ -911,7 +931,52 @@ local function pressRemove(button)
   return nil, "Mission Control offers no remove button for this Space"
 end
 
--- Open Mission Control and press the Space's remove button, as hs.spaces.removeSpace does, but also on macOS 27
+-- Open Mission Control and wait for find() to return a control from the Spaces bar. Press it and close Mission Control
+function obj:pressInMissionControl(screenId, find, press, done)
+  openMissionControl()
+  local target
+  self:pollUntil(
+    function(answer)
+      local ok, found = pcall(function()
+        return find(missionControlSpaces(screenId))
+      end)
+      target = ok and found or nil
+      answer(target ~= nil)
+    end,
+    self.verifyTimeout,
+    self.verifyInterval,
+    function(found)
+      if not found then
+        closeMissionControl()
+        return done(false, "Mission Control did not list the Spaces on this display")
+      end
+      -- Wait hs.spaces.MCwaitTime before the press, as hs.spaces does
+      local t
+      t = hs.timer.doAfter(hs.spaces.MCwaitTime, function()
+        self.pollTimers[t] = nil
+        local okP, pressed, why = pcall(press, target)
+        closeMissionControl()
+        if not okP then return done(false, tostring(pressed)) end
+        if not pressed then return done(false, why or "Mission Control refused the action") end
+        done(true)
+      end)
+      self.pollTimers[t] = true
+    end
+  )
+end
+
+-- Press the add button in Mission Control. This copies hs.spaces.addSpaceToScreen and also works on macOS 27
+function obj:createViaSpaces(screen, done)
+  local okI, screenId = pcall(screen.id, screen)
+  if not okI or not screenId then return done(false, "the display is no longer attached") end
+  self:pressInMissionControl(screenId, function(spaces)
+    return axChild(spaces, "mc.spaces.add")
+  end, function(button)
+    return button:performAction("AXPress")
+  end, done)
+end
+
+-- Press the remove button of the Space in Mission Control. This copies hs.spaces.removeSpace and also works on macOS 27
 function obj:destroyViaSpaces(entry, done)
   local okD, uuid = pcall(hs.spaces.spaceDisplay, entry.id)
   local screenId
@@ -928,35 +993,11 @@ function obj:destroyViaSpaces(entry, done)
   end
   if not position then return done(false, "the Space is not on its display's list") end
 
-  hs.spaces.openMissionControl()
-  local buttons
-  self:pollUntil(
-    function(answer)
-      local ok, found = pcall(missionControlSpaceButtons, screenId)
-      buttons = ok and found or nil
-      -- A list of a different length moves every position, so use only a list with the same count
-      answer(buttons ~= nil and #buttons == #onScreen)
-    end,
-    self.verifyTimeout,
-    self.verifyInterval,
-    function(found)
-      if not found then
-        hs.spaces.closeMissionControl()
-        return done(false, "Mission Control did not list the Spaces on this display")
-      end
-      -- Wait hs.spaces.MCwaitTime before the press, as hs.spaces does
-      local t
-      t = hs.timer.doAfter(hs.spaces.MCwaitTime, function()
-        self.pollTimers[t] = nil
-        local okP, pressed, why = pcall(pressRemove, buttons[position])
-        hs.spaces.closeMissionControl()
-        if not okP then return done(false, tostring(pressed)) end
-        if not pressed then return done(false, why or "Mission Control refused the remove action") end
-        done(true)
-      end)
-      self.pollTimers[t] = true
-    end
-  )
+  self:pressInMissionControl(screenId, function(spaces)
+    local buttons = axChildren(axChild(spaces, "mc.spaces.list"))
+    -- A list of another length shifts every position. Use only a list with the same count
+    return #buttons == #onScreen and buttons[position] or nil
+  end, pressRemove, done)
 end
 
 --- Yabai:deleteById(id) -> self
