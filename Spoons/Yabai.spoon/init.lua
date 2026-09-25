@@ -868,10 +868,95 @@ function obj:destroyViaYabai(entry, done)
   end)
 end
 
+local function axApp(bundleID)
+  local app = hs.application.applicationsForBundleID(bundleID)[1]
+  return app and hs.axuielement.applicationElement(app) or nil
+end
+
+local function axChildren(element)
+  return (element and element:attributeValue("AXChildren")) or {}
+end
+
+local function axChild(element, identifier)
+  for _, child in ipairs(axChildren(element)) do
+    if child:attributeValue("AXIdentifier") == identifier then return child end
+  end
+  return nil
+end
+
+-- hs.spaces searches only the Dock for Mission Control, but macOS 27 moved it to WindowManager, so search both
+local function missionControlSpaceButtons(screenId)
+  local roots = {}
+  local windowManager = axApp("com.apple.WindowManager")
+  if windowManager then roots[#roots + 1] = windowManager end
+  local dockGroup = axChild(axApp("com.apple.dock"), "mc")
+  if dockGroup then roots[#roots + 1] = dockGroup end
+
+  for _, root in ipairs(roots) do
+    for _, display in ipairs(axChildren(root)) do
+      if
+        display:attributeValue("AXIdentifier") == "mc.display" and display:attributeValue("AXDisplayID") == screenId
+      then
+        return axChildren(axChild(axChild(display, "mc.spaces"), "mc.spaces.list"))
+      end
+    end
+  end
+  return nil
+end
+
+local function pressRemove(button)
+  for _, action in ipairs(button:actionNames() or {}) do
+    if action == "AXRemoveDesktop" then return button:performAction(action) end
+  end
+  return nil, "Mission Control offers no remove button for this Space"
+end
+
+-- Open Mission Control and press the Space's remove button, as hs.spaces.removeSpace does, but also on macOS 27
 function obj:destroyViaSpaces(entry, done)
-  -- Takes the stable id, but opens Mission Control and clicks its remove button to do it
-  local ok, err = hs.spaces.removeSpace(entry.id)
-  done(ok == true, err)
+  local okD, uuid = pcall(hs.spaces.spaceDisplay, entry.id)
+  local screenId
+  for _, s in ipairs(hs.screen.allScreens()) do
+    if okD and uuid and s:getUUID() == uuid then screenId = s:id() end
+  end
+  if not screenId then return done(false, "no attached display holds this Space") end
+
+  local okL, onScreen = pcall(hs.spaces.spacesForScreen, uuid)
+  onScreen = (okL and type(onScreen) == "table") and onScreen or {}
+  local position
+  for i, id in ipairs(onScreen) do
+    if id == entry.id then position = i end
+  end
+  if not position then return done(false, "the Space is not on its display's list") end
+
+  hs.spaces.openMissionControl()
+  local buttons
+  self:pollUntil(
+    function(answer)
+      local ok, found = pcall(missionControlSpaceButtons, screenId)
+      buttons = ok and found or nil
+      -- A list of a different length moves every position, so use only a list with the same count
+      answer(buttons ~= nil and #buttons == #onScreen)
+    end,
+    self.verifyTimeout,
+    self.verifyInterval,
+    function(found)
+      if not found then
+        hs.spaces.closeMissionControl()
+        return done(false, "Mission Control did not list the Spaces on this display")
+      end
+      -- Wait hs.spaces.MCwaitTime before the press, as hs.spaces does
+      local t
+      t = hs.timer.doAfter(hs.spaces.MCwaitTime, function()
+        self.pollTimers[t] = nil
+        local okP, pressed, why = pcall(pressRemove, buttons[position])
+        hs.spaces.closeMissionControl()
+        if not okP then return done(false, tostring(pressed)) end
+        if not pressed then return done(false, why or "Mission Control refused the remove action") end
+        done(true)
+      end)
+      self.pollTimers[t] = true
+    end
+  )
 end
 
 --- Yabai:deleteById(id) -> self
