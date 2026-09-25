@@ -399,7 +399,8 @@ end
 ---  * The VolumeControl object
 ---
 --- For example: `spoon.VolumeControl:bindHotkeys({ up = { { "cmd", "alt", "ctrl" }, "Up" } })`
---- Bound directly with `hs.hotkey.bind` rather than through `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`; each key is given the same function as its `repeatfn` too, so holding it ramps the volume instead of moving it one step.
+--- The keys stay disarmed until `VolumeControl:start()`.
+--- Created with `hs.hotkey.new` rather than `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`. Each key also gets the same function as its `repeatfn`, so holding the key ramps the volume instead of moving it one step.
 function obj:bindHotkeys(mapping)
   self:unbindHotkeys()
 
@@ -415,7 +416,7 @@ function obj:bindHotkeys(mapping)
   for name, key in pairs(mapping) do
     local fn = spec[name]
     if fn then
-      local hotkey = hs.hotkey.bind(key[1], key[2], fn, nil, fn)
+      local hotkey = hs.hotkey.new(key[1], key[2], fn, nil, fn)
       if hotkey then
         self.hotkeys[#self.hotkeys + 1] = hotkey
       else
@@ -426,8 +427,8 @@ function obj:bindHotkeys(mapping)
     end
   end
 
-  -- Match the running state, so binding while stopped does not quietly arm the keys
-  if not self.running then self:setHotkeysEnabled(false) end
+  -- Keys start disarmed, so binding before start() does not log an enable and then a disable
+  if self.running then self:setHotkeysEnabled(true) end
 
   -- HSKeybindings.spoon walks loaded Spoons looking for a `mapping` field to display
   self.mapping = mapping
