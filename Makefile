@@ -3,6 +3,7 @@ SHELL = /bin/zsh
 .ONESHELL:
 
 LUA_FILES := $(shell find . -name '*.lua' -print)
+MD_FILES := $(shell find . -name '*.md' -print)
 
 help: ## Display all Makfile targets
 	@grep -E '^.*[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -10,7 +11,7 @@ help: ## Display all Makfile targets
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 format-md: ## Format markdown via mdformat
-	uvx --with mdformat-gfm mdformat --wrap 120 README.md
+	uvx --with mdformat-gfm mdformat --wrap 120 $(filter-out %CHANGELOG.md,$(MD_FILES))
 	@echo "\033[36mFormatted markdown\033[0m"
 
 format-lua: ## Format lua via stylua
