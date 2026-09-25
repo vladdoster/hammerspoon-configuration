@@ -159,7 +159,7 @@
       {
         "def": "VolumeControl:bindHotkeys(mapping) -> self",
         "desc": "Binds hotkeys for VolumeControl.",
-        "doc": "Binds hotkeys for VolumeControl.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * up - Raise the volume by `VolumeControl.increment`\n   * down - Lower the volume by `VolumeControl.increment`\n\nReturns:\n * The VolumeControl object\n\nFor example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`\nBound directly with `hs.hotkey.bind` rather than through `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`; each key is given the same function as its `repeatfn` too, so holding it ramps the volume instead of moving it one step.",
+        "doc": "Binds hotkeys for VolumeControl.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * up - Raise the volume by `VolumeControl.increment`\n   * down - Lower the volume by `VolumeControl.increment`\n\nReturns:\n * The VolumeControl object\n\nFor example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`\nThe keys stay disarmed until `VolumeControl:start()`.\nCreated with `hs.hotkey.new` rather than `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`. Each key also gets the same function as its `repeatfn`, so holding the key ramps the volume instead of moving it one step.",
         "name": "bindHotkeys",
         "notes": [],
         "parameters": [
@@ -172,7 +172,8 @@
           " * The VolumeControl object",
           "",
           "For example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`",
-          "Bound directly with `hs.hotkey.bind` rather than through `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`; each key is given the same function as its `repeatfn` too, so holding it ramps the volume instead of moving it one step."
+          "The keys stay disarmed until `VolumeControl:start()`.",
+          "Created with `hs.hotkey.new` rather than `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`. Each key also gets the same function as its `repeatfn`, so holding the key ramps the volume instead of moving it one step."
         ],
         "signature": "VolumeControl:bindHotkeys(mapping) -> self",
         "stripped_doc": [
@@ -412,7 +413,7 @@
       {
         "def": "VolumeControl:bindHotkeys(mapping) -> self",
         "desc": "Binds hotkeys for VolumeControl.",
-        "doc": "Binds hotkeys for VolumeControl.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * up - Raise the volume by `VolumeControl.increment`\n   * down - Lower the volume by `VolumeControl.increment`\n\nReturns:\n * The VolumeControl object\n\nFor example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`\nBound directly with `hs.hotkey.bind` rather than through `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`; each key is given the same function as its `repeatfn` too, so holding it ramps the volume instead of moving it one step.",
+        "doc": "Binds hotkeys for VolumeControl.\n\nParameters:\n * mapping - A table containing hotkey modifier/key details for the following items:\n   * up - Raise the volume by `VolumeControl.increment`\n   * down - Lower the volume by `VolumeControl.increment`\n\nReturns:\n * The VolumeControl object\n\nFor example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`\nThe keys stay disarmed until `VolumeControl:start()`.\nCreated with `hs.hotkey.new` rather than `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`. Each key also gets the same function as its `repeatfn`, so holding the key ramps the volume instead of moving it one step.",
         "name": "bindHotkeys",
         "notes": [],
         "parameters": [
@@ -425,7 +426,8 @@
           " * The VolumeControl object",
           "",
           "For example: `spoon.VolumeControl:bindHotkeys({ up = { { \"cmd\", \"alt\", \"ctrl\" }, \"Up\" } })`",
-          "Bound directly with `hs.hotkey.bind` rather than through `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`; each key is given the same function as its `repeatfn` too, so holding it ramps the volume instead of moving it one step."
+          "The keys stay disarmed until `VolumeControl:start()`.",
+          "Created with `hs.hotkey.new` rather than `hs.spoons.bindHotkeysToSpec`, which wires only a `pressedfn`. Each key also gets the same function as its `repeatfn`, so holding the key ramps the volume instead of moving it one step."
         ],
         "signature": "VolumeControl:bindHotkeys(mapping) -> self",
         "stripped_doc": [
