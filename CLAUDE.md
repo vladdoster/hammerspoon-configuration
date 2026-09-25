@@ -13,9 +13,9 @@ running inside Hammerspoon: there is no build step and no test suite. The feedba
 
 ## Commands
 
-- `make format` - runs `format-lua` (stylua over every `.lua`) then `format-md` (mdformat over `README.md` via `uvx`, so
-  it needs `uv` installed). The flags pinned in those two targets are the only formatting authority; there is no
-  stylua.toml, editorconfig or mdformat config. Read them there rather than trusting a copy.
+- `make format` - runs `format-lua` (stylua over every `.lua`) then `format-md` (mdformat over every `.md` except
+  `CHANGELOG.md`, via `uvx`, so it needs `uv` installed). The flags pinned in those two targets are the only formatting
+  authority; there is no stylua.toml, editorconfig or mdformat config. Read them there rather than trusting a copy.
 - `make docs` - regenerate `docs.json` for first-party Spoons. Requires Hammerspoon running with the `hs` CLI available:
   `init.lua` loads `hs.ipc`, but the binary itself comes from a one-time `hs.ipc.cliInstall()`. Also needs python3,
   which sorts keys for stable diffs.

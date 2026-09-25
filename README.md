@@ -234,7 +234,8 @@ second and git ignores it. Then run `make docs` to generate its `docs.json`.
   application's own shortcut for as long as Hammerspoon runs.
 - **`init.lua` sets `hs.window.animationDuration = 0.1` globally**, which is half Hammerspoon's default and applies to
   every window move any Spoon makes.
-- **`make format` rewrites this README.** It runs `mdformat --wrap 120` over it as well as stylua over the Lua.
+- **`make format` rewrites this README.** It runs `mdformat --wrap 120` over every Markdown file except `CHANGELOG.md`,
+  and it runs stylua over the Lua.
 
 ## Makefile targets
 
@@ -246,7 +247,7 @@ Run from the repository root; the Makefile uses zsh and relative paths.
 | docs       | Regenerate first-party `docs.json`. Needs the `hs` CLI and python3 |
 | format     | Run `format-lua` and `format-md`                                   |
 | format-lua | Format all Lua in place via stylua                                 |
-| format-md  | Format `README.md` via mdformat. Needs `uvx`                       |
+| format-md  | Format every `.md` except `CHANGELOG.md` via mdformat. Needs `uvx` |
 | help       | Display all Makefile targets                                       |
 
 `VERSION` and `CHANGELOG.md` are written by the release workflow, which is `workflow_dispatch` only. The release badge
