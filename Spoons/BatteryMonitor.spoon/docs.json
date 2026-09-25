@@ -294,42 +294,24 @@
         "type": "Variable"
       },
       {
-        "def": "BatteryMonitor.titleFont",
-        "desc": "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.",
-        "doc": "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.\n\nDeliberately smaller than the 13pt an unstyled title gets: menu bar extras label themselves smaller than menu titles do. 11pt is what measuring the system battery against ours gives -- untouched, ours drew \"60%\" 27.5pt wide and 10.5pt tall where the system drew it 23.5 by 9, and both ratios land on 11. Setting the size also fixes the vertical placement, since the two titles share a baseline and only the taller glyphs made ours sit high.",
-        "name": "titleFont",
-        "notes": [],
-        "parameters": [],
-        "returns": [],
-        "signature": "BatteryMonitor.titleFont",
-        "stripped_doc": [
-          "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.",
-          "",
-          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
-          "",
-          "Deliberately smaller than the 13pt an unstyled title gets: menu bar extras label themselves smaller than menu titles do. 11pt is what measuring the system battery against ours gives -- untouched, ours drew \"60%\" 27.5pt wide and 10.5pt tall where the system drew it 23.5 by 9, and both ratios land on 11. Setting the size also fixes the vertical placement, since the two titles share a baseline and only the taller glyphs made ours sit high."
-        ],
-        "type": "Variable"
-      },
-      {
         "def": "BatteryMonitor.iconStyle",
-        "desc": "Geometry and colours of the drawn menubar battery, in points.",
-        "doc": "Geometry and colours of the drawn menubar battery, in points.\n\nBaked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.\n\nThe defaults were measured off a capture of the system battery beside this one, at four pixels to the point: a 22x12 body, a 1.5pt tip one point clear of it, and a bolt inside the body rather than next to it. The icon is therefore the same width charging or not, exactly as the system icon is.\n\nThe greys were matched to the system icon by luminance, measured from a capture of the two side by side: outline 114, terminal 138, bolt 229. They are three separate values because the system icon uses three, not because a gradient was wanted.\n\nNone of them follows the system appearance, so they are tuned for a dark menubar and will read heavy on a light one. The percentage does follow the appearance, but only because it is a real menubar title rather than anything drawn here.",
+        "desc": "Geometry, colours and font of the drawn menubar battery. Sizes are in points.",
+        "doc": "Geometry, colours and font of the drawn menubar battery. Sizes are in points.\n\nBaked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.\n\nThe defaults come from captures of the macOS 27 battery beside this one, at four pixels to the point. The captures show a solid 23x12 body and a 1.5pt tip one point clear of it. The percentage is centred inside the body, and while the battery charges, a bolt follows the digits. So the icon has the same width whether the battery charges or not, as the system icon does.\n\nEach grey matches the luminance of the system icon: body 116, tip 138, digits and bolt 13. Each part has its own grey because the system icon uses a different grey for each part.\n\nNone of these greys follows the system appearance. They suit a dark menubar and look heavy on a light one. The percentage is part of the image, so it does not follow the appearance either.",
         "name": "iconStyle",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "BatteryMonitor.iconStyle",
         "stripped_doc": [
-          "Geometry and colours of the drawn menubar battery, in points.",
+          "Geometry, colours and font of the drawn menubar battery. Sizes are in points.",
           "",
           "Baked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.",
           "",
-          "The defaults were measured off a capture of the system battery beside this one, at four pixels to the point: a 22x12 body, a 1.5pt tip one point clear of it, and a bolt inside the body rather than next to it. The icon is therefore the same width charging or not, exactly as the system icon is.",
+          "The defaults come from captures of the macOS 27 battery beside this one, at four pixels to the point. The captures show a solid 23x12 body and a 1.5pt tip one point clear of it. The percentage is centred inside the body, and while the battery charges, a bolt follows the digits. So the icon has the same width whether the battery charges or not, as the system icon does.",
           "",
-          "The greys were matched to the system icon by luminance, measured from a capture of the two side by side: outline 114, terminal 138, bolt 229. They are three separate values because the system icon uses three, not because a gradient was wanted.",
+          "Each grey matches the luminance of the system icon: body 116, tip 138, digits and bolt 13. Each part has its own grey because the system icon uses a different grey for each part.",
           "",
-          "None of them follows the system appearance, so they are tuned for a dark menubar and will read heavy on a light one. The percentage does follow the appearance, but only because it is a real menubar title rather than anything drawn here."
+          "None of these greys follows the system appearance. They suit a dark menubar and look heavy on a light one. The percentage is part of the image, so it does not follow the appearance either."
         ],
         "type": "Variable"
       },
@@ -422,7 +404,7 @@
       }
     ],
     "desc": "Menubar battery readout, plus spoken and on-screen alerts driven by charge thresholds.",
-    "doc": "Menubar battery readout, plus spoken and on-screen alerts driven by charge thresholds.\n\nThe menubar item is laid out like the system battery it sits beside: the percentage as a plain\ntitle, then an `hs.canvas` battery drawn per update and handed to `setIcon`. Its fill sweeps with\nthe charge and crosses green, orange and red on the way down, and while charging a bolt inside the\nbody knocks a transparent gap through the fill and the outline.\n\nWakes on `hs.battery.watcher` rather than a stopwatch, and keeps a slow fallback timer only so the\ntime-remaining figure keeps counting down between IOKit notifications.\n\nEach rule in `BatteryMonitor.rules` fires on the RISING EDGE of its threshold and, optionally,\nrepeats while the threshold stays crossed. A rule whose threshold is not currently met can never\nfire, whatever its repeat cadence.",
+    "doc": "Menubar battery readout, plus spoken and on-screen alerts driven by charge thresholds.\n\nThe menubar item copies the system battery beside it. Each update draws an `hs.canvas` battery\nwith the percentage printed inside its solid body, and passes the image to `setIcon`. The fill\nfollows the charge and turns from green to orange to red as the charge drops. While the battery\ncharges, a bolt follows the digits.\n\nWakes on `hs.battery.watcher` rather than a stopwatch, and keeps a slow fallback timer only so the\ntime-remaining figure keeps counting down between IOKit notifications.\n\nEach rule in `BatteryMonitor.rules` fires on the RISING EDGE of its threshold and, optionally,\nrepeats while the threshold stays crossed. A rule whose threshold is not currently met can never\nfire, whatever its repeat cadence.",
     "items": [
       {
         "def": "BatteryMonitor.alertDuration",
@@ -490,23 +472,23 @@
       },
       {
         "def": "BatteryMonitor.iconStyle",
-        "desc": "Geometry and colours of the drawn menubar battery, in points.",
-        "doc": "Geometry and colours of the drawn menubar battery, in points.\n\nBaked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.\n\nThe defaults were measured off a capture of the system battery beside this one, at four pixels to the point: a 22x12 body, a 1.5pt tip one point clear of it, and a bolt inside the body rather than next to it. The icon is therefore the same width charging or not, exactly as the system icon is.\n\nThe greys were matched to the system icon by luminance, measured from a capture of the two side by side: outline 114, terminal 138, bolt 229. They are three separate values because the system icon uses three, not because a gradient was wanted.\n\nNone of them follows the system appearance, so they are tuned for a dark menubar and will read heavy on a light one. The percentage does follow the appearance, but only because it is a real menubar title rather than anything drawn here.",
+        "desc": "Geometry, colours and font of the drawn menubar battery. Sizes are in points.",
+        "doc": "Geometry, colours and font of the drawn menubar battery. Sizes are in points.\n\nBaked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.\n\nThe defaults come from captures of the macOS 27 battery beside this one, at four pixels to the point. The captures show a solid 23x12 body and a 1.5pt tip one point clear of it. The percentage is centred inside the body, and while the battery charges, a bolt follows the digits. So the icon has the same width whether the battery charges or not, as the system icon does.\n\nEach grey matches the luminance of the system icon: body 116, tip 138, digits and bolt 13. Each part has its own grey because the system icon uses a different grey for each part.\n\nNone of these greys follows the system appearance. They suit a dark menubar and look heavy on a light one. The percentage is part of the image, so it does not follow the appearance either.",
         "name": "iconStyle",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "BatteryMonitor.iconStyle",
         "stripped_doc": [
-          "Geometry and colours of the drawn menubar battery, in points.",
+          "Geometry, colours and font of the drawn menubar battery. Sizes are in points.",
           "",
           "Baked into the canvas at build time. Change it before `BatteryMonitor:start()`, or call `BatteryMonitor:rebuild()` afterwards.",
           "",
-          "The defaults were measured off a capture of the system battery beside this one, at four pixels to the point: a 22x12 body, a 1.5pt tip one point clear of it, and a bolt inside the body rather than next to it. The icon is therefore the same width charging or not, exactly as the system icon is.",
+          "The defaults come from captures of the macOS 27 battery beside this one, at four pixels to the point. The captures show a solid 23x12 body and a 1.5pt tip one point clear of it. The percentage is centred inside the body, and while the battery charges, a bolt follows the digits. So the icon has the same width whether the battery charges or not, as the system icon does.",
           "",
-          "The greys were matched to the system icon by luminance, measured from a capture of the two side by side: outline 114, terminal 138, bolt 229. They are three separate values because the system icon uses three, not because a gradient was wanted.",
+          "Each grey matches the luminance of the system icon: body 116, tip 138, digits and bolt 13. Each part has its own grey because the system icon uses a different grey for each part.",
           "",
-          "None of them follows the system appearance, so they are tuned for a dark menubar and will read heavy on a light one. The percentage does follow the appearance, but only because it is a real menubar title rather than anything drawn here."
+          "None of these greys follows the system appearance. They suit a dark menubar and look heavy on a light one. The percentage is part of the image, so it does not follow the appearance either."
         ],
         "type": "Variable"
       },
@@ -560,24 +542,6 @@
           "Whether spoken alerts are silenced. Persisted across reloads via `hs.settings`.",
           "",
           "Toggle it from the menubar item or with `BatteryMonitor:setSuppressAudio()`; assigning to it directly changes this session only."
-        ],
-        "type": "Variable"
-      },
-      {
-        "def": "BatteryMonitor.titleFont",
-        "desc": "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.",
-        "doc": "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.\n\nNo colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.\n\nDeliberately smaller than the 13pt an unstyled title gets: menu bar extras label themselves smaller than menu titles do. 11pt is what measuring the system battery against ours gives -- untouched, ours drew \"60%\" 27.5pt wide and 10.5pt tall where the system drew it 23.5 by 9, and both ratios land on 11. Setting the size also fixes the vertical placement, since the two titles share a baseline and only the taller glyphs made ours sit high.",
-        "name": "titleFont",
-        "notes": [],
-        "parameters": [],
-        "returns": [],
-        "signature": "BatteryMonitor.titleFont",
-        "stripped_doc": [
-          "Font for the percentage, as `hs.styledtext` understands it. Defaults to the menu bar font at 11pt.",
-          "",
-          "No colour is set deliberately, so AppKit's default menubar label colour applies and follows light and dark appearance on its own.",
-          "",
-          "Deliberately smaller than the 13pt an unstyled title gets: menu bar extras label themselves smaller than menu titles do. 11pt is what measuring the system battery against ours gives -- untouched, ours drew \"60%\" 27.5pt wide and 10.5pt tall where the system drew it 23.5 by 9, and both ratios land on 11. Setting the size also fixes the vertical placement, since the two titles share a baseline and only the taller glyphs made ours sit high."
         ],
         "type": "Variable"
       },
