@@ -62,10 +62,10 @@ every mutation needs a fallback behind it, not just the absent-yabai case.
 
 ### ext/ (mostly dormant)
 
-`init.lua` requires only two modules: `ext/keybind.lua` (hyper modifier plus a bind helper) and
-`ext/console.lua` (Console style and its toggle hotkey). `dockTime`, `infoDisplay`, `sysStats`, and `spoons` are kept
-but not loaded; `ext/spoons.lua` is an alternative loader that pulls third-party Spoons via SpoonInstall, and those
-downloads are what `.gitignore` and `make clean` account for.
+`init.lua` requires only two modules: `ext/keybind.lua` (hyper modifier plus a bind helper) and `ext/console.lua`
+(Console style and its toggle hotkey). `dockTime`, `infoDisplay`, `sysStats`, and `spoons` are kept but not loaded;
+`ext/spoons.lua` is an alternative loader that pulls third-party Spoons via SpoonInstall, and those downloads are what
+`.gitignore` and `make clean` account for.
 
 ## Conventions
 
