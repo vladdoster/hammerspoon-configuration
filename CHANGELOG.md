@@ -1,3 +1,12 @@
+## [2.10.1](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.10.0...v2.10.1) (2026-09-25)
+
+
+### Bug Fixes
+
+* **yabai:** create Spaces on macOS 27 ([2b23211](https://github.com/vladdoster/hammerspoon-configuration/commit/2b23211c42bbf484687811daf1da0d1a73ee4663))
+* **yabai:** disable reorder without the addition ([d11d322](https://github.com/vladdoster/hammerspoon-configuration/commit/d11d322bbda85a980f1a4f29391a3af20119a8b2))
+* **yabai:** focus Spaces on macOS 27 ([7de14c0](https://github.com/vladdoster/hammerspoon-configuration/commit/7de14c091b169208ac8c14e7ba9f7dc64f287a9f))
+
 # [2.10.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.9.1...v2.10.0) (2026-09-25)
 
 
