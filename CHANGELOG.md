@@ -1,3 +1,10 @@
+# [2.10.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.9.1...v2.10.0) (2026-09-25)
+
+
+### Features
+
+* **console:** format log lines as [name] message ([f5033f1](https://github.com/vladdoster/hammerspoon-configuration/commit/f5033f105792908e8bb0f35f82f9ee591c0f5af8))
+
 ## [2.9.1](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.9.0...v2.9.1) (2026-09-25)
 
 
