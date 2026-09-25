@@ -78,7 +78,7 @@
       {
         "def": "Yabai:focusSpaceById(id) -> self",
         "desc": "Switches to one Space, named by its stable Space id.",
-        "doc": "Switches to one Space, named by its stable Space id.\n\nParameters:\n * id - The Space id, as reported by `Yabai:listSpaces()` or `hs.spaces`\n\nReturns:\n * The Yabai object\n\nThe one verb that needs nothing special from yabai: `space --focus` goes over the plain socket, so this works on a machine with System Integrity Protection fully enabled, and `hs.spaces.gotoSpace` stands behind it regardless.",
+        "doc": "Switches to one Space, named by its stable Space id.\n\nParameters:\n * id - The Space id, as reported by `Yabai:listSpaces()` or `hs.spaces`\n\nReturns:\n * The Yabai object\n\nyabai goes first. Mission Control is the fallback. yabai 7.1.25 on macOS 27 with SIP on reports success for `space --focus` and changes nothing. After such a silent failure, the Spoon presses the button of the Space in Mission Control. It then skips yabai for focus until the next `Yabai:start()`.",
         "name": "focusSpaceById",
         "notes": [],
         "parameters": [
@@ -88,7 +88,7 @@
         "returns": [
           " * The Yabai object",
           "",
-          "The one verb that needs nothing special from yabai: `space --focus` goes over the plain socket, so this works on a machine with System Integrity Protection fully enabled, and `hs.spaces.gotoSpace` stands behind it regardless."
+          "yabai goes first. Mission Control is the fallback. yabai 7.1.25 on macOS 27 with SIP on reports success for `space --focus` and changes nothing. After such a silent failure, the Spoon presses the button of the Space in Mission Control. It then skips yabai for focus until the next `Yabai:start()`."
         ],
         "signature": "Yabai:focusSpaceById(id) -> self",
         "stripped_doc": [
@@ -1342,7 +1342,7 @@
       {
         "def": "Yabai:focusSpaceById(id) -> self",
         "desc": "Switches to one Space, named by its stable Space id.",
-        "doc": "Switches to one Space, named by its stable Space id.\n\nParameters:\n * id - The Space id, as reported by `Yabai:listSpaces()` or `hs.spaces`\n\nReturns:\n * The Yabai object\n\nThe one verb that needs nothing special from yabai: `space --focus` goes over the plain socket, so this works on a machine with System Integrity Protection fully enabled, and `hs.spaces.gotoSpace` stands behind it regardless.",
+        "doc": "Switches to one Space, named by its stable Space id.\n\nParameters:\n * id - The Space id, as reported by `Yabai:listSpaces()` or `hs.spaces`\n\nReturns:\n * The Yabai object\n\nyabai goes first. Mission Control is the fallback. yabai 7.1.25 on macOS 27 with SIP on reports success for `space --focus` and changes nothing. After such a silent failure, the Spoon presses the button of the Space in Mission Control. It then skips yabai for focus until the next `Yabai:start()`.",
         "name": "focusSpaceById",
         "notes": [],
         "parameters": [
@@ -1352,7 +1352,7 @@
         "returns": [
           " * The Yabai object",
           "",
-          "The one verb that needs nothing special from yabai: `space --focus` goes over the plain socket, so this works on a machine with System Integrity Protection fully enabled, and `hs.spaces.gotoSpace` stands behind it regardless."
+          "yabai goes first. Mission Control is the fallback. yabai 7.1.25 on macOS 27 with SIP on reports success for `space --focus` and changes nothing. After such a silent failure, the Spoon presses the button of the Space in Mission Control. It then skips yabai for focus until the next `Yabai:start()`."
         ],
         "signature": "Yabai:focusSpaceById(id) -> self",
         "stripped_doc": [

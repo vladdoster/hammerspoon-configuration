@@ -195,6 +195,7 @@ obj.running = false
 obj.yabaiResolved = nil -- nil not yet looked for, false looked for and absent, string the path
 obj.scriptingAdditionProblem = nil -- nil not known to fail, string why yabai cannot change Spaces
 obj.sipTask = nil
+obj.skipYabaiFocus = false -- true after a silent failure of yabai focus
 obj.yabaiTasks = {}
 obj.byId = {} -- last listed Space model, keyed on the stable Space id
 obj.flow = nil -- nil at the verb list, otherwise { verb = <VERBS entry>, step, picks = {}, trail = {} }
@@ -800,7 +801,7 @@ end
 --- Returns:
 ---  * The Yabai object
 ---
---- The one verb that needs nothing special from yabai: `space --focus` goes over the plain socket, so this works on a machine with System Integrity Protection fully enabled, and `hs.spaces.gotoSpace` stands behind it regardless.
+--- yabai goes first. Mission Control is the fallback. yabai 7.1.25 on macOS 27 with SIP on reports success for `space --focus` and changes nothing. After such a silent failure, the Spoon presses the button of the Space in Mission Control. It then skips yabai for focus until the next `Yabai:start()`.
 function obj:focusSpaceById(id)
   self:listSpaces(function(entries, err)
     if not entries then return self:reportFailure("read the Spaces", err) end
@@ -813,17 +814,30 @@ function obj:focusSpaceById(id)
       answer(select(2, pcall(hs.spaces.focusedSpace)) == id)
     end
     local function viaSpaces()
-      local ok, why = hs.spaces.gotoSpace(id)
-      if ok ~= true then return self:reportFailure("focus " .. spaceName(entry), why) end
-      self:confirmThen(what, probe)
+      self:focusViaSpaces(id, function(ok, why)
+        if not ok then return self:reportFailure("focus " .. spaceName(entry), why) end
+        self:confirmThen(what, probe)
+      end)
     end
 
-    if self:yabaiBinary() then
+    if self:yabaiBinary() and not self.skipYabaiFocus then
       -- The selector is a Mission Control position, so it is read fresh from the id rather than remembered from the list
       self:yabaiRun({ "--message", "space", "--focus", tostring(entry.index) }, function(ok, _, why)
-        if ok then return self:confirmThen(what, probe) end
-        self.logger.f("yabai could not focus Space %d (%s); falling back to hs.spaces", id, tostring(why))
-        viaSpaces()
+        if not ok then
+          self.logger.f(
+            "yabai could not focus Space %d (%s). The Spoon uses Mission Control instead",
+            id,
+            tostring(why)
+          )
+          return viaSpaces()
+        end
+        -- yabai can report success and change nothing. Wait for the change before the fallback
+        self:pollUntil(probe, self.verifyTimeout, self.verifyInterval, function(observed)
+          if observed then return self:confirmThen(what, probe) end
+          self.skipYabaiFocus = true
+          self.logger.f("yabai focus of Space %d changed nothing. The Spoon uses Mission Control instead", id)
+          viaSpaces()
+        end)
       end)
     else
       viaSpaces()
@@ -959,8 +973,33 @@ local function pressRemove(button)
   return nil, "Mission Control offers no remove button for this Space"
 end
 
+-- Find the display and the Mission Control button of one Space. Return nil and a reason on failure
+local function spaceButtonFinder(spaceId)
+  local okD, uuid = pcall(hs.spaces.spaceDisplay, spaceId)
+  local screenId
+  for _, s in ipairs(hs.screen.allScreens()) do
+    if okD and uuid and s:getUUID() == uuid then screenId = s:id() end
+  end
+  if not screenId then return nil, "no attached display holds this Space" end
+
+  local okL, onScreen = pcall(hs.spaces.spacesForScreen, uuid)
+  onScreen = (okL and type(onScreen) == "table") and onScreen or {}
+  local position
+  for i, id in ipairs(onScreen) do
+    if id == spaceId then position = i end
+  end
+  if not position then return nil, "the Space is not on its display's list" end
+
+  return screenId,
+    function(spaces)
+      local buttons = axChildren(axChild(spaces, "mc.spaces.list"))
+      -- A list of another length shifts every position. Use only a list with the same count
+      return #buttons == #onScreen and buttons[position] or nil
+    end
+end
+
 -- Open Mission Control and wait for find() to return a control from the Spaces bar. Press it and close Mission Control
-function obj:pressInMissionControl(screenId, find, press, done)
+function obj:pressInMissionControl(screenId, find, press, done, pressLeaves)
   openMissionControl()
   local target
   self:pollUntil(
@@ -983,7 +1022,9 @@ function obj:pressInMissionControl(screenId, find, press, done)
       t = hs.timer.doAfter(hs.spaces.MCwaitTime, function()
         self.pollTimers[t] = nil
         local okP, pressed, why = pcall(press, target)
-        closeMissionControl()
+        local failed = not okP or not pressed
+        -- A press on a Space button exits Mission Control. Another toggle here opens it again
+        if failed or not pressLeaves then closeMissionControl() end
         if not okP then return done(false, tostring(pressed)) end
         if not pressed then return done(false, why or "Mission Control refused the action") end
         done(true)
@@ -1006,26 +1047,18 @@ end
 
 -- Press the remove button of the Space in Mission Control. This copies hs.spaces.removeSpace and also works on macOS 27
 function obj:destroyViaSpaces(entry, done)
-  local okD, uuid = pcall(hs.spaces.spaceDisplay, entry.id)
-  local screenId
-  for _, s in ipairs(hs.screen.allScreens()) do
-    if okD and uuid and s:getUUID() == uuid then screenId = s:id() end
-  end
-  if not screenId then return done(false, "no attached display holds this Space") end
+  local screenId, find = spaceButtonFinder(entry.id)
+  if not screenId then return done(false, find) end
+  self:pressInMissionControl(screenId, find, pressRemove, done)
+end
 
-  local okL, onScreen = pcall(hs.spaces.spacesForScreen, uuid)
-  onScreen = (okL and type(onScreen) == "table") and onScreen or {}
-  local position
-  for i, id in ipairs(onScreen) do
-    if id == entry.id then position = i end
-  end
-  if not position then return done(false, "the Space is not on its display's list") end
-
-  self:pressInMissionControl(screenId, function(spaces)
-    local buttons = axChildren(axChild(spaces, "mc.spaces.list"))
-    -- A list of another length shifts every position. Use only a list with the same count
-    return #buttons == #onScreen and buttons[position] or nil
-  end, pressRemove, done)
+-- Press the button of the Space in Mission Control. This copies hs.spaces.gotoSpace and also works on macOS 27
+function obj:focusViaSpaces(id, done)
+  local screenId, find = spaceButtonFinder(id)
+  if not screenId then return done(false, find) end
+  self:pressInMissionControl(screenId, find, function(button)
+    return button:performAction("AXPress")
+  end, done, true)
 end
 
 --- Yabai:deleteById(id) -> self
@@ -2515,6 +2548,7 @@ function obj:stop()
   -- Re-probed on the next start(), so installing yabai and reloading is enough to notice it
   self.yabaiResolved = nil
   self.scriptingAdditionProblem = nil
+  self.skipYabaiFocus = false
 
   self.logger.i("stopped")
   return self
