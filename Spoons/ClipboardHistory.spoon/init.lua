@@ -5,7 +5,8 @@
 ---
 --- Watches the pasteboard, keeps the last `ClipboardHistory.historySize` text entries, and
 --- offers them back through a chooser or a menubar menu. Selecting an entry puts it back on
---- the clipboard; pasting stays a manual cmd+v.
+--- the clipboard; pasting stays a manual cmd+v. A second action, `ClipboardHistory:showAndType()`,
+--- types the picked entry into the front app instead and leaves the clipboard alone.
 ---
 --- The history is written to `hs.settings`, so it lands on disk in plain text. Entries marked
 --- concealed or transient (see `ClipboardHistory.ignoredIdentifiers`) are never recorded, and
@@ -129,6 +130,8 @@ obj.nextId = 1
 obj.watcher = nil
 obj.menubarItem = nil
 obj.chooser = nil
+-- What a chooser pick does: "copy" or "type"; set by show() on every open
+obj.chooserAction = "copy"
 obj.saveTimer = nil
 obj.warned = {}
 
@@ -388,6 +391,42 @@ function obj:copyById(id)
   return false
 end
 
+--- ClipboardHistory:typeById(id) -> boolean
+--- Method
+--- Types the full text of a history entry into the front app as keystrokes.
+---
+--- Parameters:
+---  * id - the `id` field of the entry, as carried by a chooser choice
+---
+--- Returns:
+---  * `true` if the entry was found and typed
+---
+--- The clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.
+--- Newlines arrive as Return keystrokes, which a chat or form field may treat as submit.
+--- Refuses while secure input is on (a focused password field), since synthetic keys are dropped there.
+--- Each character is one key event, so a large entry takes visibly long; copy those instead.
+function obj:typeById(id)
+  for _, item in ipairs(self.items) do
+    if item.id == id then
+      if hs.eventtap.isSecureInputEnabled() then
+        self.logger.w("secure input is active; not typing")
+        hs.alert.show("ClipboardHistory: secure input is on, cannot type")
+        return false
+      end
+      local ok, err = pcall(hs.eventtap.keyStrokes, item.text)
+      if not ok then
+        self.logger.wf("could not type the entry: %s", tostring(err))
+        hs.alert.show("ClipboardHistory: could not type the entry")
+        return false
+      end
+      return true
+    end
+  end
+  self.logger.wf("no history entry with id %s", tostring(id))
+  hs.alert.show("ClipboardHistory: that entry is no longer available")
+  return false
+end
+
 --- ClipboardHistory:togglePause() -> self
 --- Method
 --- Suspends or resumes recording.
@@ -417,32 +456,55 @@ function obj:ensureChooser()
   self.chooser = hs.chooser.new(function(choice)
     -- nil when the chooser was dismissed with Escape rather than a selection
     if not choice or not choice.id then return end
-    self:copyById(choice.id)
+    if self.chooserAction == "type" then
+      self:typeById(choice.id)
+    else
+      self:copyById(choice.id)
+    end
   end)
 
   self.chooser:rows(self.chooserRows)
   self.chooser:width(self.chooserWidth)
   self.chooser:searchSubText(false)
-  self.chooser:placeholderText("Search the clipboard history…")
   return self.chooser
 end
 
---- ClipboardHistory:show() -> self
+--- ClipboardHistory:show([action]) -> self
 --- Method
 --- Opens the chooser over the clipboard history.
+---
+--- Parameters:
+---  * action - optional; what a pick does. `"copy"` (the default) puts the entry on the clipboard, `"type"` types it into the front app
+---
+--- Returns:
+---  * The ClipboardHistory object
+function obj:show(action)
+  local chooser = self:ensureChooser()
+  self.chooserAction = action == "type" and "type" or "copy"
+  -- Set on every open, so the placeholder names the action this open takes
+  chooser:placeholderText(
+    self.chooserAction == "type" and "Type an entry into the front app…" or "Search the clipboard history…"
+  )
+  -- Static table, so the list rebuilds on open; a callback caches until refreshChoicesCallback()
+  chooser:choices(self:choiceList())
+  chooser:query("")
+  chooser:show()
+  return self
+end
+
+--- ClipboardHistory:showAndType() -> self
+--- Method
+--- Opens the chooser; the picked entry is typed into the front app instead of copied.
 ---
 --- Parameters:
 ---  * None
 ---
 --- Returns:
 ---  * The ClipboardHistory object
-function obj:show()
-  local chooser = self:ensureChooser()
-  -- Static table, so the list rebuilds on open; a callback caches until refreshChoicesCallback()
-  chooser:choices(self:choiceList())
-  chooser:query("")
-  chooser:show()
-  return self
+---
+--- See `ClipboardHistory:typeById()` for what typing does and does not do.
+function obj:showAndType()
+  return self:show("type")
 end
 
 --- ClipboardHistory:hide() -> self
@@ -461,30 +523,54 @@ end
 
 -- Menubar
 
+-- One menu item per recent entry, capped at menuItems; pick(id) is what a click does
+function obj:entryItems(pick)
+  local out = {}
+  for i, item in ipairs(self.items) do
+    if i > self.menuItems then break end
+    -- The id, not the index: the history can change between the menu being built and picked
+    local id = item.id
+    out[#out + 1] = {
+      title = self:label(item),
+      fn = function()
+        pick(self, id)
+      end,
+    }
+  end
+  return out
+end
+
 function obj:buildMenu()
-  local menu = { {
-    title = "Search…",
-    fn = function()
-      self:show()
-    end,
-  } }
+  local menu = {
+    {
+      title = "Search…",
+      fn = function()
+        self:show()
+      end,
+    },
+    {
+      title = "Type…",
+      fn = function()
+        self:showAndType()
+      end,
+    },
+  }
 
   menu[#menu + 1] = { title = "-" }
   if #self.items == 0 then
     menu[#menu + 1] = { title = "No history yet", disabled = true }
   else
-    for i, item in ipairs(self.items) do
-      if i > self.menuItems then break end
-      -- The id, not the index: the history can change between the menu being built and picked
-      local id = item.id
-      menu[#menu + 1] = {
-        title = self:label(item),
-        fn = function()
-          self:copyById(id)
-        end,
-      }
+    for _, item in ipairs(self:entryItems(self.copyById)) do
+      menu[#menu + 1] = item
     end
   end
+
+  menu[#menu + 1] = { title = "-" }
+  menu[#menu + 1] = {
+    title = "Type recent",
+    disabled = #self.items == 0,
+    menu = self:entryItems(self.typeById),
+  }
 
   menu[#menu + 1] = { title = "-" }
   menu[#menu + 1] = {
@@ -624,6 +710,7 @@ end
 --- Parameters:
 ---  * mapping - a table containing hotkey modifier/key details for the following items:
 ---   * show - open the chooser over the clipboard history
+---   * showAndType - open the chooser; the pick is typed into the front app
 ---   * togglePause - suspend or resume recording
 ---   * clear - discard the whole history
 ---
@@ -632,6 +719,7 @@ end
 function obj:bindHotkeys(mapping)
   local spec = {
     show = hs.fnutils.partial(self.show, self),
+    showAndType = hs.fnutils.partial(self.showAndType, self),
     togglePause = hs.fnutils.partial(self.togglePause, self),
     clear = hs.fnutils.partial(self.clear, self),
   }

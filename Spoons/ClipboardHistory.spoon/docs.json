@@ -95,6 +95,31 @@
         "type": "Method"
       },
       {
+        "def": "ClipboardHistory:typeById(id) -> boolean",
+        "desc": "Types the full text of a history entry into the front app as keystrokes.",
+        "doc": "Types the full text of a history entry into the front app as keystrokes.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and typed\n\nThe clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.\nNewlines arrive as Return keystrokes, which a chat or form field may treat as submit.\nRefuses while secure input is on (a focused password field), since synthetic keys are dropped there.\nEach character is one key event, so a large entry takes visibly long; copy those instead.",
+        "name": "typeById",
+        "notes": [],
+        "parameters": [
+          " * id - the `id` field of the entry, as carried by a chooser choice",
+          ""
+        ],
+        "returns": [
+          " * `true` if the entry was found and typed",
+          "",
+          "The clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.",
+          "Newlines arrive as Return keystrokes, which a chat or form field may treat as submit.",
+          "Refuses while secure input is on (a focused password field), since synthetic keys are dropped there.",
+          "Each character is one key event, so a large entry takes visibly long; copy those instead."
+        ],
+        "signature": "ClipboardHistory:typeById(id) -> boolean",
+        "stripped_doc": [
+          "Types the full text of a history entry into the front app as keystrokes.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
         "def": "ClipboardHistory:togglePause() -> self",
         "desc": "Suspends or resumes recording.",
         "doc": "Suspends or resumes recording.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nThe watcher keeps running while paused and its callback discards what it is given, so resuming rebuilds nothing.\nThe flag is persisted, so a Spoon paused before a reload comes back paused.",
@@ -118,21 +143,43 @@
         "type": "Method"
       },
       {
-        "def": "ClipboardHistory:show() -> self",
+        "def": "ClipboardHistory:show([action]) -> self",
         "desc": "Opens the chooser over the clipboard history.",
-        "doc": "Opens the chooser over the clipboard history.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "doc": "Opens the chooser over the clipboard history.\n\nParameters:\n * action - optional; what a pick does. `\"copy\"` (the default) puts the entry on the clipboard, `\"type\"` types it into the front app\n\nReturns:\n * The ClipboardHistory object",
         "name": "show",
+        "notes": [],
+        "parameters": [
+          " * action - optional; what a pick does. `\"copy\"` (the default) puts the entry on the clipboard, `\"type\"` types it into the front app",
+          ""
+        ],
+        "returns": [
+          " * The ClipboardHistory object"
+        ],
+        "signature": "ClipboardHistory:show([action]) -> self",
+        "stripped_doc": [
+          "Opens the chooser over the clipboard history.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:showAndType() -> self",
+        "desc": "Opens the chooser; the picked entry is typed into the front app instead of copied.",
+        "doc": "Opens the chooser; the picked entry is typed into the front app instead of copied.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nSee `ClipboardHistory:typeById()` for what typing does and does not do.",
+        "name": "showAndType",
         "notes": [],
         "parameters": [
           " * None",
           ""
         ],
         "returns": [
-          " * The ClipboardHistory object"
+          " * The ClipboardHistory object",
+          "",
+          "See `ClipboardHistory:typeById()` for what typing does and does not do."
         ],
-        "signature": "ClipboardHistory:show() -> self",
+        "signature": "ClipboardHistory:showAndType() -> self",
         "stripped_doc": [
-          "Opens the chooser over the clipboard history.",
+          "Opens the chooser; the picked entry is typed into the front app instead of copied.",
           ""
         ],
         "type": "Method"
@@ -202,12 +249,13 @@
       {
         "def": "ClipboardHistory:bindHotkeys(mapping) -> self",
         "desc": "Binds hotkeys for this Spoon.",
-        "doc": "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier/key details for the following items:\n  * show - open the chooser over the clipboard history\n  * togglePause - suspend or resume recording\n  * clear - discard the whole history\n\nReturns:\n * The ClipboardHistory object",
+        "doc": "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier/key details for the following items:\n  * show - open the chooser over the clipboard history\n  * showAndType - open the chooser; the pick is typed into the front app\n  * togglePause - suspend or resume recording\n  * clear - discard the whole history\n\nReturns:\n * The ClipboardHistory object",
         "name": "bindHotkeys",
         "notes": [],
         "parameters": [
           " * mapping - a table containing hotkey modifier/key details for the following items:",
           "  * show - open the chooser over the clipboard history",
+          "  * showAndType - open the chooser; the pick is typed into the front app",
           "  * togglePause - suspend or resume recording",
           "  * clear - discard the whole history",
           ""
@@ -429,7 +477,7 @@
       }
     ],
     "desc": "A searchable clipboard history that survives a Hammerspoon restart.",
-    "doc": "A searchable clipboard history that survives a Hammerspoon restart.\n\nWatches the pasteboard, keeps the last `ClipboardHistory.historySize` text entries, and\noffers them back through a chooser or a menubar menu. Selecting an entry puts it back on\nthe clipboard; pasting stays a manual cmd+v.\n\nThe history is written to `hs.settings`, so it lands on disk in plain text. Entries marked\nconcealed or transient (see `ClipboardHistory.ignoredIdentifiers`) are never recorded, and\nrecording can be paused from the menu -- but the markers are advisory, so treat the\nhistory as readable by anything that can read your home directory.",
+    "doc": "A searchable clipboard history that survives a Hammerspoon restart.\n\nWatches the pasteboard, keeps the last `ClipboardHistory.historySize` text entries, and\noffers them back through a chooser or a menubar menu. Selecting an entry puts it back on\nthe clipboard; pasting stays a manual cmd+v. A second action, `ClipboardHistory:showAndType()`,\ntypes the picked entry into the front app instead and leaves the clipboard alone.\n\nThe history is written to `hs.settings`, so it lands on disk in plain text. Entries marked\nconcealed or transient (see `ClipboardHistory.ignoredIdentifiers`) are never recorded, and\nrecording can be paused from the menu -- but the markers are advisory, so treat the\nhistory as readable by anything that can read your home directory.",
     "items": [
       {
         "def": "ClipboardHistory.chooserRows",
@@ -637,12 +685,13 @@
       {
         "def": "ClipboardHistory:bindHotkeys(mapping) -> self",
         "desc": "Binds hotkeys for this Spoon.",
-        "doc": "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier/key details for the following items:\n  * show - open the chooser over the clipboard history\n  * togglePause - suspend or resume recording\n  * clear - discard the whole history\n\nReturns:\n * The ClipboardHistory object",
+        "doc": "Binds hotkeys for this Spoon.\n\nParameters:\n * mapping - a table containing hotkey modifier/key details for the following items:\n  * show - open the chooser over the clipboard history\n  * showAndType - open the chooser; the pick is typed into the front app\n  * togglePause - suspend or resume recording\n  * clear - discard the whole history\n\nReturns:\n * The ClipboardHistory object",
         "name": "bindHotkeys",
         "notes": [],
         "parameters": [
           " * mapping - a table containing hotkey modifier/key details for the following items:",
           "  * show - open the chooser over the clipboard history",
+          "  * showAndType - open the chooser; the pick is typed into the front app",
           "  * togglePause - suspend or resume recording",
           "  * clear - discard the whole history",
           ""
@@ -765,21 +814,43 @@
         "type": "Method"
       },
       {
-        "def": "ClipboardHistory:show() -> self",
+        "def": "ClipboardHistory:show([action]) -> self",
         "desc": "Opens the chooser over the clipboard history.",
-        "doc": "Opens the chooser over the clipboard history.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object",
+        "doc": "Opens the chooser over the clipboard history.\n\nParameters:\n * action - optional; what a pick does. `\"copy\"` (the default) puts the entry on the clipboard, `\"type\"` types it into the front app\n\nReturns:\n * The ClipboardHistory object",
         "name": "show",
+        "notes": [],
+        "parameters": [
+          " * action - optional; what a pick does. `\"copy\"` (the default) puts the entry on the clipboard, `\"type\"` types it into the front app",
+          ""
+        ],
+        "returns": [
+          " * The ClipboardHistory object"
+        ],
+        "signature": "ClipboardHistory:show([action]) -> self",
+        "stripped_doc": [
+          "Opens the chooser over the clipboard history.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:showAndType() -> self",
+        "desc": "Opens the chooser; the picked entry is typed into the front app instead of copied.",
+        "doc": "Opens the chooser; the picked entry is typed into the front app instead of copied.\n\nParameters:\n * None\n\nReturns:\n * The ClipboardHistory object\n\nSee `ClipboardHistory:typeById()` for what typing does and does not do.",
+        "name": "showAndType",
         "notes": [],
         "parameters": [
           " * None",
           ""
         ],
         "returns": [
-          " * The ClipboardHistory object"
+          " * The ClipboardHistory object",
+          "",
+          "See `ClipboardHistory:typeById()` for what typing does and does not do."
         ],
-        "signature": "ClipboardHistory:show() -> self",
+        "signature": "ClipboardHistory:showAndType() -> self",
         "stripped_doc": [
-          "Opens the chooser over the clipboard history.",
+          "Opens the chooser; the picked entry is typed into the front app instead of copied.",
           ""
         ],
         "type": "Method"
@@ -845,6 +916,31 @@
         "signature": "ClipboardHistory:togglePause() -> self",
         "stripped_doc": [
           "Suspends or resumes recording.",
+          ""
+        ],
+        "type": "Method"
+      },
+      {
+        "def": "ClipboardHistory:typeById(id) -> boolean",
+        "desc": "Types the full text of a history entry into the front app as keystrokes.",
+        "doc": "Types the full text of a history entry into the front app as keystrokes.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and typed\n\nThe clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.\nNewlines arrive as Return keystrokes, which a chat or form field may treat as submit.\nRefuses while secure input is on (a focused password field), since synthetic keys are dropped there.\nEach character is one key event, so a large entry takes visibly long; copy those instead.",
+        "name": "typeById",
+        "notes": [],
+        "parameters": [
+          " * id - the `id` field of the entry, as carried by a chooser choice",
+          ""
+        ],
+        "returns": [
+          " * `true` if the entry was found and typed",
+          "",
+          "The clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.",
+          "Newlines arrive as Return keystrokes, which a chat or form field may treat as submit.",
+          "Refuses while secure input is on (a focused password field), since synthetic keys are dropped there.",
+          "Each character is one key event, so a large entry takes visibly long; copy those instead."
+        ],
+        "signature": "ClipboardHistory:typeById(id) -> boolean",
+        "stripped_doc": [
+          "Types the full text of a history entry into the front app as keystrokes.",
           ""
         ],
         "type": "Method"

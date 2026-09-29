@@ -16,7 +16,7 @@ because `hs.spaces.moveWindowToSpace()` has been a silent no-op since macOS 15. 
 | Spoon              | What it does                                                                      |
 | ------------------ | --------------------------------------------------------------------------------- |
 | `BatteryMonitor`   | Menubar battery readout, plus spoken and on-screen alerts on charge and time left |
-| `ClipboardHistory` | Searchable clipboard history that survives a Hammerspoon restart                  |
+| `ClipboardHistory` | Searchable clipboard history that survives a restart; copies or types an entry    |
 | `DeminimizeWindow` | Restores a minimized window, onto the Space you are on when yabai is installed    |
 | `FocusBorder`      | Red border around the focused window, hidden while that window is fullscreen      |
 | `PictureInPicture` | Toggles the front Safari or Chrome tab's video into and out of Picture in Picture |
@@ -34,6 +34,7 @@ Six put an item in the menubar as shipped. `DeminimizeWindow` has one but leaves
 | ------------------- | ---------------------------------- |
 | hyper + `R`         | Reload the config                  |
 | hyper + `C`         | Show clipboard history             |
+| hyper + `V`         | Type a clipboard entry             |
 | hyper + `M`         | Restore a minimized window         |
 | hyper + `Y`         | Enter the Space and window modal   |
 | hyper + `Up`/`Down` | Raise / lower output volume        |
@@ -43,6 +44,11 @@ Six put an item in the menubar as shipped. `DeminimizeWindow` has one but leaves
 
 Hyper is `cmd+alt+ctrl`. `PinnedWindows` and `SummonWindow` deliberately use `cmd+alt+shift` instead, to stay clear of
 the hyper chords.
+
+Hyper + `C` and hyper + `V` open the same chooser over the same history. The difference is what a pick does: `C` puts
+the entry on the clipboard for a manual paste, `V` types it into the front app as keystrokes and leaves the clipboard
+alone. Typing is refused while a password field has focus, because secure input drops synthetic keys, and it is slow on
+a large entry, so copy those instead.
 
 ### The Yabai modal
 

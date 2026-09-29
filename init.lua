@@ -18,7 +18,10 @@ hs.window.filter.ignoreAlways["Hammerspoon"] = true
 hs.loadSpoon("SpoonInstall")
 
 spoon.SpoonInstall:andUse("BatteryMonitor", { start = true })
-spoon.SpoonInstall:andUse("ClipboardHistory", { hotkeys = { show = { { "cmd", "alt", "ctrl" }, "C" } }, start = true })
+spoon.SpoonInstall:andUse("ClipboardHistory", {
+  hotkeys = { show = { { "cmd", "alt", "ctrl" }, "C" }, showAndType = { { "cmd", "alt", "ctrl" }, "V" } },
+  start = true,
+})
 spoon.SpoonInstall:andUse(
   "DeminimizeWindow",
   { hotkeys = { restore = { { "cmd", "alt", "ctrl" }, "M" } }, start = true }
