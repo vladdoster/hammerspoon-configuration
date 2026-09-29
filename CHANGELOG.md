@@ -1,3 +1,10 @@
+# [2.11.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.10.1...v2.11.0) (2026-09-29)
+
+
+### Features
+
+* **clipboardhistory:** type a picked entry ([35171ed](https://github.com/vladdoster/hammerspoon-configuration/commit/35171ed85303c992d056639d57e1330e0da93bf2))
+
 ## [2.10.1](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.10.0...v2.10.1) (2026-09-25)
 
 
