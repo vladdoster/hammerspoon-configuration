@@ -1,3 +1,10 @@
+# [2.12.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.11.0...v2.12.0) (2026-10-14)
+
+
+### Features
+
+* **clipboardhistory:** record images and files ([9d4ed7b](https://github.com/vladdoster/hammerspoon-configuration/commit/9d4ed7b6a5c6bf09c3d412f7061654748923a17e))
+
 # [2.11.0](https://github.com/vladdoster/hammerspoon-configuration/compare/v2.10.1...v2.11.0) (2026-09-29)
 
 
