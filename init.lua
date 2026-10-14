@@ -4,6 +4,9 @@ require("hs.ipc")
 hs.window.animationDuration = 0.1
 
 local console = require("ext.console")
+local keybind = require("ext.keybind")
+local hyper = keybind.hyper
+
 console.setup()
 console.bindHotkeys({ toggle = { { "ctrl", "alt", "shift" }, "H" } })
 
@@ -17,38 +20,26 @@ hs.window.filter.ignoreAlways["Hammerspoon"] = true
 
 hs.loadSpoon("SpoonInstall")
 
-spoon.SpoonInstall:andUse("BatteryMonitor", { start = true })
-spoon.SpoonInstall:andUse("ClipboardHistory", {
-  hotkeys = { show = { { "cmd", "alt", "ctrl" }, "C" }, showAndType = { { "cmd", "alt", "ctrl" }, "V" } },
-  start = true,
-})
-spoon.SpoonInstall:andUse(
-  "DeminimizeWindow",
-  { hotkeys = { restore = { { "cmd", "alt", "ctrl" }, "M" } }, start = true }
-)
-spoon.SpoonInstall:andUse("FocusBorder", { start = true })
-spoon.SpoonInstall:andUse(
-  "PictureInPicture",
-  { hotkeys = { toggle = { { "cmd", "alt", "ctrl" }, "P" } }, start = true }
-)
-spoon.SpoonInstall:andUse(
-  "PinnedWindows",
-  { hotkeys = { togglePin = { { "cmd", "alt", "shift" }, "P" } }, start = true }
-)
-spoon.SpoonInstall:andUse("SummonWindow", { hotkeys = { summon = { { "cmd", "alt", "shift" }, "S" } }, start = true })
-spoon.SpoonInstall:andUse(
-  "VolumeControl",
-  { hotkeys = { down = { { "cmd", "alt", "ctrl" }, "Down" }, up = { { "cmd", "alt", "ctrl" }, "Up" } }, start = true }
-)
-spoon.SpoonInstall:andUse(
-  "Yabai",
-  { config = { confirmWhenWindows = false }, hotkeys = { modal = { { "cmd", "alt", "ctrl" }, "Y" } }, start = true }
-)
+local function use(name, arg)
+    arg = arg or {}
+    arg.start = true
+    spoon.SpoonInstall:andUse(name, arg)
+end
 
-require("ext.keybind").bind({
-  ["R"] = function()
-    hs.reload()
-  end,
+use("BatteryMonitor")
+use("ClipboardHistory", { hotkeys = { show = { hyper, "C" }, showAndType = { hyper, "V" } } })
+use("DeminimizeWindow", { hotkeys = { restore = { hyper, "M" } } })
+use("FocusBorder")
+use("PictureInPicture", { hotkeys = { toggle = { hyper, "P" } } })
+use("PinnedWindows", { hotkeys = { togglePin = { { "cmd", "alt", "shift" }, "P" } } })
+use("SummonWindow", { hotkeys = { summon = { { "cmd", "alt", "shift" }, "S" } } })
+use("VolumeControl", { hotkeys = { down = { hyper, "Down" }, up = { hyper, "Up" } } })
+use("Yabai", { config = { confirmWhenWindows = false }, hotkeys = { modal = { hyper, "Y" } } })
+
+keybind.bind({
+    ["R"] = function()
+        hs.reload()
+    end,
 })
 
 hs.notify.new({ informativeText = "Config loaded", title = "Hammerspoon" }):send()
