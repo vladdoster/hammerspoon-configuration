@@ -51,21 +51,22 @@
         "type": "Method"
       },
       {
-        "def": "ClipboardHistory:choiceList() -> table",
+        "def": "ClipboardHistory:choiceList([textOnly]) -> table",
         "desc": "Builds the chooser's list of choices from the current history.",
-        "doc": "Builds the chooser's list of choices from the current history.\n\nParameters:\n * None\n\nReturns:\n * A list of `hs.chooser` choice tables\n\nEach choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.",
+        "doc": "Builds the chooser's list of choices from the current history.\n\nParameters:\n * textOnly - optional; when `true`, lists text entries only, as the type action needs\n\nReturns:\n * A list of `hs.chooser` choice tables\n\nEach choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.\nImage and files entries also carry a thumbnail.",
         "name": "choiceList",
         "notes": [],
         "parameters": [
-          " * None",
+          " * textOnly - optional; when `true`, lists text entries only, as the type action needs",
           ""
         ],
         "returns": [
           " * A list of `hs.chooser` choice tables",
           "",
-          "Each choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked."
+          "Each choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.",
+          "Image and files entries also carry a thumbnail."
         ],
-        "signature": "ClipboardHistory:choiceList() -> table",
+        "signature": "ClipboardHistory:choiceList([textOnly]) -> table",
         "stripped_doc": [
           "Builds the chooser's list of choices from the current history.",
           ""
@@ -74,8 +75,8 @@
       },
       {
         "def": "ClipboardHistory:copyById(id) -> boolean",
-        "desc": "Puts the full text of a history entry back on the clipboard.",
-        "doc": "Puts the full text of a history entry back on the clipboard.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and copied\n\nThis fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here.",
+        "desc": "Puts a history entry back on the clipboard in its own form.",
+        "doc": "Puts a history entry back on the clipboard in its own form.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and copied\n\nText goes back as text. An image goes back as the bytes it was copied with, under the same type, so it pastes at its original size.\nFiles go back as file URLs, so Finder pastes the files themselves. The copy skips paths that no longer exist. When no path exists, the copy fails with an alert.\nThis fires our own watcher, deliberately and with no suppression: the entry is already in the history, so the watcher takes its move-to-top path, which is the ordering wanted here.",
         "name": "copyById",
         "notes": [],
         "parameters": [
@@ -85,11 +86,13 @@
         "returns": [
           " * `true` if the entry was found and copied",
           "",
-          "This fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here."
+          "Text goes back as text. An image goes back as the bytes it was copied with, under the same type, so it pastes at its original size.",
+          "Files go back as file URLs, so Finder pastes the files themselves. The copy skips paths that no longer exist. When no path exists, the copy fails with an alert.",
+          "This fires our own watcher, deliberately and with no suppression: the entry is already in the history, so the watcher takes its move-to-top path, which is the ordering wanted here."
         ],
         "signature": "ClipboardHistory:copyById(id) -> boolean",
         "stripped_doc": [
-          "Puts the full text of a history entry back on the clipboard.",
+          "Puts a history entry back on the clipboard in its own form.",
           ""
         ],
         "type": "Method"
@@ -97,7 +100,7 @@
       {
         "def": "ClipboardHistory:typeById(id) -> boolean",
         "desc": "Types the full text of a history entry into the front app as keystrokes.",
-        "doc": "Types the full text of a history entry into the front app as keystrokes.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and typed\n\nThe clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.\nNewlines arrive as Return keystrokes, which a chat or form field may treat as submit.\nRefuses while secure input is on (a focused password field), since synthetic keys are dropped there.\nEach character is one key event, so a large entry takes visibly long; copy those instead.",
+        "doc": "Types the full text of a history entry into the front app as keystrokes.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and typed\n\nThe clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.\nNewlines arrive as Return keystrokes, which a chat or form field may treat as submit.\nRefuses while secure input is on (a focused password field), since synthetic keys are dropped there.\nEach character is one key event, so a large entry takes visibly long; copy those instead.\nText entries only. The method refuses an image or files entry with an alert.",
         "name": "typeById",
         "notes": [],
         "parameters": [
@@ -110,7 +113,8 @@
           "The clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.",
           "Newlines arrive as Return keystrokes, which a chat or form field may treat as submit.",
           "Refuses while secure input is on (a focused password field), since synthetic keys are dropped there.",
-          "Each character is one key event, so a large entry takes visibly long; copy those instead."
+          "Each character is one key event, so a large entry takes visibly long; copy those instead.",
+          "Text entries only. The method refuses an image or files entry with an alert."
         ],
         "signature": "ClipboardHistory:typeById(id) -> boolean",
         "stripped_doc": [
@@ -304,17 +308,35 @@
       },
       {
         "def": "ClipboardHistory.maxItemSize",
-        "desc": "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
-        "doc": "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).\n\nA storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`.",
+        "desc": "Bytes; a text copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
+        "doc": "Bytes; a text copy larger than this is not recorded at all. Defaults to `102400` (100 KB).\n\nText only. For images, see `ClipboardHistory.maxImageSize`.\nA storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`.",
         "name": "maxItemSize",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "ClipboardHistory.maxItemSize",
         "stripped_doc": [
-          "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
+          "Bytes; a text copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
           "",
+          "Text only. For images, see `ClipboardHistory.maxImageSize`.",
           "A storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`."
+        ],
+        "type": "Variable"
+      },
+      {
+        "def": "ClipboardHistory.maxImageSize",
+        "desc": "Bytes; an image copy larger than this is not recorded at all. Defaults to `26214400` (25 MB).",
+        "doc": "Bytes; an image copy larger than this is not recorded at all. Defaults to `26214400` (25 MB).\n\nLarge enough for an uncompressed full-screen TIFF on a 3024 by 1964 display.\nEach image is a file on disk, so the history can hold up to `ClipboardHistory.historySize` images of this size.",
+        "name": "maxImageSize",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.maxImageSize",
+        "stripped_doc": [
+          "Bytes; an image copy larger than this is not recorded at all. Defaults to `26214400` (25 MB).",
+          "",
+          "Large enough for an uncompressed full-screen TIFF on a 3024 by 1964 display.",
+          "Each image is a file on disk, so the history can hold up to `ClipboardHistory.historySize` images of this size."
         ],
         "type": "Variable"
       },
@@ -477,7 +499,7 @@
       }
     ],
     "desc": "A searchable clipboard history that survives a Hammerspoon restart.",
-    "doc": "A searchable clipboard history that survives a Hammerspoon restart.\n\nWatches the pasteboard, keeps the last `ClipboardHistory.historySize` text entries, and\noffers them back through a chooser or a menubar menu. Selecting an entry puts it back on\nthe clipboard; pasting stays a manual cmd+v. A second action, `ClipboardHistory:showAndType()`,\ntypes the picked entry into the front app instead and leaves the clipboard alone.\n\nThe history is written to `hs.settings`, so it lands on disk in plain text. Entries marked\nconcealed or transient (see `ClipboardHistory.ignoredIdentifiers`) are never recorded, and\nrecording can be paused from the menu -- but the markers are advisory, so treat the\nhistory as readable by anything that can read your home directory.",
+    "doc": "A searchable clipboard history that survives a Hammerspoon restart.\n\nWatches the pasteboard, keeps the last `ClipboardHistory.historySize` entries, and\noffers them back through a chooser or a menubar menu. An entry is text, an image, or a set of\nfiles copied in Finder. Selecting an entry puts it back on the clipboard; pasting stays a manual\ncmd+v. A second action, `ClipboardHistory:showAndType()`, types a picked text entry into the\nfront app instead and leaves the clipboard alone.\n\nThe history is written to `hs.settings`, so text lands on disk in plain text. Each image goes\nto a file under `~/Library/Application Support/Hammerspoon/ClipboardHistory/` as its raw\npasteboard bytes, and the file is deleted when the image leaves the history. A files entry\nkeeps only the paths. Entries marked\nconcealed or transient (see `ClipboardHistory.ignoredIdentifiers`) are never recorded, and\nrecording can be paused from the menu -- but the markers are advisory, so treat the\nhistory as readable by anything that can read your home directory.",
     "items": [
       {
         "def": "ClipboardHistory.chooserRows",
@@ -571,17 +593,35 @@
         "type": "Variable"
       },
       {
+        "def": "ClipboardHistory.maxImageSize",
+        "desc": "Bytes; an image copy larger than this is not recorded at all. Defaults to `26214400` (25 MB).",
+        "doc": "Bytes; an image copy larger than this is not recorded at all. Defaults to `26214400` (25 MB).\n\nLarge enough for an uncompressed full-screen TIFF on a 3024 by 1964 display.\nEach image is a file on disk, so the history can hold up to `ClipboardHistory.historySize` images of this size.",
+        "name": "maxImageSize",
+        "notes": [],
+        "parameters": [],
+        "returns": [],
+        "signature": "ClipboardHistory.maxImageSize",
+        "stripped_doc": [
+          "Bytes; an image copy larger than this is not recorded at all. Defaults to `26214400` (25 MB).",
+          "",
+          "Large enough for an uncompressed full-screen TIFF on a 3024 by 1964 display.",
+          "Each image is a file on disk, so the history can hold up to `ClipboardHistory.historySize` images of this size."
+        ],
+        "type": "Variable"
+      },
+      {
         "def": "ClipboardHistory.maxItemSize",
-        "desc": "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
-        "doc": "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).\n\nA storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`.",
+        "desc": "Bytes; a text copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
+        "doc": "Bytes; a text copy larger than this is not recorded at all. Defaults to `102400` (100 KB).\n\nText only. For images, see `ClipboardHistory.maxImageSize`.\nA storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`.",
         "name": "maxItemSize",
         "notes": [],
         "parameters": [],
         "returns": [],
         "signature": "ClipboardHistory.maxItemSize",
         "stripped_doc": [
-          "Bytes; a copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
+          "Bytes; a text copy larger than this is not recorded at all. Defaults to `102400` (100 KB).",
           "",
+          "Text only. For images, see `ClipboardHistory.maxImageSize`.",
           "A storage guard, not a display one: oversized entries are dropped rather than truncated. For display truncation see `ClipboardHistory.labelLength`."
         ],
         "type": "Variable"
@@ -707,21 +747,22 @@
         "type": "Method"
       },
       {
-        "def": "ClipboardHistory:choiceList() -> table",
+        "def": "ClipboardHistory:choiceList([textOnly]) -> table",
         "desc": "Builds the chooser's list of choices from the current history.",
-        "doc": "Builds the chooser's list of choices from the current history.\n\nParameters:\n * None\n\nReturns:\n * A list of `hs.chooser` choice tables\n\nEach choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.",
+        "doc": "Builds the chooser's list of choices from the current history.\n\nParameters:\n * textOnly - optional; when `true`, lists text entries only, as the type action needs\n\nReturns:\n * A list of `hs.chooser` choice tables\n\nEach choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.\nImage and files entries also carry a thumbnail.",
         "name": "choiceList",
         "notes": [],
         "parameters": [
-          " * None",
+          " * textOnly - optional; when `true`, lists text entries only, as the type action needs",
           ""
         ],
         "returns": [
           " * A list of `hs.chooser` choice tables",
           "",
-          "Each choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked."
+          "Each choice carries the entry's `id`, never its text: `hs.chooser` retains every choice table it is given, so the full text would hand it the whole history on every open. `ClipboardHistory:copyById()` resolves the id when a row is picked.",
+          "Image and files entries also carry a thumbnail."
         ],
-        "signature": "ClipboardHistory:choiceList() -> table",
+        "signature": "ClipboardHistory:choiceList([textOnly]) -> table",
         "stripped_doc": [
           "Builds the chooser's list of choices from the current history.",
           ""
@@ -750,8 +791,8 @@
       },
       {
         "def": "ClipboardHistory:copyById(id) -> boolean",
-        "desc": "Puts the full text of a history entry back on the clipboard.",
-        "doc": "Puts the full text of a history entry back on the clipboard.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and copied\n\nThis fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here.",
+        "desc": "Puts a history entry back on the clipboard in its own form.",
+        "doc": "Puts a history entry back on the clipboard in its own form.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and copied\n\nText goes back as text. An image goes back as the bytes it was copied with, under the same type, so it pastes at its original size.\nFiles go back as file URLs, so Finder pastes the files themselves. The copy skips paths that no longer exist. When no path exists, the copy fails with an alert.\nThis fires our own watcher, deliberately and with no suppression: the entry is already in the history, so the watcher takes its move-to-top path, which is the ordering wanted here.",
         "name": "copyById",
         "notes": [],
         "parameters": [
@@ -761,11 +802,13 @@
         "returns": [
           " * `true` if the entry was found and copied",
           "",
-          "This fires our own watcher, deliberately and with no suppression: the text is already in the history, so `ClipboardHistory:record()` takes its move-to-top path, which is the ordering wanted here."
+          "Text goes back as text. An image goes back as the bytes it was copied with, under the same type, so it pastes at its original size.",
+          "Files go back as file URLs, so Finder pastes the files themselves. The copy skips paths that no longer exist. When no path exists, the copy fails with an alert.",
+          "This fires our own watcher, deliberately and with no suppression: the entry is already in the history, so the watcher takes its move-to-top path, which is the ordering wanted here."
         ],
         "signature": "ClipboardHistory:copyById(id) -> boolean",
         "stripped_doc": [
-          "Puts the full text of a history entry back on the clipboard.",
+          "Puts a history entry back on the clipboard in its own form.",
           ""
         ],
         "type": "Method"
@@ -923,7 +966,7 @@
       {
         "def": "ClipboardHistory:typeById(id) -> boolean",
         "desc": "Types the full text of a history entry into the front app as keystrokes.",
-        "doc": "Types the full text of a history entry into the front app as keystrokes.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and typed\n\nThe clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.\nNewlines arrive as Return keystrokes, which a chat or form field may treat as submit.\nRefuses while secure input is on (a focused password field), since synthetic keys are dropped there.\nEach character is one key event, so a large entry takes visibly long; copy those instead.",
+        "doc": "Types the full text of a history entry into the front app as keystrokes.\n\nParameters:\n * id - the `id` field of the entry, as carried by a chooser choice\n\nReturns:\n * `true` if the entry was found and typed\n\nThe clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.\nNewlines arrive as Return keystrokes, which a chat or form field may treat as submit.\nRefuses while secure input is on (a focused password field), since synthetic keys are dropped there.\nEach character is one key event, so a large entry takes visibly long; copy those instead.\nText entries only. The method refuses an image or files entry with an alert.",
         "name": "typeById",
         "notes": [],
         "parameters": [
@@ -936,7 +979,8 @@
           "The clipboard is not touched, so the watcher does not fire and the entry keeps its place in the history.",
           "Newlines arrive as Return keystrokes, which a chat or form field may treat as submit.",
           "Refuses while secure input is on (a focused password field), since synthetic keys are dropped there.",
-          "Each character is one key event, so a large entry takes visibly long; copy those instead."
+          "Each character is one key event, so a large entry takes visibly long; copy those instead.",
+          "Text entries only. The method refuses an image or files entry with an alert."
         ],
         "signature": "ClipboardHistory:typeById(id) -> boolean",
         "stripped_doc": [
